@@ -4,7 +4,7 @@
 
 Is implementation of `Hamcrest <http://hamcrest.org>`_ idea in Common Lisp.
 
-It simplfies unittest's code and make it is more readable.
+It simplifes unittest's code and make it is more readable.
 
 For example, you can write not:
 
