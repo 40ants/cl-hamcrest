@@ -8,16 +8,7 @@
 (in-package :hamcrest.t.prove)
 
 
-(plan nil)
-
-
-(subtest "Just plain prove test"
-  (is "Blah" "Blah")
-  (is t t))
-
-
-(subtest "Just plain prove test with failed assertion"
-  (is "Blah" t))
+(plan 2)
 
 
 (defmacro test-assertion (title body expected)
@@ -30,7 +21,14 @@ the result before trying to match."
   
   (with-gensyms (result trimmed)
     `(subtest ,title
-       (let* ((,result (with-output-to-string
+       (let* (;; We need to overide current suite, to prevent
+              ;; tested assert-that macro from modifying real testsuite.
+              ;; Otherwise it can increment failed or success tests count
+              ;; and prove will output wrong data.
+              (prove.suite:*suite* (make-instance 'prove.suite:package-suite))
+              ;; All output during the test, should be captured
+              ;; to test against give regex
+              (,result (with-output-to-string
                            (prove.output:*test-result-output*)
                          ,body))
               (,trimmed (string-trim '(#\Space #\Newline)
@@ -52,16 +50,29 @@ the result before trying to match."
      "✓ Has alist entries \\(:FOO 1 :BAR 2\\)")
 
     (test-assertion
-        "Missing value"
-      (assert-that value
-                   (has-alist-entries
-                    :baz 1))
-      "× Key BAZ is missing")
+     "Missing value"
+     (assert-that value
+                  (has-alist-entries
+                   :baz 1))
+     "× Key BAZ is missing")
 
-    (subtest
-        "Ignored value"
-      (assert-that value
-                   (has-alist-entries
-                    :baz _)))))
+    (test-assertion
+     "Placeholder _ can match any value"
+     (assert-that value
+       (has-alist-entries
+        :bar _))
+     "✓ Has alist entries \\(:BAR _\\)")))
+
+
+(subtest "'Any' matcher  and placeholder"
+  (test-assertion
+   "'Any' matcher matches any value"
+   (assert-that 1 (any))
+   "✓ Any value if good enough")
+
+  (test-assertion
+   "'Any' matcher can be replaced with '_' placeholder"
+   (assert-that 1 _)
+   "✓ Any value if good enough"))
 
 (finalize)

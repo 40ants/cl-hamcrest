@@ -9,7 +9,9 @@
   (:import-from :alexandria
                 :with-gensyms)
   (:export :assert-that
-           :has-alist-entries))
+           :has-alist-entries
+           :any
+           :_))
 (in-package :hamcrest.prove)
 
 
@@ -50,6 +52,7 @@ which formats a string, comparing two values."
                   :initform (error ":expected-line is required")
                   :reader expected-line)))
 
+
 (defclass passed-assertion-report (prove.report:normal-test-report)
   ((prove.report:got :initform nil)
    (prove.report:expected :initform nil)
@@ -58,77 +61,29 @@ which formats a string, comparing two values."
                   :reader expected-line)))
 
 
-;; (defclass failed-assertion-report (assertion-report)
-;;   ())
-
-
-;; (defclass successful-assertion-report (assertion-report)
-;;   ())
-
-
 (defmethod report-expected-line ((report assertion-report))
   (expected-line report))
 
 (defmethod report-expected-line ((report passed-assertion-report))
   (expected-line report))
 
-
-;; (defmethod report-expected-line ((report successful-assertion-report))
-;;   "Some succeess")
-
-
-;; (prove.reporter.list::report-expected-line
-;;  (make-instance 'failed-assertion-report
-;;                 :got t
-;;                 :expected t))
-
-
-
-;; (defun test (args
-;;              &key notp
-;;                duration
-;;                (print-error-detail t)
-;;                (output t))
-;;   (multiple-value-bind (desc arg-test)
-;;       (parse-description-and-test args)
-;;     (let* ((suite (current-suite))
-;;            (report ))
-;;       (add-report report suite)
-;;       (unless result
-;;         (incf (failed suite)))
-;;       (incf (test-count suite))
-;;       (when output
-;;         (format-report *test-result-output* nil report :count (test-count suite)))
-;;       (values result report))))
-
-
 (defmacro assert-that (value matcher)
-  `(let* ((suite (prove.suite:current-suite))
-          (report (handler-case
-                      (progn (funcall ,matcher ,value)
-                             (make-instance 'passed-assertion-report
-                                            :expected-line (documentation ,matcher 'function)))
-                    (assertion-error (c)
-                      (incf (prove.suite:failed suite))
-                      (make-instance 'assertion-report
-                                     :expected-line (assertion-error-reason c))))))
-     (prove.suite:add-report report suite)
-     (incf (prove.suite:test-count suite))
+  "Main macro to test values agains matchers."
+  
+  `(symbol-macrolet ((_ (any)))
+     (let* ((suite (prove.suite:current-suite))
+            (report (handler-case
+                        (progn (funcall ,matcher ,value)
+                               (make-instance 'passed-assertion-report
+                                              :expected-line (documentation ,matcher 'function)))
+                      (assertion-error (c)
+                        (incf (prove.suite:failed suite))
+                        (make-instance 'assertion-report
+                                       :expected-line (assertion-error-reason c))))))
+       (prove.suite:add-report report suite)
+       (incf (prove.suite:test-count suite))
      
-     (prove.reporter:format-report *test-result-output* nil report
-                                   :count (prove.suite:test-count suite))
+       (prove.reporter:format-report *test-result-output* nil report
+                                     :count (prove.suite:test-count suite))
 
-     (values t report)))
-
-
-
-
-
-
-;; (funcall (has-alist-entries ((:baz . 1))) nil)
-
-
-(defun foo ()
-  (flet ((bar ()
-           "BRRR"))
-    #'bar))
+       (values t report))))
