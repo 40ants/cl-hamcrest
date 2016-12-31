@@ -5,6 +5,7 @@
                 :with-gensyms)
   (:export :has-alist-entries
            :any
+           :contains
            :_))
 
 (in-package :hamcrest.matchers)
@@ -55,3 +56,32 @@
     "Any value if good enough"
     (declare (ignore value))
     nil))
+
+
+(defmacro contains (&rest entries)
+  (with-gensyms (matcher)
+    `(flet ((,matcher (value)
+              "Contains all given values"
+              (let ((entries-len (length (list ,@entries)))
+                    (value-len (length value)))
+                (when (< value-len entries-len)
+                  (error 'assertion-error
+                         :reason "Result is shorter than expected"))
+                (when (> value-len entries-len)
+                  (error 'assertion-error
+                         :reason "Expected value is shorter than result"))
+                (iter (for checked-value
+                           :in value)
+                      (for expected-value
+                           :in (list ,@entries))
+                      (for index
+                           :upfrom 0)
+                      (unless (equal checked-value
+                                     expected-value)
+                        (error 'assertion-error
+                               :reason (format nil
+                                               "Item ~S at index ~a, but ~S was expected"
+                                               checked-value
+                                               index
+                                               expected-value)))))))
+       (function ,matcher))))

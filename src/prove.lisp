@@ -11,6 +11,7 @@
   (:export :assert-that
            :has-alist-entries
            :any
+           :contains
            :_))
 (in-package :hamcrest.prove)
 

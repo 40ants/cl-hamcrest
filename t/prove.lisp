@@ -8,7 +8,7 @@
 (in-package :hamcrest.t.prove)
 
 
-(plan 2)
+(plan 3)
 
 
 (defmacro test-assertion (title body expected)
@@ -74,5 +74,31 @@ the result before trying to match."
    "'Any' matcher can be replaced with '_' placeholder"
    (assert-that 1 _)
    "✓ Any value if good enough"))
+
+
+(subtest "Contains matcher"
+  (test-assertion
+   "Good scenario"
+   (assert-that '(1 :two "three")
+                (contains 1 :two "three"))
+   "✓ Contains all given values")
+
+  (test-assertion
+   "Bad scenario, when value is shorter"
+   (assert-that '(1)
+                (contains 1 :two "three"))
+   "× Result is shorter than expected")
+
+  (test-assertion
+   "Bad scenario, when expected value is shorter"
+   (assert-that '(1 :two "three")
+                (contains 1))
+   "× Expected value is shorter than result")
+
+  (test-assertion
+   "Bad scenario, when some item mismatch"
+   (assert-that '(1 "two" "three")
+                (contains 1 :two "three"))
+   "× Item \"two\" at index 1, but :TWO was expected"))
 
 (finalize)
