@@ -1,11 +1,13 @@
 (defpackage hamcrest.matchers
   (:use :cl
-        :iterate)
+        :iterate
+        :hamcrest.utils)
   (:import-from :alexandria
                 :with-gensyms)
   (:export :has-alist-entries
            :any
            :contains
+           :contains-in-any-order
            :_))
 
 (in-package :hamcrest.matchers)
@@ -19,6 +21,9 @@
 (defmacro has-alist-entries (&rest entries)
   (with-gensyms (check-key check-value matcher)
     `(flet ((,matcher (value)
+              (unless (alistp value)
+                (error 'assertion-error
+                       :reason "Value is not alist"))
               ;; we go through each key/value pair
               (iter (for (,check-key ,check-value)
                          :on (list ,@entries)
@@ -89,4 +94,44 @@
                                                    checked-value
                                                    index
                                                    expected-value))))))))
+       (function ,matcher))))
+
+
+(defmacro contains-in-any-order (&rest entries)
+  (with-gensyms (matcher)
+    `(flet ((,matcher (value)
+              "Contains all given values"
+              (let ((entries-len (length (list ,@entries)))
+                    (value-len (length value)))
+                (when (< value-len entries-len)
+                  (error 'assertion-error
+                         :reason "Result is shorter than expected"))
+                (when (> value-len entries-len)
+                  (error 'assertion-error
+                         :reason "Expected value is shorter than result"))
+                (iter (for item in (list ,@entries))
+                      (unless (find item value
+                                    :test (lambda (expected checked-item)
+                                            (if (functionp expected)
+                                                ;; pass value to next matcher
+                                                (handler-case
+                                                    (progn
+                                                      (funcall expected checked-item)
+                                                      ;; if matched, then return True
+                                                      t)
+                                                  (assertion-error (c)
+                                                    ;; if condition was thrown, then item
+                                                    ;; does not conform to the matcher
+                                                    nil))
+                                                ;; otherwise, just check for equality
+                                                (equal checked-item expected)
+                                                )))
+                        (error 'assertion-error
+                               :reason (if (functionp item)
+                                           (format nil
+                                                   "Value which ~S is missing"
+                                                   (documentation item 'function))
+                                           (format nil
+                                                   "Value ~S is missing"
+                                                   item))))))))
        (function ,matcher))))

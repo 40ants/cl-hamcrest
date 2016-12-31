@@ -12,7 +12,8 @@
                :alexandria)
   :components ((:module "src"
                 :components
-                ((:file "matchers"))))
+                ((:file "utils")
+                 (:file "matchers"))))
   :description "A set of helpers to make your unittests more readable."
   :long-description
   #.(with-open-file (stream (merge-pathnames

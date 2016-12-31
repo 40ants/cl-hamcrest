@@ -8,7 +8,7 @@
 (in-package :hamcrest.t.prove)
 
 
-(plan 3)
+(plan 4)
 
 
 (defmacro test-assertion (title body expected)
@@ -42,7 +42,8 @@ the result before trying to match."
 (subtest
     "Alist assertions"
   (let ((value '((:foo . 1)
-                 (:bar . 2))))
+                 (:bar . 2)))
+        (not-alist '(:foo 1 :bar 2)))
 
     (test-assertion
      "Successful match"
@@ -62,9 +63,17 @@ the result before trying to match."
     (test-assertion
      "Placeholder _ can match any value"
      (assert-that value
-       (has-alist-entries
-        :bar _))
-     "✓ Has alist entries \\(:BAR _\\)")))
+                  (has-alist-entries
+                   :bar _))
+     "✓ Has alist entries \\(:BAR _\\)")
+
+    (test-assertion
+     "Checked value should be proper alist"
+     (assert-that not-alist
+                  (has-alist-entries
+                   :foo 1
+                   :bar 2))
+     "× Value is not alist")))
 
 
 (subtest "'Any' matcher  and placeholder"
@@ -142,5 +151,33 @@ the result before trying to match."
      ;;       Second item:
      ;;         Key AGE is missing
      "× Key :AGE is missing")))
+
+
+(subtest "Contains in any order"
+  (let ((value (list 4 5 3 1))
+        (complex (list 3 2 '((:foo "bar")) 1)))
+    (test-assertion
+     "Works with list and don't modifies it"
+     (assert-that value
+                  (contains-in-any-order 1 4 3 5))
+     "✓ Contains all given values")
+    ;; now check that original value does not touched
+    (is value (list 4 5 3 1))
+
+    (test-assertion
+     "And fails if some item not found in given list"
+     (assert-that value
+                  ;; value 2 is absent in checked list
+                  (contains-in-any-order 1 4 2 5))
+     "× Value 2 is missing")
+
+    (test-assertion
+     "And fails if some complex item not found in given list"
+     (assert-that complex
+                  (contains-in-any-order
+                   1 2 3
+                   (has-alist-entries :foo "bar")))
+     "× Value which \"Has alist entries .*\" is missing")))
+
 
 (finalize)

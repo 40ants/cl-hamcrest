@@ -9,9 +9,11 @@
   (:import-from :alexandria
                 :with-gensyms)
   (:export :assert-that
+           ;; reexport matchers for convenience
            :has-alist-entries
            :any
            :contains
+           :contains-in-any-order
            :_))
 (in-package :hamcrest.prove)
 

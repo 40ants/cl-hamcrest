@@ -45,3 +45,19 @@ You can do just:
          :users (contains-in-any-order
            (has-alist-entries :name "Ivan")
            (has-alist-entries :name "Maria"))))
+
+
+Supported matchers
+==================
+
+* ``contains`` – checks is sequence contains only particular values in correct order.
+* ``contains-in-any-order`` – same as ``contains``, but order does not matter.
+* ``any`` – matches to any value, have shortcut ``_``.
+* ``has-alist-entries`` – checks that value is alist, having specified keys and values.
+
+Roadmap
+=======
+
+* Output a context information when some nested matcher was failed.
+* Add ``has-plist-entries`` matcher.
+* Add ``has-hash-entries`` matcher.
