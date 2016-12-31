@@ -21,16 +21,19 @@ the result before trying to match."
   
   (with-gensyms (result trimmed)
     `(subtest ,title
-       (let* (;; We need to overide current suite, to prevent
-              ;; tested assert-that macro from modifying real testsuite.
-              ;; Otherwise it can increment failed or success tests count
-              ;; and prove will output wrong data.
-              (prove.suite:*suite* (make-instance 'prove.suite:package-suite))
-              ;; All output during the test, should be captured
-              ;; to test against give regex
-              (,result (with-output-to-string
-                           (prove.output:*test-result-output*)
-                         ,body))
+       (let* ((,result
+               ;; All output during the test, should be captured
+               ;; to test against give regex
+               (with-output-to-string
+                   (prove.output:*test-result-output*)
+
+                 ;; We need to overide current suite, to prevent
+                 ;; tested assert-that macro from modifying real testsuite.
+                 ;; Otherwise it can increment failed or success tests count
+                 ;; and prove will output wrong data.
+                 (let ((prove.suite:*suite* (make-instance 'prove.suite:suite)))
+                   ,body)))
+
               (,trimmed (string-trim '(#\Space #\Newline)
                                      ,result)))
          (like ,trimmed ,expected)))))
