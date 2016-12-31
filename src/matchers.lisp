@@ -13,9 +13,58 @@
 (in-package :hamcrest.matchers)
 
 
+(defvar *context*
+  nil
+  "Context description for nested matchers.
+
+When some matcher calls another, it should push it's description to this list.
+And after successful matching to pop item from the list.")
+
+
+(defmacro with-context (description &body body)
+  "Manages *context* stack when calling nested matchers."
+
+  `(let ((*context* (cons ,description *context*)))
+     ,@body))
+
+
 (define-condition assertion-error (error)
   ((reason :initarg :reason
-           :reader assertion-error-reason)))
+           :reader assertion-error-reason)
+   ;; save current matcher's context for futher usage
+   (context :initform (copy-list *context*)
+            :reader assertion-context)))
+
+
+(defun assertion-error-reason-with-context (condition &key (indent-spaces 2))
+  "Returns a multiline string where error reason is nested into the context
+like that:
+
+Item with index 1:
+  Alist entry with key :NAME
+    Alist entry with key :FIRST is required
+
+Parameter :indent-spaces could be specified to control number of spaces
+for each indentation level."
+
+  (let ((reason (assertion-error-reason condition))
+        (level 0))
+
+    (with-output-to-string (s)
+      (flet ((indent-line ()
+               (iter (repeat (* level indent-spaces))
+                     (write-char #\Space s))))
+
+        ;; write context lines
+        (iter (for item :in (assertion-context condition))
+              (indent-line)
+              (write-string item s)
+              (write-char #\Newline s)
+              (incf level))
+
+        ;; and reason
+        (indent-line)
+        (write-string reason s)))))
 
 
 (defmacro has-alist-entries (&rest entries)
@@ -84,7 +133,8 @@
 
                       (if (functionp expected-value)
                           ;; if expected-value is a matcher
-                          (funcall expected-value checked-value)
+                          (with-context (format nil "Item with index ~a" index)
+                            (funcall expected-value checked-value))
                           ;; if it is a real value
                           (unless (equal checked-value
                                          expected-value)

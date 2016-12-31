@@ -5,7 +5,7 @@
         :hamcrest.matchers)
   (:import-from :hamcrest.matchers
                 :assertion-error
-                :assertion-error-reason)
+                :assertion-error-reason-with-context)
   (:import-from :alexandria
                 :with-gensyms)
   (:export :assert-that
@@ -82,7 +82,7 @@ which formats a string, comparing two values."
                       (assertion-error (c)
                         (incf (prove.suite:failed suite))
                         (make-instance 'assertion-report
-                                       :expected-line (assertion-error-reason c))))))
+                                       :expected-line (assertion-error-reason-with-context c))))))
        (prove.suite:add-report report suite)
        (incf (prove.suite:test-count suite))
      
@@ -90,3 +90,4 @@ which formats a string, comparing two values."
                                      :count (prove.suite:test-count suite))
 
        (values t report))))
+

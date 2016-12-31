@@ -143,14 +143,16 @@ the result before trying to match."
                   (contains
                    ;; everything is ok here
                    (has-alist-entries :name "Maria")
+                   ;; but :age key is absent
                    (has-alist-entries :age 40)))
-     ;; TODO: actually, what I want here is the context,
-     ;;       like:
-     ;;       Key AGE is missing in the second item.
-     ;;       or
-     ;;       Second item:
-     ;;         Key AGE is missing
-     "× Key :AGE is missing")))
+     ;; Here matcher should show full context with
+     ;; description of all  higher level matchers,
+     ;; like:
+     ;;
+     ;; Second item:
+     ;;   Key AGE is missing
+     "× Item with index 1
+  Key :AGE is missing")))
 
 
 (subtest "Contains in any order"

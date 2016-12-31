@@ -6,7 +6,7 @@
 (in-package :hamcrest.t.utils)
 
 
-(plan 1)
+(plan 2)
 
 (subtest
     "Checking alistp predicate"
@@ -32,5 +32,20 @@
        :do (is (alistp value)
                nil
                (format nil "~S is not a proper alist" value)))))
+
+
+(subtest "Deindent text"
+  (let ((text "
+    Blah
+      Minor
+        - again;
+        - and again.
+")
+        (expected "Blah
+  Minor
+    - again;
+    - and again."))
+    (is (deindent text) expected)))
+
 
 (finalize)
