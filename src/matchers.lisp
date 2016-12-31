@@ -120,6 +120,7 @@
                                                       ;; if matched, then return True
                                                       t)
                                                   (assertion-error (c)
+                                                    (declare (ignorable c))
                                                     ;; if condition was thrown, then item
                                                     ;; does not conform to the matcher
                                                     nil))
