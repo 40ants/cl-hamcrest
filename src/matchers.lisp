@@ -30,7 +30,7 @@
                       ;; in original value
                       (when (null pair)
                         (error 'assertion-error
-                               :reason (format nil "Key ~a is missing"
+                               :reason (format nil "Key ~S is missing"
                                                ,check-key)))
 
                       ;; and if it is, then pass value to next matcher
@@ -76,12 +76,17 @@
                            :in (list ,@entries))
                       (for index
                            :upfrom 0)
-                      (unless (equal checked-value
-                                     expected-value)
-                        (error 'assertion-error
-                               :reason (format nil
-                                               "Item ~S at index ~a, but ~S was expected"
-                                               checked-value
-                                               index
-                                               expected-value)))))))
+
+                      (if (functionp expected-value)
+                          ;; if expected-value is a matcher
+                          (funcall expected-value checked-value)
+                          ;; if it is a real value
+                          (unless (equal checked-value
+                                         expected-value)
+                            (error 'assertion-error
+                                   :reason (format nil
+                                                   "Item ~S at index ~a, but ~S was expected"
+                                                   checked-value
+                                                   index
+                                                   expected-value))))))))
        (function ,matcher))))

@@ -57,7 +57,7 @@ the result before trying to match."
      (assert-that value
                   (has-alist-entries
                    :baz 1))
-     "× Key BAZ is missing")
+     "× Key :BAZ is missing")
 
     (test-assertion
      "Placeholder _ can match any value"
@@ -102,6 +102,45 @@ the result before trying to match."
    "Bad scenario, when some item mismatch"
    (assert-that '(1 "two" "three")
                 (contains 1 :two "three"))
-   "× Item \"two\" at index 1, but :TWO was expected"))
+   "× Item \"two\" at index 1, but :TWO was expected")
+
+  (test-assertion
+   "Good scenario, with some placeholders"
+   (assert-that '(1 :two "three")
+                (contains 1 _ "three"))
+   "✓ Contains all given values")
+
+  (test-assertion
+   "Good scenario, with another placeholders"
+   (assert-that '(1 :two "three")
+                (contains _ _ "three"))
+   "✓ Contains all given values")
+
+  (let ((value '(((:name . "Maria"))
+                 ((:name . "Alexander")))))
+    (test-assertion
+     "Check if all alists in the list have :name entry"
+     (assert-that value
+                  (contains
+                   ;; we need exactly this value in the first object
+                   (has-alist-entries :name "Maria")
+                   ;; and we don't care about name of the second person
+                   (has-alist-entries :name _)))
+     "✓ Contains all given values")
+
+    (test-assertion
+     "Check if some nested matcher will fail"
+     (assert-that value
+                  (contains
+                   ;; everything is ok here
+                   (has-alist-entries :name "Maria")
+                   (has-alist-entries :age 40)))
+     ;; TODO: actually, what I want here is the context,
+     ;;       like:
+     ;;       Key AGE is missing in the second item.
+     ;;       or
+     ;;       Second item:
+     ;;         Key AGE is missing
+     "× Key :AGE is missing")))
 
 (finalize)
