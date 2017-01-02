@@ -1,21 +1,20 @@
 (in-package :cl-user)
-(defpackage hamcrest-asd
+(defpackage hamcrest-prove-asd
   (:use :cl :asdf))
-(in-package :hamcrest-asd)
+(in-package :hamcrest-prove-asd)
 
 
-(defsystem hamcrest
+(defsystem hamcrest-prove
   :version "0.1.0"
   :author "Alexander Artemenko"
   :license "BSD"
   :depends-on (:iterate
-               :alexandria
-               :cl-reexport)
+               :hamcrest
+               :prove)
   :components ((:module "src"
                 :components
-                ((:file "utils")
-                 (:file "matchers"))))
-  :description "A set of helpers to make your unittests more readable."
+                ((:file "prove"))))
+  :description "A set of helpers to make your Prove unittests more readable."
   :long-description
   #.(with-open-file (stream (merge-pathnames
                              #p"README.rst"
@@ -30,4 +29,3 @@
                 (read-sequence seq stream))
           seq)))
   :in-order-to ((test-op (test-op hamcrest-test))))
-
