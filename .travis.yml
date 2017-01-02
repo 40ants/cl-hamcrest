@@ -25,5 +25,6 @@ install:
 script:
   - cl -e '(ql:quickload :prove)
            (ql:quickload :hamcrest-test)
-           (unless (prove:run-test-system :hamcrest-test)
+           (if (prove:run-test-system :hamcrest-test)
+             (uiop:quit 0)
              (uiop:quit 1))'
