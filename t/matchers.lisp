@@ -42,7 +42,7 @@
         (funcall ,matcher
                  ,value)
         "Matcher should return t.")
-       (is (documentation matcher 'function)
+       (is (documentation matcher t)
            ,expected-matcher-docstring
            (format nil "Matcher's docstring should be \"~a\"."
                    ,expected-matcher-docstring)))))
