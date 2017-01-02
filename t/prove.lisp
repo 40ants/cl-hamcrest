@@ -11,7 +11,7 @@
 (in-package :hamcrest.t.prove)
 
 
-(plan 1)
+(plan 2)
 
 
 (defmacro test-assertion (title body expected)
@@ -77,6 +77,16 @@ the result before trying to match."
      ;;   Key AGE is missing
      "× Item with index 1
   Key :AGE is missing")))
+
+
+(subtest "Assert-that uses implicit has-all, to combine multiple matchers"
+  (let ((value '(:name "Irina")))
+    (test-assertion
+     "Check if object have :name key, but not :husband key"
+     (assert-that value
+                  (has-plist-entries :name "Irina")
+                  (hasnt-plist-keys :husband))
+     "✓ All checks are passed")))
 
 
 (finalize)

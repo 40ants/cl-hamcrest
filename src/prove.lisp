@@ -68,28 +68,36 @@ which formats a string, comparing two values."
 (defmethod report-expected-line ((report passed-assertion-report))
   (expected-line report))
 
-(defmacro assert-that (value matcher)
+(defmacro assert-that (value &rest matchers)
   "Main macro to test values agains matchers."
   
-  (with-gensyms (matcher-var matcher-description)
-    `(symbol-macrolet ((_ (any)))
-       (multiple-value-bind (,matcher-var ,matcher-description)
-           ,matcher
+  (let ((matcher (if (> (length matchers)
+                        1)
+                     ;; if there is more than one matcher,
+                     ;; then we need to combine them implicitly
+                     `(has-all ,@matchers)
+                     ;; otherwise, just use single matcher
+                     (first matchers))))
+    
+    (with-gensyms (matcher-var matcher-description)
+      `(symbol-macrolet ((_ (any)))
+         (multiple-value-bind (,matcher-var ,matcher-description)
+             ,matcher
        
-         (let* ((suite (prove.suite:current-suite))
-                (report (handler-case
-                            (progn (funcall ,matcher-var ,value)
-                                   (make-instance 'passed-assertion-report
-                                                  :expected-line ,matcher-description))
-                          (assertion-error (c)
-                            (incf (prove.suite:failed suite))
-                            (make-instance 'assertion-report
-                                           :expected-line (assertion-error-reason-with-context c))))))
-           (prove.suite:add-report report suite)
-           (incf (prove.suite:test-count suite))
+           (let* ((suite (prove.suite:current-suite))
+                  (report (handler-case
+                              (progn (funcall ,matcher-var ,value)
+                                     (make-instance 'passed-assertion-report
+                                                    :expected-line ,matcher-description))
+                            (assertion-error (c)
+                              (incf (prove.suite:failed suite))
+                              (make-instance 'assertion-report
+                                             :expected-line (assertion-error-reason-with-context c))))))
+             (prove.suite:add-report report suite)
+             (incf (prove.suite:test-count suite))
      
-           (prove.reporter:format-report *test-result-output* nil report
-                                         :count (prove.suite:test-count suite))
+             (prove.reporter:format-report *test-result-output* nil report
+                                           :count (prove.suite:test-count suite))
 
-           (values t report))))))
+             (values t report)))))))
 
