@@ -23,8 +23,10 @@ install:
   - curl -L https://github.com/luismbo/cl-travis/raw/master/install.sh | sh
 
 script:
-  - cl -e '(format t \"~a: ~a\" (lisp-implementation-type)
-                                (lisp-implementation-version))
+  - cl -e '(princ (lisp-implementation-type))
+           (terpri)
+           (princ (lisp-implementation-version))
+           (terpri)
            (uiop:quit 0)'
 
   - cl -e '(ql:quickload :prove)
