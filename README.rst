@@ -54,10 +54,12 @@ Supported matchers
 * ``contains-in-any-order`` – same as ``contains``, but order does not matter.
 * ``any`` – matches to any value, have shortcut ``_``.
 * ``has-alist-entries`` – checks that value is alist, having specified keys and values.
+* ``has-plist-entries`` – checks that value is a plist, having specified keys and values.
 
 Roadmap
 =======
 
 * Output a context information when some nested matcher was failed.
-* Add ``has-plist-entries`` matcher.
 * Add ``has-hash-entries`` matcher.
+* Add ``has-properties`` matcher.
+* Add ``has-slots`` matcher.

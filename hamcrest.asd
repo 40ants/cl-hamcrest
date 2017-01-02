@@ -9,7 +9,8 @@
   :author "Alexander Artemenko"
   :license "BSD"
   :depends-on (:iterate
-               :alexandria)
+               :alexandria
+               :cl-reexport)
   :components ((:module "src"
                 :components
                 ((:file "utils")

@@ -11,7 +11,8 @@
                :prove)
   :components ((:module "t"
                         :components
-                        ((:test-file "prove"))))
+                        ((:test-file "matchers")
+                         (:test-file "prove"))))
   :description "Test system for cl-hamcrest."
 
   :defsystem-depends-on (:prove-asdf)

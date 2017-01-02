@@ -8,14 +8,11 @@
                 :assertion-error-reason-with-context)
   (:import-from :alexandria
                 :with-gensyms)
-  (:export :assert-that
-           ;; reexport matchers for convenience
-           :has-alist-entries
-           :any
-           :contains
-           :contains-in-any-order
-           :_))
+  (:export :assert-that))
 (in-package :hamcrest.prove)
+
+;; reexport matchers for convenience
+(cl-reexport:reexport-from 'hamcrest.matchers)
 
 
 (defvar original-report-expected-line
