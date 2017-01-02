@@ -23,6 +23,6 @@ install:
   - curl -L https://github.com/luismbo/cl-travis/raw/master/install.sh | sh
 
 script:
-  - cl -e '(ql:quickload '(prove hamcrest-test))
+  - cl -e '(ql:quickload \'(prove hamcrest-test))
            (unless (prove:run-test-system :hamcrest-test)
              (uiop:quit 1))'
