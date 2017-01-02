@@ -23,8 +23,8 @@ install:
   - curl -L https://github.com/luismbo/cl-travis/raw/master/install.sh | sh
 
 script:
-  - cl -e '(format t "~a: ~a" (lisp-implementation-type)
-                              (lisp-implementation-version))'
+  - cl -e '(format t \"~a: ~a\" (lisp-implementation-type)
+                                (lisp-implementation-version))'
   - cl -e '(ql:quickload :prove)
            (ql:quickload :hamcrest-test)
            (if (prove:run-test-system :hamcrest-test)
