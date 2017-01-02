@@ -10,6 +10,7 @@
   :license "BSD"
   :depends-on (:iterate
                :alexandria
+               :split-sequence
                :cl-reexport)
   :components ((:module "src"
                 :components
