@@ -30,11 +30,17 @@ the result before trying to match."
                (with-output-to-string
                    (prove.output:*test-result-output*)
 
-                 ;; We need to overide current suite, to prevent
-                 ;; tested assert-that macro from modifying real testsuite.
-                 ;; Otherwise it can increment failed or success tests count
-                 ;; and prove will output wrong data.
-                 (let ((prove.suite:*suite* (make-instance 'prove.suite:suite)))
+                 (let (;; Colors whould be turned off to
+                       ;; prevent Prove's reporter return
+                       ;; string with terminal sequences.
+                       ;; This way it will be easier to compare
+                       ;; results with usual strings
+                       (prove.color:*enable-colors* nil)
+                       ;; We need to overide current suite, to prevent
+                       ;; tested assert-that macro from modifying real testsuite.
+                       ;; Otherwise it can increment failed or success tests count
+                       ;; and prove will output wrong data.
+                       (prove.suite:*suite* (make-instance 'prove.suite:suite)))
                    ,body)))
 
               (,trimmed (string-trim '(#\Space #\Newline)
