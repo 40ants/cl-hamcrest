@@ -1,3 +1,4 @@
+(in-package :cl-user)
 (defpackage hamcrest.prove
   (:use :cl
         :prove

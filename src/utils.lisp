@@ -1,3 +1,4 @@
+(in-package :cl-user)
 (defpackage hamcrest.utils
   (:use :cl
         :iterate)
