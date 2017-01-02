@@ -7,6 +7,7 @@
                 :with-gensyms)
   (:export :has-alist-entries
            :has-plist-entries
+           :hasnt-plist-keys
            :any
            :has-all
            :contains
@@ -115,14 +116,20 @@ for each indentation level."
                  (format nil "Has alist entries ~s" ',entries))))))
 
 
+(defun check-if-list (value)
+  "A little helper, to check types in matchers"
+  (unless (listp value)
+    (error 'assertion-error
+           :reason "Value is not a list")))
+
+
 (defmacro has-plist-entries (&rest entries)
   "Check if plist have given entries"
   (with-gensyms (expected-key expected-value matcher)
     `(symbol-macrolet ((_ (any)))
        (flet ((,matcher (value)
-                (unless (listp value)
-                  (error 'assertion-error
-                         :reason "Value is not a list"))
+                (check-if-list value)
+                
                 ;; we go through each key/value pair
                 ;; from expected entries
                 (flet ((get-key-value (key)
@@ -161,6 +168,26 @@ condition 'assertion-error with reason \"Key ~S is missing\"."
          (values (function ,matcher)
                  (format nil "Has plist entries ~S" ',entries))))))
 
+
+(defmacro hasnt-plist-keys (&rest keys)
+  (with-gensyms (matcher)
+    `(flet ((,matcher (value)
+              (check-if-list value)
+              
+              (iterate (for key :in ',keys)
+                       (for key-value next (getf value key 'absent))
+                       (when (not (eql key-value 'absent))
+                         (error 'assertion-error
+                                :reason (format nil "Key ~S is present in object, but shouldn't"
+                                                key))))
+              ;; if everything is OK, then
+              t))
+       
+       (values (function ,matcher)
+               (if (> (length ',keys) 1)
+                   (format nil "Keys ~{~S~^, ~} are absent"
+                           ',keys)
+                   (format nil "Key ~S is absent" ,@keys))))))
 
 (defun any ()
   (values (lambda (value)

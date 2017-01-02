@@ -12,7 +12,7 @@
 (in-package :hamcrest.t.matchers)
 
 
-(plan 6)
+(plan 7)
 
 
 (defmacro test-if-matcher-fails (title matcher value expected-error-message)
@@ -229,5 +229,33 @@
               (has-plist-entries :blah "other"))
      value
      "Key :BLAH has \"minor\" value, but \"other\" was expected")))
+
+
+(subtest "Hasn't plist keys matcher"
+  (let ((obj '(:foo "bar")))
+
+    (test-if-matcher-fails
+     "It only accepts lists"
+     (hasnt-plist-keys :blah)
+     42
+     "Value is not a list")
+    
+    (test-if-matcher-ok
+     "If key is absent, than it is good"
+     (hasnt-plist-keys :blah)
+     obj
+     "Key :BLAH is absent")
+
+    (test-if-matcher-ok
+     "For multiple keys message should be plural"
+     (hasnt-plist-keys :blah :minor)
+     obj
+     "Keys :BLAH, :MINOR are absent")
+
+    (test-if-matcher-fails
+     "If key is present, then matcher should fail"
+     (hasnt-plist-keys :foo)
+     obj
+     "Key :FOO is present in object, but shouldn't")))
 
 (finalize)
