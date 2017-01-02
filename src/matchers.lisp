@@ -8,6 +8,7 @@
   (:export :has-alist-entries
            :has-plist-entries
            :any
+           :has-all
            :contains
            :contains-in-any-order
            :_))
@@ -149,7 +150,7 @@ condition 'assertion-error with reason \"Key ~S is missing\"."
                               (when (not (equal key-value
                                                 ,expected-value))
                                 (error 'assertion-error
-                                       :reason (format nil "Key ~a has ~a value, but ~a was expected"
+                                       :reason (format nil "Key ~S has ~S value, but ~S was expected"
                                                        ,expected-key
                                                        key-value
                                                        ,expected-value)))))))
@@ -158,7 +159,7 @@ condition 'assertion-error with reason \"Key ~S is missing\"."
                 t))
          
          (values (function ,matcher)
-                 (format nil "Has plist entries ~s" ',entries))))))
+                 (format nil "Has plist entries ~S" ',entries))))))
 
 
 (defun any ()
@@ -167,6 +168,13 @@ condition 'assertion-error with reason \"Key ~S is missing\"."
             t)
           "Any value if good enough"))
 
+
+(defun has-all (&rest matchers)
+  (values (lambda (value)
+            (iterate (for matcher :in matchers)
+                     (funcall matcher value))
+            t)
+          "All checks are passed"))
 
 (defmacro contains (&rest entries)
   (with-gensyms (matcher)

@@ -12,7 +12,7 @@
 (in-package :hamcrest.t.matchers)
 
 
-(plan 5)
+(plan 6)
 
 
 (defmacro test-if-matcher-fails (title matcher value expected-error-message)
@@ -207,9 +207,27 @@
      "And fails if some complex item not found in given list"
      (contains-in-any-order
       1 2 3
-      (has-alist-entries :foo "bar"))
+      (has-alist-entries :blah "minor"))
      complex
      "Value which \"Has alist entries .*\" is missing")))
 
+
+(subtest "Grouping matchers with (has-all ...)"
+
+  (let ((value '(:foo "bar" :blah "minor")))
+    
+    (test-if-matcher-ok
+     "Good, if value matches both matchers"
+     (has-all (has-plist-entries :foo "bar")
+              (has-plist-entries :blah "minor"))
+     value
+     "All checks are passed")
+
+    (test-if-matcher-fails
+     "Matcher 'and' should fail if some matcher fails"
+     (has-all (has-plist-entries :foo "bar")
+              (has-plist-entries :blah "other"))
+     value
+     "Key :BLAH has \"minor\" value, but \"other\" was expected")))
 
 (finalize)

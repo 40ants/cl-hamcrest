@@ -56,8 +56,10 @@ Supported matchers
 * ``contains`` – checks is sequence contains only particular values in correct order.
 * ``contains-in-any-order`` – same as ``contains``, but order does not matter.
 * ``any`` – matches to any value, have shortcut ``_``.
+* ``has-all`` – matches only if all nested matchers match, like ``(and ...)`` logic.
 * ``has-alist-entries`` – checks that value is alist, having specified keys and values.
 * ``has-plist-entries`` – checks that value is a plist, having specified keys and values.
+
 
 Roadmap
 =======
