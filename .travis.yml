@@ -1,16 +1,27 @@
-language: lisp
-sudo: required
+language: common-lisp
+sudo: false
 
+cache:
+  directories:
+    - $HOME/.roswell
+    - $HOME/.config/common-lisp
+
+addons:
+  apt:
+    packages:
+      - libc6-i386
+      - openjdk-7-jre
 env:
+  global:
+    - PATH=~/.roswell/bin:$PATH
+    - ROSWELL_BRANCH=master
+    - ROSWELL_INSTALL_DIR=$HOME/.roswell
   matrix:
     - LISP=abcl
     - LISP=allegro
     - LISP=sbcl
-    - LISP=sbcl32
     - LISP=ccl
-    - LISP=ccl32
     - LISP=clisp
-    - LISP=clisp32
     - LISP=cmucl
     - LISP=ecl
 
@@ -19,19 +30,24 @@ matrix:
     - env: LISP=cmucl
     - env: LISP=ecl
 
+os:
+  - osx
+  - linux
+
 install:
-  - curl -L https://github.com/luismbo/cl-travis/raw/master/install.sh | sh
+  - curl -L https://raw.githubusercontent.com/snmsts/roswell/release/scripts/install-for-ci.sh | sh
+  - ros install prove
+
+before_script:
+  - ros --version
+  - ros config
 
 script:
-  - cl -- --version
-  - cl -e '(princ (lisp-implementation-type))
-           (terpri)
-           (princ (lisp-implementation-version))
-           (terpri)
-           (uiop:quit 0)'
+  - ros -- --version
+  - ros -e '(princ (lisp-implementation-type))
+            (terpri)
+            (princ (lisp-implementation-version))
+            (terpri)
+            (uiop:quit 0)'
 
-  - cl -e '(ql:quickload :prove)
-           (ql:quickload :hamcrest-test)
-           (if (prove:run-test-system :hamcrest-test)
-             (uiop:quit 0)
-             (uiop:quit 1))'
+  - run-prove hamcrest-test.asd
