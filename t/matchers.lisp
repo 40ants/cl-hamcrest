@@ -36,16 +36,17 @@
 
 
 (defmacro test-if-matcher-ok (title matcher value expected-matcher-docstring)
-  `(subtest ,title
-     (let ((matcher ,matcher))
-       (ok
-        (funcall ,matcher
-                 ,value)
-        "Matcher should return t.")
-       (is (documentation matcher t)
-           ,expected-matcher-docstring
-           (format nil "Matcher's docstring should be \"~a\"."
-                   ,expected-matcher-docstring)))))
+  (with-gensyms (matcher-var matcher-description)
+    `(subtest ,title
+       (multiple-value-bind (,matcher-var ,matcher-description) ,matcher
+         (ok
+          (funcall ,matcher-var
+                   ,value)
+          "Matcher should return t.")
+         (is ,matcher-description
+             ,expected-matcher-docstring
+             (format nil "Matcher description should be \"~a\"."
+                     ,expected-matcher-docstring))))))
 
 
 (subtest

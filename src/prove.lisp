@@ -71,21 +71,25 @@ which formats a string, comparing two values."
 (defmacro assert-that (value matcher)
   "Main macro to test values agains matchers."
   
-  `(symbol-macrolet ((_ (any)))
-     (let* ((suite (prove.suite:current-suite))
-            (report (handler-case
-                        (progn (funcall ,matcher ,value)
-                               (make-instance 'passed-assertion-report
-                                              :expected-line (documentation ,matcher 'function)))
-                      (assertion-error (c)
-                        (incf (prove.suite:failed suite))
-                        (make-instance 'assertion-report
-                                       :expected-line (assertion-error-reason-with-context c))))))
-       (prove.suite:add-report report suite)
-       (incf (prove.suite:test-count suite))
+  (with-gensyms (matcher-var matcher-description)
+    `(symbol-macrolet ((_ (any)))
+       (multiple-value-bind (,matcher-var ,matcher-description)
+           ,matcher
+       
+         (let* ((suite (prove.suite:current-suite))
+                (report (handler-case
+                            (progn (funcall ,matcher-var ,value)
+                                   (make-instance 'passed-assertion-report
+                                                  :expected-line ,matcher-description))
+                          (assertion-error (c)
+                            (incf (prove.suite:failed suite))
+                            (make-instance 'assertion-report
+                                           :expected-line (assertion-error-reason-with-context c))))))
+           (prove.suite:add-report report suite)
+           (incf (prove.suite:test-count suite))
      
-       (prove.reporter:format-report *test-result-output* nil report
-                                     :count (prove.suite:test-count suite))
+           (prove.reporter:format-report *test-result-output* nil report
+                                         :count (prove.suite:test-count suite))
 
-       (values t report))))
+           (values t report))))))
 

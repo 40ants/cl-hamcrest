@@ -109,10 +109,9 @@ for each indentation level."
                                                      ,check-value))))))
                 ;; return true is everything OK
                 t))
-         (setf (documentation (function ,matcher)
-                              'function)
-               (format nil "Has alist entries ~s" ',entries))
-         (function ,matcher)))))
+
+         (values (function ,matcher)
+                 (format nil "Has alist entries ~s" ',entries))))))
 
 
 (defmacro has-plist-entries (&rest entries)
@@ -157,24 +156,22 @@ condition 'assertion-error with reason \"Key ~S is missing\"."
                 ;; return true to show
                 ;; that mathing was successful
                 t))
-         (setf (documentation (function ,matcher)
-                              'function)
-               (format nil "Has plist entries ~s" ',entries))
-         (function ,matcher)))))
+         
+         (values (function ,matcher)
+                 (format nil "Has plist entries ~s" ',entries))))))
 
 
 (defun any ()
-  (lambda (value)
-    "Any value if good enough"
-    (declare (ignore value))
-    t))
+  (values (lambda (value)
+            (declare (ignore value))
+            t)
+          "Any value if good enough"))
 
 
 (defmacro contains (&rest entries)
   (with-gensyms (matcher)
     `(symbol-macrolet ((_ (any)))
       (flet ((,matcher (value)
-               "Contains all given values"
                (let ((entries-len (length (list ,@entries)))
                      (value-len (length value)))
                  (when (< value-len entries-len)
@@ -205,13 +202,20 @@ condition 'assertion-error with reason \"Key ~S is missing\"."
                                                     expected-value))))))
                ;; to show that everything is ok
                t))
-        (function ,matcher)))))
+        (values (function ,matcher)
+               "Contains all given values")))))
+
+
+(defun wrap-multiple-values (code)
+  "Small helper to use in macro-generation where
+item can be a values list"
+  `(multiple-value-list ,code))
 
 
 (defmacro contains-in-any-order (&rest entries)
   (with-gensyms (matcher)
     `(flet ((,matcher (value)
-              "Contains all given values"
+              
               (let ((entries-len (length (list ,@entries)))
                     (value-len (length value)))
                 (when (< value-len entries-len)
@@ -220,7 +224,7 @@ condition 'assertion-error with reason \"Key ~S is missing\"."
                 (when (> value-len entries-len)
                   (error 'assertion-error
                          :reason "Expected value is shorter than result"))
-                (iter (for item in (list ,@entries))
+                (iter (for (item item-description) in (list ,@(mapcar #'wrap-multiple-values entries)))
                       (unless (find item value
                                     :test (lambda (expected checked-item)
                                             (if (functionp expected)
@@ -242,10 +246,11 @@ condition 'assertion-error with reason \"Key ~S is missing\"."
                                :reason (if (functionp item)
                                            (format nil
                                                    "Value which ~S is missing"
-                                                   (documentation item 'function))
+                                                   item-description)
                                            (format nil
                                                    "Value ~S is missing"
                                                    item))))))
               ;; return true to show that everything is ok
               t))
-       (function ,matcher))))
+       (values (function ,matcher)
+               "Contains all given values"))))
