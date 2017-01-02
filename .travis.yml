@@ -23,6 +23,7 @@ install:
   - curl -L https://github.com/luismbo/cl-travis/raw/master/install.sh | sh
 
 script:
+  - cl -- --version
   - cl -e '(princ (lisp-implementation-type))
            (terpri)
            (princ (lisp-implementation-version))
