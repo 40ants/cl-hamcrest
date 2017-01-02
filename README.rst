@@ -2,6 +2,9 @@
  cl-hamcrest
 =============
 
+.. image:: https://travis-ci.org/40ants/cl-hamcrest.svg?branch=master
+    :target: https://travis-ci.org/40ants/cl-hamcrest
+
 Is implementation of `Hamcrest <http://hamcrest.org>`_ idea in Common Lisp.
 
 It simplifes unittest's code and make it is more readable.
