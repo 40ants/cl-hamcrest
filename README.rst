@@ -5,10 +5,10 @@
 .. image:: https://travis-ci.org/40ants/cl-hamcrest.svg?branch=master
     :target: https://travis-ci.org/40ants/cl-hamcrest
 
-Is implementation of `Hamcrest`_ idea in Common Lisp.
+It is implementation of `Hamcrest`_ idea in Common Lisp.
 
-It simplifes unittest's code and make it is more readable. Hamcrest uses
-idea of patternmatching, to construct matchers from different pieces and
+It simplifes unittests and make them more readable. Hamcrest uses
+idea of pattern-matching, to construct matchers from different pieces and
 to apply them to the data.
 
 Reasoning
