@@ -75,47 +75,6 @@ for each indentation level."
         (write-string reason s)))))
 
 
-(defmacro has-alist-entries (&rest entries)
-  (with-gensyms (check-key check-value matcher)
-    `(symbol-macrolet ((_ (any)))
-       (flet ((,matcher (value)
-                (unless (alistp value)
-                  (error 'assertion-error
-                         :reason "Value is not alist"))
-                ;; we go through each key/value pair
-                ;; from expected entries
-                (iter (for (,check-key ,check-value)
-                           :on (list ,@entries)
-                           :by #'cddr)
-                      (let* ((pair (assoc ,check-key value))
-                             (item (cdr pair)))
-
-                        ;; and check if corresponding key is present
-                        ;; in original value
-                        (when (null pair)
-                          (error 'assertion-error
-                                 :reason (format nil "Key ~S is missing"
-                                                 ,check-key)))
-
-                        ;; and if it is, then pass value to next matcher
-                        ;; (which is callable)
-                        (if (functionp ,check-value)
-                            (funcall ,check-value item)
-                            ;; or check if it's value is same as specified
-                            (when (not (equal item
-                                              ,check-value))
-                              (error 'assertion-error
-                                     :reason (format nil "Key ~a has ~a value, but ~a was expected"
-                                                     ,check-key
-                                                     item
-                                                     ,check-value))))))
-                ;; return true is everything OK
-                t))
-
-         (values (function ,matcher)
-                 (format nil "Has alist entries ~s" ',entries))))))
-
-
 (defun check-if-list (value)
   "A little helper, to check types in matchers"
   (unless (listp value)
@@ -123,50 +82,101 @@ for each indentation level."
            :reason "Value is not a list")))
 
 
-(defmacro has-plist-entries (&rest entries)
-  "Check if plist have given entries"
-  (with-gensyms (expected-key expected-value matcher)
-    `(symbol-macrolet ((_ (any)))
-       (flet ((,matcher (value)
-                (check-if-list value)
-                
-                ;; we go through each key/value pair
-                ;; from expected entries
-                (flet ((get-key-value (key)
-                         "Get value for the key or throws
-condition 'assertion-error with reason \"Key ~S is missing\"."
-                         (let ((key-value (getf value key 'absent)))
+(defun check-if-alist (value)
+  "A little helper, to check types in matchers"
+  (unless (alistp value)
+    (error 'assertion-error
+           :reason "Value is not alist")))
 
-                           ;; and check if corresponding key is present
-                           ;; in original value
-                           (when (eql key-value 'absent)
-                             (error 'assertion-error
-                                    :reason (format nil "Key ~S is missing" key)))
-                           key-value)))
-                
-                  (iter (for (,expected-key ,expected-value)
-                             :on (list ,@entries)
-                             :by #'cddr)
-                        (let ((key-value (get-key-value ,expected-key)))
 
-                          ;; if expected-value is callable, then it is a matcher
-                          ;; and we should call it to check
-                          (if (functionp ,expected-value)
-                              (funcall ,expected-value key-value)
-                              ;; or check if it's value is same as specified
-                              (when (not (equal key-value
-                                                ,expected-value))
-                                (error 'assertion-error
-                                       :reason (format nil "Key ~S has ~S value, but ~S was expected"
-                                                       ,expected-key
-                                                       key-value
-                                                       ,expected-value)))))))
-                ;; return true to show
-                ;; that mathing was successful
-                t))
+(defmacro def-has-xxx-entries (obj-type
+                               &key
+                                 check-obj-type
+                                 get-key-value
+                                 format-error-message
+                                 format-matcher-description)
+  "Check if object have given entries"
+  (let* ((macro-name (format nil "has-~a-entries" obj-type))
+         (macro-name (intern (string-upcase macro-name))))
+    `(defmacro ,macro-name (&rest entries)
+       (let ((get-key-value ',get-key-value)
+             (check-obj-type ',check-obj-type)
+             (format-matcher-description ',format-matcher-description)
+             (format-error-message ',format-error-message))
          
-         (values (function ,matcher)
-                 (format nil "Has plist entries ~S" ',entries))))))
+         (with-gensyms (expected-key expected-value matcher)
+           `(symbol-macrolet ((_ (any)))
+              (labels ((format-matcher-description (entries)
+                         ,format-matcher-description)
+                       (format-error-message (expected-key
+                                              expected-value
+                                              key-value)
+                         ,format-error-message)
+                       (,matcher (value)
+                         ,check-obj-type
+                
+                         ;; we go through each key/value pair
+                         ;; from expected entries
+                         (flet ((get-key-value (key)
+                                  "Gets value for the key or throws
+condition 'assertion-error with reason \"Key ~S is missing\"."
+                                  ,get-key-value))
+                
+                           (iter (for (,expected-key ,expected-value)
+                                      :on (list ,@entries)
+                                      :by #'cddr)
+                                 (let ((key-value (get-key-value ,expected-key)))
+
+                                   ;; if expected-value is callable, then it is a matcher
+                                   ;; and we should call it to check
+                                   (if (functionp ,expected-value)
+                                       (funcall ,expected-value key-value)
+                                       ;; or check if it's value is same as specified
+                                       (when (not (equal key-value
+                                                         ,expected-value))
+                                         (error 'assertion-error
+                                                :reason (format-error-message
+                                                         ,expected-key
+                                                         ,expected-value
+                                                         key-value)))))))
+                         ;; return true to show
+                         ;; that mathing was successful
+                         t))
+         
+                (values (function ,matcher)
+                        (format-matcher-description ',entries)))))))))
+
+
+(def-has-xxx-entries
+    "plist"
+    :check-obj-type (check-if-list value)
+    :get-key-value (let ((key-value (getf value key 'absent)))
+                     (when (eql key-value 'absent)
+                       (error 'assertion-error
+                              :reason (format nil "Key ~S is missing" key)))
+                     key-value)
+    :format-error-message (format nil "Key ~S has ~S value, but ~S was expected"
+                                  expected-key
+                                  key-value
+                                  expected-value)
+    :format-matcher-description (format nil "Has plist entries ~S" entries))
+
+
+
+(def-has-xxx-entries
+    "alist"
+    :check-obj-type (check-if-alist value)
+    :get-key-value (let* ((pair (assoc key value))
+                          (key-value (cdr pair)))
+                     (when (null pair)
+                       (error 'assertion-error
+                              :reason (format nil "Key ~S is missing" key)))
+                     key-value)
+    :format-error-message (format nil "Key ~S has ~S value, but ~S was expected"
+                                  expected-key
+                                  key-value
+                                  expected-value)
+    :format-matcher-description (format nil "Has alist entries ~S" entries))
 
 
 (defmacro hasnt-plist-keys (&rest keys)
