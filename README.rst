@@ -11,15 +11,21 @@ It simplifes unittest's code and make it is more readable. Hamcrest uses
 idea of patternmatching, to construct matchers from different pieces and
 to apply them to the data.
 
+Reasoning
+=========
+
+Why not pattern-matching library?
+---------------------------------
+
 You may ask: "Why dont use a pattern-matching library, like `Optima`_?"
 
 Here is another example from another library ``log4cl-json``, where I want
 to check that some fields in plist have special values and other key is not
 present. Here is the data:
 
-.. code:: lisp
+.. code:: common-lisp
 
-          (defvar log-line '(:|@message| "Some"
+          (defvar log-item '(:|@message| "Some"
                              :|@timestamp| 122434342
                              ;; this field is wrong and
                              ;; shouldn't be here
@@ -27,10 +33,10 @@ present. Here is the data:
 
 With `Optima`_ I could write this code to match the data:
 
-.. code:: lisp
+.. code:: common-lisp
 
           (ok (ematch
-                data
+                log-item
               ((and (guard (property :|@message| m)
                            (equal m "Some"))
                     (property :|@timestamp| _)
@@ -53,12 +59,15 @@ But error message will be quite cumbersome::
                                                    (PROPERTY :|@fields|
                                                     _)))). (expected: :NON-ERROR)
 
+CL-HAMCREST more concise and clear
+----------------------------------
+
 With ``cl-hamcrest`` test becomes more readable:
 
-.. code::
+.. code:: common-lisp
 
    (assert-that
-         data
+         log-item
          (has-plist-entries :|@message| "Some"
                             :|@timestamp| _)
          (hasnt-plist-keys :|@fields|))
@@ -71,16 +80,19 @@ That is because ``cl-hamcrest`` tracks the context and works
 together with testing framework, to output all information
 to let you understand where the problem is.
 
+Why not just use Prove's assertions?
+------------------------------------
+
 To draw a full picture, here is test, written in plain Prove's
 assertions:
 
-.. code:: lisp
+.. code:: common-lisp
 
-          (ok (member :|@message| data))
-          (is (getf data :|@message|)
+          (ok (member :|@message| log-item))
+          (is (getf log-item :|@message|)
               "Some")
-          (ok (member :|@timestamp| data))
-          (ok (not (member :|@fields| data)))
+          (ok (member :|@timestamp| log-item))
+          (ok (not (member :|@fields| log-item)))
 
 And it's output::
 
