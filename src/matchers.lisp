@@ -10,6 +10,7 @@
            :has-plist-entries
            :has-hash-entries
            :has-properties
+           :has-slots
            :hasnt-plist-keys
            :any
            :contains
@@ -100,11 +101,21 @@ for each indentation level."
 
 
 (defun check-if-symbol (value)
-  "A little helper, to check types in matchers"
+  "A little helper, to check types in matchers."
   (unless (symbolp value)
 
     (error 'assertion-error
            :reason "Value is not a symbol")))
+
+
+(defun check-if-has-slots (object)
+  "A little helper, to check if object is instance of a class and has slots."
+  (typecase (class-of object)
+    ((or standard-class
+         structure-class)
+     t)
+    (t (error 'assertion-error
+              :reason "Value is not an instance"))))
 
 
 (defmacro def-has-macro (macro-name
@@ -231,6 +242,23 @@ condition 'assertion-error with reason \"Key ~S is missing\"."
 
 
 
+(def-has-macro
+    has-slots
+    
+    :check-obj-type (check-if-has-slots object)
+    :get-key-value (if (and (slot-exists-p object key)
+                            (slot-boundp object key))
+                       (slot-value object key)
+                       (error 'assertion-error
+                              :reason (format nil "Slot ~S is missing" key)))
+    :format-error-message (format nil "Slot ~S has ~S value, but ~S was expected"
+                                  expected-key
+                                  key-value
+                                  expected-value)
+    :format-matcher-description (format nil "Has slots ~S" entries))
+
+
+;; (etypecase (class-of '1) (standard-class "STANDART") (structure-class "STRUCT"))
 
 (defmacro hasnt-plist-keys (&rest keys)
   (with-gensyms (matcher)

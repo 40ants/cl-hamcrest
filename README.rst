@@ -116,6 +116,7 @@ Supported matchers
 * ``has-plist-entries`` – checks that value is a plist, having specified keys and values.
 * ``has-hash-entries`` – checks that value is a hashmap, which have specified keys and values.
 * ``has-properties`` – checks if symbol has given properties and values.
+* ``has-slots`` – checks if object has give slots and values.
 * ``hasnt-plist-keys`` – checks if give keys are missing in the object.
 
 
@@ -124,8 +125,7 @@ Roadmap
 
 * Use uniq CommonLisp feature to restart signaled conditions to collect
   all problems with data when there are few problems with keys.
-* Add ``has-properties`` matcher.
-* Add ``has-slots`` matcher.
+* Add ``hasnt-some-keys`` matchers, corresponding to ``has-some-entries``.
 
 
 .. _Hamcrest: http://hamcrest.org

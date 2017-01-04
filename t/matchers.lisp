@@ -12,7 +12,7 @@
 (in-package :hamcrest.t.matchers)
 
 
-(plan 9)
+(plan 10)
 
 
 (defmacro test-if-matcher-fails (title matcher value expected-error-message)
@@ -218,6 +218,53 @@
        a-list
        "Value is not a symbol"))))
 
+
+(defstruct test-class
+  (foo)
+  (bar))
+
+
+(subtest
+    "Slots assertions"
+  (let ((object (make-test-class :foo 1 :bar 2))
+        (a-number 1)
+        (a-list '(1 2 3)))
+
+    (test-if-matcher-ok
+     "Successful match"
+     (has-slots 'foo 1 'bar 2)
+     object
+     "Has slots ('FOO 1 'BAR 2)")
+
+    (test-if-matcher-fails
+     "Missing value"
+     (has-slots 'BAZ 1)
+     object
+     "Slot BAZ is missing")
+
+    (test-if-matcher-ok
+     "Placeholder _ can match any value"
+     (has-slots 'BAR _)
+     object
+     "Has slots ('BAR _)")
+
+    (locally
+        ;; remove compile-time warning
+        ;; about wrong type
+        (declare #+sbcl
+                 (sb-ext:muffle-conditions sb-int:type-warning))
+      
+      (test-if-matcher-fails
+       "Checked value should be an instance"
+       (has-slots 'foo 1 'bar 2)
+       a-number
+       "Value is not an instance")
+
+      (test-if-matcher-fails
+       "Checked value should be an instance"
+       (has-slots 'foo 1 'bar 2)
+       a-list
+       "Value is not an instance"))))
 
 
 (subtest "'Any' matcher  and placeholder"
