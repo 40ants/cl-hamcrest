@@ -7,6 +7,7 @@
                 :with-gensyms)
   (:export :has-alist-entries
            :has-plist-entries
+           :has-hash-entries
            :hasnt-plist-keys
            :any
            :has-all
@@ -89,6 +90,14 @@ for each indentation level."
            :reason "Value is not alist")))
 
 
+(defun check-if-hash (value)
+  "A little helper, to check types in matchers"
+  (unless (hash-table-p value)
+
+    (error 'assertion-error
+           :reason "Value is not a hash")))
+
+
 (defmacro def-has-xxx-entries (obj-type
                                &key
                                  check-obj-type
@@ -112,7 +121,7 @@ for each indentation level."
                                               expected-value
                                               key-value)
                          ,format-error-message)
-                       (,matcher (value)
+                       (,matcher (object)
                          ,check-obj-type
                 
                          ;; we go through each key/value pair
@@ -149,8 +158,8 @@ condition 'assertion-error with reason \"Key ~S is missing\"."
 
 (def-has-xxx-entries
     "plist"
-    :check-obj-type (check-if-list value)
-    :get-key-value (let ((key-value (getf value key 'absent)))
+    :check-obj-type (check-if-list object)
+    :get-key-value (let ((key-value (getf object key 'absent)))
                      (when (eql key-value 'absent)
                        (error 'assertion-error
                               :reason (format nil "Key ~S is missing" key)))
@@ -165,8 +174,8 @@ condition 'assertion-error with reason \"Key ~S is missing\"."
 
 (def-has-xxx-entries
     "alist"
-    :check-obj-type (check-if-alist value)
-    :get-key-value (let* ((pair (assoc key value))
+    :check-obj-type (check-if-alist object)
+    :get-key-value (let* ((pair (assoc key object))
                           (key-value (cdr pair)))
                      (when (null pair)
                        (error 'assertion-error
@@ -177,6 +186,22 @@ condition 'assertion-error with reason \"Key ~S is missing\"."
                                   key-value
                                   expected-value)
     :format-matcher-description (format nil "Has alist entries ~S" entries))
+
+
+(def-has-xxx-entries
+    "hash"
+    :check-obj-type (check-if-hash object)
+    :get-key-value (let* ((key-value (gethash key object 'absent)))
+                     (when (eql key-value 'absent)
+                       (error 'assertion-error
+                              :reason (format nil "Key ~S is missing" key)))
+                     key-value)
+    :format-error-message (format nil "Key ~S has ~S value, but ~S was expected"
+                                  expected-key
+                                  key-value
+                                  expected-value)
+    :format-matcher-description (format nil "Has hash entries ~S" entries))
+
 
 
 (defmacro hasnt-plist-keys (&rest keys)

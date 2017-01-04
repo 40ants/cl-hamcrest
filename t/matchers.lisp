@@ -12,7 +12,7 @@
 (in-package :hamcrest.t.matchers)
 
 
-(plan 7)
+(plan 8)
 
 
 (defmacro test-if-matcher-fails (title matcher value expected-error-message)
@@ -73,11 +73,17 @@
      value
      "Has alist entries (:BAR _)")
 
-    (test-if-matcher-fails
-     "Checked value should be proper alist"
-     (has-alist-entries :foo 1 :bar 2)
-     not-alist
-     "Value is not alist")))
+    (locally
+        ;; remove compile-time warning
+        ;; about wrong type
+        (declare #+sbcl
+                 (sb-ext:muffle-conditions sb-int:type-warning))
+
+      (test-if-matcher-fails
+       "Checked value should be proper alist"
+       (has-alist-entries :foo 1 :bar 2)
+       not-alist
+       "Value is not alist"))))
 
 
 (subtest
@@ -104,11 +110,64 @@
      value
      "Has plist entries (:BAR _)")
 
+    (locally
+        ;; remove compile-time warning
+        ;; about wrong type
+        (declare #+sbcl
+                 (sb-ext:muffle-conditions sb-int:type-warning))
+
+      (test-if-matcher-fails
+       "Checked value should be a list"
+       (has-plist-entries :foo 1 :bar 2)
+       not-list
+       "Value is not a list"))))
+
+
+(subtest
+    "Hash assertions"
+  (let ((value (make-hash-table :test #'equal))
+        (a-number 1)
+        (a-list '(1 2 3)))
+
+    (setf (gethash "foo" value) 1
+          (gethash "bar" value) 2)
+
+    (test-if-matcher-ok
+     "Successful match"
+     (has-hash-entries "foo" 1 "bar" 2)
+     value
+     "Has hash entries (\"foo\" 1 \"bar\" 2)")
+
     (test-if-matcher-fails
-     "Checked value should be a list"
-     (has-plist-entries :foo 1 :bar 2)
-     not-list
-     "Value is not a list")))
+     "Missing value"
+     (has-hash-entries "baz" 1)
+     value
+     "Key \"baz\" is missing")
+
+    (test-if-matcher-ok
+     "Placeholder _ can match any value"
+     (has-hash-entries "bar" _)
+     value
+     "Has hash entries (\"bar\" _)")
+
+    (locally
+        ;; remove compile-time warning
+        ;; about wrong type
+        (declare #+sbcl
+                 (sb-ext:muffle-conditions sb-int:type-warning))
+      
+      (test-if-matcher-fails
+       "Checked value should be a hash-map"
+       (has-hash-entries "foo" 1 "bar"
+                         2)
+       a-number
+       "Value is not a hash")
+
+      (test-if-matcher-fails
+       "Checked value should be a hash-map"
+       (has-hash-entries "foo" 1 "bar" 2)
+       a-list
+       "Value is not a hash"))))
 
 
 (subtest "'Any' matcher  and placeholder"
@@ -234,11 +293,17 @@
 (subtest "Hasn't plist keys matcher"
   (let ((obj '(:foo "bar")))
 
-    (test-if-matcher-fails
-     "It only accepts lists"
-     (hasnt-plist-keys :blah)
-     42
-     "Value is not a list")
+    (locally
+        ;; remove compile-time warning
+        ;; about wrong type
+        (declare #+sbcl
+                 (sb-ext:muffle-conditions sb-int:type-warning))
+
+      (test-if-matcher-fails
+       "It only accepts lists"
+       (hasnt-plist-keys :blah)
+       42
+       "Value is not a list"))
     
     (test-if-matcher-ok
      "If key is absent, than it is good"
