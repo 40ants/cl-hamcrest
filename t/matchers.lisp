@@ -12,7 +12,7 @@
 (in-package :hamcrest.t.matchers)
 
 
-(plan 8)
+(plan 9)
 
 
 (defmacro test-if-matcher-fails (title matcher value expected-error-message)

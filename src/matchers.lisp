@@ -182,7 +182,7 @@ condition 'assertion-error with reason \"Key ~S is missing\"."
 
 
 (def-has-macro
-    has-alist-properties
+    has-alist-entries
     
     :check-obj-type (check-if-alist object)
     :get-key-value (let* ((pair (assoc key object))
