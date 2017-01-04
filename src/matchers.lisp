@@ -5,12 +5,13 @@
         :hamcrest.utils)
   (:import-from :alexandria
                 :with-gensyms)
-  (:export :has-alist-entries
+  (:export :has-all
+           :has-alist-entries
            :has-plist-entries
            :has-hash-entries
+           :has-properties
            :hasnt-plist-keys
            :any
-           :has-all
            :contains
            :contains-in-any-order
            :_))
@@ -98,66 +99,74 @@ for each indentation level."
            :reason "Value is not a hash")))
 
 
-(defmacro def-has-xxx-entries (obj-type
-                               &key
-                                 check-obj-type
-                                 get-key-value
-                                 format-error-message
-                                 format-matcher-description)
-  "Check if object have given entries"
-  (let* ((macro-name (format nil "has-~a-entries" obj-type))
-         (macro-name (intern (string-upcase macro-name))))
-    `(defmacro ,macro-name (&rest entries)
-       (let ((get-key-value ',get-key-value)
-             (check-obj-type ',check-obj-type)
-             (format-matcher-description ',format-matcher-description)
-             (format-error-message ',format-error-message))
-         
-         (with-gensyms (expected-key expected-value matcher)
-           `(symbol-macrolet ((_ (any)))
-              (labels ((format-matcher-description (entries)
-                         ,format-matcher-description)
-                       (format-error-message (expected-key
-                                              expected-value
-                                              key-value)
-                         ,format-error-message)
-                       (,matcher (object)
-                         ,check-obj-type
-                
-                         ;; we go through each key/value pair
-                         ;; from expected entries
-                         (flet ((get-key-value (key)
-                                  "Gets value for the key or throws
+(defun check-if-symbol (value)
+  "A little helper, to check types in matchers"
+  (unless (symbolp value)
+
+    (error 'assertion-error
+           :reason "Value is not a symbol")))
+
+
+(defmacro def-has-macro (macro-name
+                         &key
+                           check-obj-type
+                           get-key-value
+                           format-error-message
+                           format-matcher-description)
+  "Defines a new macro to check if object has some properties."
+  
+  `(defmacro ,macro-name (&rest entries)
+     (let ((get-key-value ',get-key-value)
+           (check-obj-type ',check-obj-type)
+           (format-matcher-description ',format-matcher-description)
+           (format-error-message ',format-error-message))
+       
+       (with-gensyms (expected-key expected-value matcher)
+         `(symbol-macrolet ((_ (any)))
+            (labels ((format-matcher-description (entries)
+                       ,format-matcher-description)
+                     (format-error-message (expected-key
+                                            expected-value
+                                            key-value)
+                       ,format-error-message)
+                     (,matcher (object)
+                       ,check-obj-type
+                       
+                       ;; we go through each key/value pair
+                       ;; from expected entries
+                       (flet ((get-key-value (key)
+                                "Gets value for the key or throws
 condition 'assertion-error with reason \"Key ~S is missing\"."
-                                  ,get-key-value))
-                
-                           (iter (for (,expected-key ,expected-value)
-                                      :on (list ,@entries)
-                                      :by #'cddr)
-                                 (let ((key-value (get-key-value ,expected-key)))
+                                ,get-key-value))
+                         
+                         (iter (for (,expected-key ,expected-value)
+                                    :on (list ,@entries)
+                                    :by #'cddr)
+                               (let ((key-value (get-key-value ,expected-key)))
 
-                                   ;; if expected-value is callable, then it is a matcher
-                                   ;; and we should call it to check
-                                   (if (functionp ,expected-value)
-                                       (funcall ,expected-value key-value)
-                                       ;; or check if it's value is same as specified
-                                       (when (not (equal key-value
-                                                         ,expected-value))
-                                         (error 'assertion-error
-                                                :reason (format-error-message
-                                                         ,expected-key
-                                                         ,expected-value
-                                                         key-value)))))))
-                         ;; return true to show
-                         ;; that mathing was successful
-                         t))
-         
-                (values (function ,matcher)
-                        (format-matcher-description ',entries)))))))))
+                                 ;; if expected-value is callable, then it is a matcher
+                                 ;; and we should call it to check
+                                 (if (functionp ,expected-value)
+                                     (funcall ,expected-value key-value)
+                                     ;; or check if it's value is same as specified
+                                     (when (not (equal key-value
+                                                       ,expected-value))
+                                       (error 'assertion-error
+                                              :reason (format-error-message
+                                                       ,expected-key
+                                                       ,expected-value
+                                                       key-value)))))))
+                       ;; return true to show
+                       ;; that mathing was successful
+                       t))
+              
+              (values (function ,matcher)
+                      (format-matcher-description ',entries))))))))
 
 
-(def-has-xxx-entries
-    "plist"
+(def-has-macro
+    has-plist-entries
+    
     :check-obj-type (check-if-list object)
     :get-key-value (let ((key-value (getf object key 'absent)))
                      (when (eql key-value 'absent)
@@ -172,8 +181,9 @@ condition 'assertion-error with reason \"Key ~S is missing\"."
 
 
 
-(def-has-xxx-entries
-    "alist"
+(def-has-macro
+    has-alist-properties
+    
     :check-obj-type (check-if-alist object)
     :get-key-value (let* ((pair (assoc key object))
                           (key-value (cdr pair)))
@@ -188,8 +198,9 @@ condition 'assertion-error with reason \"Key ~S is missing\"."
     :format-matcher-description (format nil "Has alist entries ~S" entries))
 
 
-(def-has-xxx-entries
-    "hash"
+(def-has-macro
+    has-hash-entries
+    
     :check-obj-type (check-if-hash object)
     :get-key-value (let* ((key-value (gethash key object 'absent)))
                      (when (eql key-value 'absent)
@@ -201,6 +212,23 @@ condition 'assertion-error with reason \"Key ~S is missing\"."
                                   key-value
                                   expected-value)
     :format-matcher-description (format nil "Has hash entries ~S" entries))
+
+
+(def-has-macro
+    has-properties
+    
+    :check-obj-type (check-if-symbol object)
+    :get-key-value (let* ((key-value (get object key 'absent)))
+                     (when (eql key-value 'absent)
+                       (error 'assertion-error
+                              :reason (format nil "Property ~S is missing" key)))
+                     key-value)
+    :format-error-message (format nil "Property ~S has ~S value, but ~S was expected"
+                                  expected-key
+                                  key-value
+                                  expected-value)
+    :format-matcher-description (format nil "Has properties ~S" entries))
+
 
 
 

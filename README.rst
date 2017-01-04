@@ -115,6 +115,7 @@ Supported matchers
 * ``has-alist-entries`` – checks that value is alist, having specified keys and values.
 * ``has-plist-entries`` – checks that value is a plist, having specified keys and values.
 * ``has-hash-entries`` – checks that value is a hashmap, which have specified keys and values.
+* ``has-properties`` – checks if symbol has given properties and values.
 * ``hasnt-plist-keys`` – checks if give keys are missing in the object.
 
 

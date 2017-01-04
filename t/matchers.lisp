@@ -170,6 +170,56 @@
        "Value is not a hash"))))
 
 
+
+(subtest
+    "Properties assertions"
+  (let ((object (make-symbol "Test-Symbol"))
+        (a-number 1)
+        (a-list '(1 2 3)))
+
+    ;; prepare data for the test, by setting
+    ;; these two properties on the symbol
+    (setf (get object :foo) 1
+          (get object :bar) 2)
+
+    (test-if-matcher-ok
+     "Successful match"
+     (has-properties :foo 1 :bar 2)
+     object
+     "Has properties (:FOO 1 :BAR 2)")
+
+    (test-if-matcher-fails
+     "Missing value"
+     (has-properties :BAZ 1)
+     object
+     "Property :BAZ is missing")
+
+    (test-if-matcher-ok
+     "Placeholder _ can match any value"
+     (has-properties :BAR _)
+     object
+     "Has properties (:BAR _)")
+
+    (locally
+        ;; remove compile-time warning
+        ;; about wrong type
+        (declare #+sbcl
+                 (sb-ext:muffle-conditions sb-int:type-warning))
+      
+      (test-if-matcher-fails
+       "Checked value should be a symbol"
+       (has-properties :foo 1 :bar 2)
+       a-number
+       "Value is not a symbol")
+
+      (test-if-matcher-fails
+       "Checked value should be a symbol"
+       (has-properties :foo 1 :bar 2)
+       a-list
+       "Value is not a symbol"))))
+
+
+
 (subtest "'Any' matcher  and placeholder"
   (test-if-matcher-ok
    "'Any' matcher matches any value"
