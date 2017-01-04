@@ -234,7 +234,7 @@
      "Successful match"
      (has-slots 'foo 1 'bar 2)
      object
-     "Has slots ('FOO 1 'BAR 2)")
+     "Has slots (FOO 1 BAR 2)")
 
     (test-if-matcher-fails
      "Missing value"
@@ -246,7 +246,7 @@
      "Placeholder _ can match any value"
      (has-slots 'BAR _)
      object
-     "Has slots ('BAR _)")
+     "Has slots (BAR _)")
 
     (locally
         ;; remove compile-time warning

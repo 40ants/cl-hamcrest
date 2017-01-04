@@ -118,6 +118,14 @@ for each indentation level."
               :reason "Value is not an instance"))))
 
 
+(defun quote-underline (value)
+  (if (and (symbolp value)
+           (equal (symbol-name value)
+                  "_"))
+      ''_
+      value))
+
+
 (defmacro def-has-macro (macro-name
                          &key
                            check-obj-type
@@ -172,7 +180,11 @@ condition 'assertion-error with reason \"Key ~S is missing\"."
                        t))
               
               (values (function ,matcher)
-                      (format-matcher-description ',entries))))))))
+                      (format-matcher-description
+                       ;; Here we need a little magic quoting
+                       ;; to make symbols appear as BLAH instead
+                       ;; of 'BLAH or (QUOTE BLAH) (depending on LISP implementaion).
+                       (list ,@(mapcar #'quote-underline entries))))))))))
 
 
 (def-has-macro
@@ -247,6 +259,16 @@ condition 'assertion-error with reason \"Key ~S is missing\"."
     
     :check-obj-type (check-if-has-slots object)
     :get-key-value (if (and (slot-exists-p object key)
+                            ;; on ABCL slot-bound-p works
+                            ;; only for decendants of standard-class
+                            ;; for structure-class we assume slot always bound
+                            #+abcl
+                            (typecase (class-of object)
+                              (standard-class (slot-boundp object key))
+                              (otherwise t))
+                            ;; for other implementation, we'll check
+                            ;; if slot is bound even for structs
+                            #-abcl
                             (slot-boundp object key))
                        (slot-value object key)
                        (error 'assertion-error
@@ -257,8 +279,6 @@ condition 'assertion-error with reason \"Key ~S is missing\"."
                                   expected-value)
     :format-matcher-description (format nil "Has slots ~S" entries))
 
-
-;; (etypecase (class-of '1) (standard-class "STANDART") (structure-class "STRUCT"))
 
 (defmacro hasnt-plist-keys (&rest keys)
   (with-gensyms (matcher)
