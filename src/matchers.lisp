@@ -259,17 +259,13 @@ condition 'assertion-error with reason \"Key ~S is missing\"."
     
     :check-obj-type (check-if-has-slots object)
     :get-key-value (if (and (slot-exists-p object key)
-                            ;; on ABCL slot-bound-p works
+                            ;; slot-bound-p works
                             ;; only for decendants of standard-class
-                            ;; for structure-class we assume slot always bound
-                            #+abcl
+                            ;; for structure-class it always returns
+                            ;; true or signals error on some implementations.
                             (typecase (class-of object)
                               (standard-class (slot-boundp object key))
-                              (otherwise t))
-                            ;; for other implementation, we'll check
-                            ;; if slot is bound even for structs
-                            #-abcl
-                            (slot-boundp object key))
+                              (otherwise t)))
                        (slot-value object key)
                        (error 'assertion-error
                               :reason (format nil "Slot ~S is missing" key)))
