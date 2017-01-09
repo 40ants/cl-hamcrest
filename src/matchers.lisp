@@ -126,6 +126,19 @@ for each indentation level."
       value))
 
 
+(defmacro format-expected-entries (prefix-text)
+  "This macro is for formatting description of matchers which expect
+  some key/value entries, like (has-plist-entries :foo 1 :bar 2)."
+
+  (let ((message-text (concatenate 'string
+                                   prefix-text
+                                   ":~%  ~{~a~^~%  ~}")))
+    `(format nil ,message-text
+             (iterate (for (key value) :on entries :by #'cddr)
+                      (collecting
+                       (format nil "~S = ~S" key value))))))
+
+
 (defmacro def-has-macro (macro-name
                          &key
                            check-obj-type
@@ -200,7 +213,7 @@ condition 'assertion-error with reason \"Key ~S is missing\"."
                                   expected-key
                                   key-value
                                   expected-value)
-    :format-matcher-description (format nil "Has plist entries ~S" entries))
+    :format-matcher-description (format-expected-entries "Has plist entries"))
 
 
 
@@ -218,7 +231,7 @@ condition 'assertion-error with reason \"Key ~S is missing\"."
                                   expected-key
                                   key-value
                                   expected-value)
-    :format-matcher-description (format nil "Has alist entries ~S" entries))
+    :format-matcher-description (format-expected-entries "Has alist entries"))
 
 
 (def-has-macro
@@ -234,7 +247,7 @@ condition 'assertion-error with reason \"Key ~S is missing\"."
                                   expected-key
                                   key-value
                                   expected-value)
-    :format-matcher-description (format nil "Has hash entries ~S" entries))
+    :format-matcher-description (format-expected-entries "Has hash entries"))
 
 
 (def-has-macro
@@ -250,7 +263,7 @@ condition 'assertion-error with reason \"Key ~S is missing\"."
                                   expected-key
                                   key-value
                                   expected-value)
-    :format-matcher-description (format nil "Has properties ~S" entries))
+    :format-matcher-description (format-expected-entries "Has properties"))
 
 
 
@@ -273,7 +286,7 @@ condition 'assertion-error with reason \"Key ~S is missing\"."
                                   expected-key
                                   key-value
                                   expected-value)
-    :format-matcher-description (format nil "Has slots ~S" entries))
+    :format-matcher-description (format-expected-entries "Has slots"))
 
 
 (defmacro hasnt-plist-keys (&rest keys)

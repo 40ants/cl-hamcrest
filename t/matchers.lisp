@@ -45,7 +45,7 @@
           "Matcher should return t.")
          (is ,matcher-description
              ,expected-matcher-docstring
-             (format nil "Matcher description should be \"~a\"."
+             (format nil "Matcher description should be:~%\"~a\"."
                      ,expected-matcher-docstring))))))
 
 
@@ -59,7 +59,9 @@
      "Successful match"
      (has-alist-entries :foo 1 :bar 2)
      value
-     "Has alist entries (:FOO 1 :BAR 2)")
+     "Has alist entries:
+  :FOO = 1
+  :BAR = 2")
 
     (test-if-matcher-fails
      "Missing value"
@@ -71,7 +73,8 @@
      "Placeholder _ can match any value"
      (has-alist-entries :bar _)
      value
-     "Has alist entries (:BAR _)")
+     "Has alist entries:
+  :BAR = _")
 
     (locally
         ;; remove compile-time warning
@@ -96,7 +99,9 @@
      "Successful match"
      (has-plist-entries :foo 1 :bar 2)
      value
-     "Has plist entries (:FOO 1 :BAR 2)")
+     "Has plist entries:
+  :FOO = 1
+  :BAR = 2")
 
     (test-if-matcher-fails
      "Missing value"
@@ -108,7 +113,8 @@
      "Placeholder _ can match any value"
      (has-plist-entries :bar _)
      value
-     "Has plist entries (:BAR _)")
+     "Has plist entries:
+  :BAR = _")
 
     (locally
         ;; remove compile-time warning
@@ -136,7 +142,9 @@
      "Successful match"
      (has-hash-entries "foo" 1 "bar" 2)
      value
-     "Has hash entries (\"foo\" 1 \"bar\" 2)")
+     "Has hash entries:
+  \"foo\" = 1
+  \"bar\" = 2")
 
     (test-if-matcher-fails
      "Missing value"
@@ -148,7 +156,8 @@
      "Placeholder _ can match any value"
      (has-hash-entries "bar" _)
      value
-     "Has hash entries (\"bar\" _)")
+     "Has hash entries:
+  \"bar\" = _")
 
     (locally
         ;; remove compile-time warning
@@ -186,7 +195,9 @@
      "Successful match"
      (has-properties :foo 1 :bar 2)
      object
-     "Has properties (:FOO 1 :BAR 2)")
+     "Has properties:
+  :FOO = 1
+  :BAR = 2")
 
     (test-if-matcher-fails
      "Missing value"
@@ -198,7 +209,8 @@
      "Placeholder _ can match any value"
      (has-properties :BAR _)
      object
-     "Has properties (:BAR _)")
+     "Has properties:
+  :BAR = _")
 
     (locally
         ;; remove compile-time warning
@@ -234,7 +246,9 @@
      "Successful match"
      (has-slots 'foo 1 'bar 2)
      object
-     "Has slots (FOO 1 BAR 2)")
+     "Has slots:
+  FOO = 1
+  BAR = 2")
 
     (test-if-matcher-fails
      "Missing value"
@@ -246,7 +260,8 @@
      "Placeholder _ can match any value"
      (has-slots 'BAR _)
      object
-     "Has slots (BAR _)")
+     "Has slots:
+  BAR = _")
 
     (locally
         ;; remove compile-time warning
