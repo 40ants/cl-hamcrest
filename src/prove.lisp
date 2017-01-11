@@ -80,9 +80,9 @@ which formats a string, comparing two values."
     
     (with-gensyms (matcher-var matcher-description)
       `(symbol-macrolet ((_ (any)))
-         (multiple-value-bind (,matcher-var ,matcher-description)
-             ,matcher
-       
+         (let* ((,matcher-var ,matcher)
+                (,matcher-description (matcher-description ,matcher-var)))
+
            (let* ((suite (prove.suite:current-suite))
                   (report (handler-case
                               (progn (funcall ,matcher-var ,value)

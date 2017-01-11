@@ -38,7 +38,8 @@
 (defmacro test-if-matcher-ok (title matcher value expected-matcher-docstring)
   (with-gensyms (matcher-var matcher-description)
     `(subtest ,title
-       (multiple-value-bind (,matcher-var ,matcher-description) ,matcher
+       (let* ((,matcher-var ,matcher)
+              (,matcher-description (matcher-description ,matcher-var)))
          (ok
           (funcall ,matcher-var
                    ,value)
@@ -403,11 +404,10 @@
 
 
 (subtest "Nested object matchers"
-  (multiple-value-bind (matcher description)
-      (has-plist-entries
-       :foo (has-alist-entries
-             :bar :minor))
-    (declare (ignorable matcher))
+  (let* ((matcher (has-plist-entries
+                   :foo (has-alist-entries
+                         :bar :minor)))
+         (description (matcher-description matcher)))
     
     (is description
         "Has plist entries:

@@ -15,6 +15,7 @@
            :any
            :contains
            :contains-in-any-order
+           :matcher-description
            :_))
 
 (in-package :hamcrest.matchers)
@@ -241,8 +242,7 @@ condition 'assertion-error with reason \"Key ~S is missing\"."
                 
                 (setf (matcher-description (function ,matcher))
                       description)
-                (values (function ,matcher)
-                        description))))))))
+                (function ,matcher))))))))
 
 
 (def-has-macro
@@ -354,8 +354,7 @@ condition 'assertion-error with reason \"Key ~S is missing\"."
                               (format nil "Key ~S is absent" ,@keys))))
          (setf (matcher-description (function ,matcher))
                description)
-         (values (function ,matcher)
-                 description)))))
+         (function ,matcher)))))
 
 (defun any ()
   (let ((matcher (lambda (value)
@@ -365,7 +364,7 @@ condition 'assertion-error with reason \"Key ~S is missing\"."
     
     (setf (matcher-description matcher)
           description)
-    (values matcher description)))
+    matcher))
 
 
 (defun has-all (&rest matchers)
@@ -375,7 +374,7 @@ condition 'assertion-error with reason \"Key ~S is missing\"."
                    t))
         (description "All checks are passed"))
     (setf (matcher-description matcher) description)
-    (values matcher description)))
+    matcher))
 
 (defmacro contains (&rest entries)
   (with-gensyms (matcher)
@@ -414,14 +413,7 @@ condition 'assertion-error with reason \"Key ~S is missing\"."
          (let ((description "Contains all given values"))
            (setf (matcher-description (function ,matcher))
                  description)
-           (values (function ,matcher)
-                   description))))))
-
-
-(defun wrap-multiple-values (code)
-  "Small helper to use in macro-generation where
-item can be a values list"
-  `(multiple-value-list ,code))
+           (function ,matcher))))))
 
 
 (defmacro contains-in-any-order (&rest entries)
@@ -471,5 +463,4 @@ item can be a values list"
        (let ((description "Contains all given values"))
          (setf (matcher-description (function ,matcher))
                description)
-         (values (function ,matcher)
-                 description)))))
+         (function ,matcher)))))
