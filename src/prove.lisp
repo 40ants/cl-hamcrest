@@ -61,7 +61,6 @@ which formats a string, comparing two values."
                   :initform (error ":expected-line is required")
                   :reader expected-line)))
 
-
 (defmethod report-expected-line ((report assertion-report))
   (expected-line report))
 

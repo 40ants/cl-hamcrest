@@ -20,6 +20,22 @@
 (in-package :hamcrest.matchers)
 
 
+(defvar *matcher-descriptions*
+  (make-hash-table)
+  "In some implementation it is impossible to have documentation
+in functions created with flet, labels or lambda, that is why
+we'll store their docstrings in this cache")
+
+
+(defun matcher-description (fn)
+  (gethash fn *matcher-descriptions*))
+
+
+(defsetf matcher-description (fn) (value)
+  `(setf (gethash ,fn *matcher-descriptions*)
+         ,value))
+
+
 (defvar *context*
   nil
   "Context description for nested matchers.
@@ -45,6 +61,12 @@ And after successful matching to pop item from the list.")
   (:report (lambda (condition stream)
              (write-string (assertion-error-reason condition)
                            stream))))
+
+
+(defmethod print-object ((obj assertion-error) stream)
+  "Returns assertion error representation along with it's reason."
+  (format stream "#<ASSERTION-ERROR ~a>"
+          (assertion-error-reason obj)))
 
 
 (defun assertion-error-reason-with-context (condition &key (indent-spaces 2))
@@ -136,7 +158,26 @@ for each indentation level."
     `(format nil ,message-text
              (iterate (for (key value) :on entries :by #'cddr)
                       (collecting
-                       (format nil "~S = ~S" key value))))))
+                        (if (functionp value)
+                            (let* ((value-prefix (format nil "~S = "
+                                                         key))
+                                   (indent (prove.reporter::indent
+                                            1
+                                            (+ (length value-prefix)
+                                               ;; add two spaces becase
+                                               ;; this is additional
+                                               ;; shift for key values
+                                               2)))
+                                   (description (matcher-description value))
+                                   (shifted-value (shift-rest-lines
+                                                   description
+                                                   indent)))
+                              (concatenate 'string
+                                           value-prefix
+                                           shifted-value))
+                            (format nil "~S = ~S"
+                                    key
+                                    value)))))))
 
 
 (defmacro def-has-macro (macro-name
@@ -192,12 +233,16 @@ condition 'assertion-error with reason \"Key ~S is missing\"."
                        ;; that mathing was successful
                        t))
               
-              (values (function ,matcher)
-                      (format-matcher-description
-                       ;; Here we need a little magic quoting
-                       ;; to make symbols appear as BLAH instead
-                       ;; of 'BLAH or (QUOTE BLAH) (depending on LISP implementaion).
-                       (list ,@(mapcar #'quote-underline entries))))))))))
+              (let ((description (format-matcher-description
+                                  ;; Here we need a little magic quoting
+                                  ;; to make symbols appear as BLAH instead
+                                  ;; of 'BLAH or (QUOTE BLAH) (depending on LISP implementaion).
+                                  (list ,@(mapcar #'quote-underline entries)))))
+                
+                (setf (matcher-description (function ,matcher))
+                      description)
+                (values (function ,matcher)
+                        description))))))))
 
 
 (def-has-macro
@@ -302,63 +347,75 @@ condition 'assertion-error with reason \"Key ~S is missing\"."
                                                 key))))
               ;; if everything is OK, then
               t))
-       
-       (values (function ,matcher)
-               (if (> (length ',keys) 1)
-                   (format nil "Keys ~{~S~^, ~} are absent"
-                           ',keys)
-                   (format nil "Key ~S is absent" ,@keys))))))
+
+       (let ((description (if (> (length ',keys) 1)
+                              (format nil "Keys ~{~S~^, ~} are absent"
+                                      ',keys)
+                              (format nil "Key ~S is absent" ,@keys))))
+         (setf (matcher-description (function ,matcher))
+               description)
+         (values (function ,matcher)
+                 description)))))
 
 (defun any ()
-  (values (lambda (value)
-            (declare (ignore value))
-            t)
-          "Any value if good enough"))
+  (let ((matcher (lambda (value)
+                   (declare (ignore value))
+                   t))
+        (description "Any value if good enough"))
+    
+    (setf (matcher-description matcher)
+          description)
+    (values matcher description)))
 
 
 (defun has-all (&rest matchers)
-  (values (lambda (value)
-            (iterate (for matcher :in matchers)
-                     (funcall matcher value))
-            t)
-          "All checks are passed"))
+  (let ((matcher (lambda (value)
+                   (iterate (for matcher :in matchers)
+                            (funcall matcher value))
+                   t))
+        (description "All checks are passed"))
+    (setf (matcher-description matcher) description)
+    (values matcher description)))
 
 (defmacro contains (&rest entries)
   (with-gensyms (matcher)
     `(symbol-macrolet ((_ (any)))
-      (flet ((,matcher (value)
-               (let ((entries-len (length (list ,@entries)))
-                     (value-len (length value)))
-                 (when (< value-len entries-len)
-                   (error 'assertion-error
-                          :reason "Result is shorter than expected"))
-                 (when (> value-len entries-len)
-                   (error 'assertion-error
-                          :reason "Expected value is shorter than result"))
-                 (iter (for checked-value
-                            :in value)
-                       (for expected-value
-                            :in (list ,@entries))
-                       (for index
-                            :upfrom 0)
+       (flet ((,matcher (value)
+                (let ((entries-len (length (list ,@entries)))
+                      (value-len (length value)))
+                  (when (< value-len entries-len)
+                    (error 'assertion-error
+                           :reason "Result is shorter than expected"))
+                  (when (> value-len entries-len)
+                    (error 'assertion-error
+                           :reason "Expected value is shorter than result"))
+                  (iter (for checked-value
+                             :in value)
+                        (for expected-value
+                             :in (list ,@entries))
+                        (for index
+                             :upfrom 0)
 
-                       (if (functionp expected-value)
-                           ;; if expected-value is a matcher
-                           (with-context (format nil "Item with index ~a" index)
-                             (funcall expected-value checked-value))
-                           ;; if it is a real value
-                           (unless (equal checked-value
-                                          expected-value)
-                             (error 'assertion-error
-                                    :reason (format nil
-                                                    "Item ~S at index ~a, but ~S was expected"
-                                                    checked-value
-                                                    index
-                                                    expected-value))))))
-               ;; to show that everything is ok
-               t))
-        (values (function ,matcher)
-               "Contains all given values")))))
+                        (if (functionp expected-value)
+                            ;; if expected-value is a matcher
+                            (with-context (format nil "Item with index ~a" index)
+                              (funcall expected-value checked-value))
+                            ;; if it is a real value
+                            (unless (equal checked-value
+                                           expected-value)
+                              (error 'assertion-error
+                                     :reason (format nil
+                                                     "Item ~S at index ~a, but ~S was expected"
+                                                     checked-value
+                                                     index
+                                                     expected-value))))))
+                ;; to show that everything is ok
+                t))
+         (let ((description "Contains all given values"))
+           (setf (matcher-description (function ,matcher))
+                 description)
+           (values (function ,matcher)
+                   description))))))
 
 
 (defun wrap-multiple-values (code)
@@ -379,7 +436,7 @@ item can be a values list"
                 (when (> value-len entries-len)
                   (error 'assertion-error
                          :reason "Expected value is shorter than result"))
-                (iter (for (item item-description) in (list ,@(mapcar #'wrap-multiple-values entries)))
+                (iter (for item in (list ,@entries))
                       (unless (find item value
                                     :test (lambda (expected checked-item)
                                             (if (functionp expected)
@@ -401,11 +458,18 @@ item can be a values list"
                                :reason (if (functionp item)
                                            (format nil
                                                    "Value which ~S is missing"
-                                                   item-description)
+                                                   (or (matcher-description item)
+                                                       ;; if for some reason matcher's description
+                                                       ;; wasn't found
+                                                       item))
                                            (format nil
                                                    "Value ~S is missing"
                                                    item))))))
               ;; return true to show that everything is ok
               t))
-       (values (function ,matcher)
-               "Contains all given values"))))
+       
+       (let ((description "Contains all given values"))
+         (setf (matcher-description (function ,matcher))
+               description)
+         (values (function ,matcher)
+                 description)))))

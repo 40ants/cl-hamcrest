@@ -9,8 +9,8 @@
   :author "Alexander Artemenko"
   :license "BSD"
   :depends-on (:iterate
-               :hamcrest
-               :prove)
+               :prove
+               :hamcrest)
   :components ((:module "src"
                 :components
                 ((:file "prove"))))

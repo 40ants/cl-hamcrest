@@ -3,7 +3,8 @@
   (:use :cl
         :iterate)
   (:export :alistp
-           :deindent))
+           :deindent
+           :shift-rest-lines))
 (in-package :hamcrest.utils)
 
 
@@ -75,3 +76,11 @@ and removes common number of whitespaces from rest of the lines."
     ;; now join lines together and separate them with new-lines
     (values (format nil "~{~a~^~%~}" new-lines)
             min-indent)))
+
+
+(defun shift-rest-lines (text indent)
+  "Adds text from 'indent' to all lines from the 'text' except the first
+  one."
+  (ppcre:regex-replace-all "(\\n)(?m)(?!$)"
+                           text
+                           (format nil "\\1~A" indent)))

@@ -2,7 +2,8 @@
 (defpackage hamcrest.t.prove
   (:use :cl
         :prove
-        :hamcrest.prove)
+        :hamcrest.prove
+        :hamcrest.utils)
   (:import-from :alexandria
                 :with-gensyms)
   (:import-from :hamcrest.matchers
@@ -40,12 +41,13 @@ the result before trying to match."
                        ;; tested assert-that macro from modifying real testsuite.
                        ;; Otherwise it can increment failed or success tests count
                        ;; and prove will output wrong data.
-                       (prove.suite:*suite* (make-instance 'prove.suite:suite)))
+                       (prove.suite:*suite* (make-instance 'prove.suite:suite))
+                       (prove.reporter::*debug-indentation* nil))
                    ,body)))
 
               (,trimmed (string-trim '(#\Space #\Newline)
-                                     ,result)))
-         (like ,trimmed ,expected)))))
+                                     (deindent ,result))))
+         (like ,trimmed (deindent ,expected))))))
 
 
 (subtest "Nested matchers in Prove's assert-that"
@@ -75,8 +77,9 @@ the result before trying to match."
      ;;
      ;; Second item:
      ;;   Key AGE is missing
-     "× Item with index 1
-  Key :AGE is missing")))
+     "
+× Item with index 1
+    Key :AGE is missing")))
 
 
 (subtest "Assert-that uses implicit has-all, to combine multiple matchers"

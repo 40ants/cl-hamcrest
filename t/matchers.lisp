@@ -12,7 +12,7 @@
 (in-package :hamcrest.t.matchers)
 
 
-(plan 10)
+(plan 11)
 
 
 (defmacro test-if-matcher-fails (title matcher value expected-error-message)
@@ -380,7 +380,7 @@
       1 2 3
       (has-alist-entries :blah "minor"))
      complex
-     "Value which \"Has alist entries .*\" is missing")))
+     "(?s)Value which \"Has alist entries:.*\" is missing")))
 
 
 (subtest "Grouping matchers with (has-all ...)"
@@ -400,6 +400,19 @@
               (has-plist-entries :blah "other"))
      value
      "Key :BLAH has \"minor\" value, but \"other\" was expected")))
+
+
+(subtest "Nested object matchers"
+  (multiple-value-bind (matcher description)
+      (has-plist-entries
+       :foo (has-alist-entries
+             :bar :minor))
+    (declare (ignorable matcher))
+    
+    (is description
+        "Has plist entries:
+  :FOO = Has alist entries:
+           :BAR = :MINOR")))
 
 
 (subtest "Hasn't plist keys matcher"

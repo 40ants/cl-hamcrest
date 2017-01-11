@@ -12,7 +12,8 @@
   :components ((:module "t"
                         :components
                         ((:test-file "matchers")
-                         (:test-file "prove"))))
+                         (:test-file "prove")
+                         (:test-file "utils"))))
   :description "Test system for cl-hamcrest."
 
   :defsystem-depends-on (:prove-asdf)

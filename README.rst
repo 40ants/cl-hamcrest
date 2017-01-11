@@ -108,10 +108,15 @@ what does ``NIL is expected to be T`` mean.
 Supported matchers
 ==================
 
-* ``contains`` – checks is sequence contains only particular values in correct order.
-* ``contains-in-any-order`` – same as ``contains``, but order does not matter.
-* ``any`` – matches to any value, have shortcut ``_``.
-* ``has-all`` – matches only if all nested matchers match, like ``(and ...)`` logic.
+* Logical
+  - ``any`` – matches to any value, have shortcut ``_``.
+  - ``has-all`` – matches only if all nested matchers match, like ``(and ...)`` logic.
+
+* Sequences
+  - ``contains`` – checks is sequence contains only particular values in correct order.
+  - ``contains-in-any-order`` – same as ``contains``, but order does not matter.
+
+* Object matchers
 * ``has-alist-entries`` – checks that value is alist, having specified keys and values.
 * ``has-plist-entries`` – checks that value is a plist, having specified keys and values.
 * ``has-hash-entries`` – checks that value is a hashmap, which have specified keys and values.
@@ -123,10 +128,23 @@ Supported matchers
 Roadmap
 =======
 
-* Use uniq CommonLisp feature to restart signaled conditions to collect
-  all problems with data when there are few problems with keys.
-* Add ``hasnt-some-keys`` matchers, corresponding to ``has-some-entries``.
-
+* Logical matchers:
+  - ``all-of`` – rename ``has-all``.
+  - ``any-of`` – Matches if any of the given matchers evaluate to True.
+  - ``is-not`` – Inverts the given matcher to its logical negation (think if
+    we need it, and how to show the results, here are results
+    how it works `in PyHamcrest <https://gist.github.com/svetlyak40wt/fbe480384e9e3f75b10523aa0b4fb6ce>`_
+    – it just sees that matcher returned True and raises Assertion error with full object's content and
+    matcher's description with prepended 'not' particle).
+* Object matchers:
+  - Add ``hasnt-some-keys`` matchers, corresponding to ``has-some-entries``.
+* Sequence matchers:
+  - ``is-in`` – Matches if evaluated object is present in a given sequence.
+  - ``has-items`` – Matches if all of the given matchers are satisfied by any elements of the sequence.
+  - ``only-contains`` – Matches if each element of sequence satisfies any of the given matchers.
+* Other features:
+  - Use uniq CommonLisp feature to restart signaled conditions to collect
+    all problems with data when there are few problems with keys.
 
 .. _Hamcrest: http://hamcrest.org
 .. _Optima: http://quickdocs.org/optima/
