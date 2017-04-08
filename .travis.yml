@@ -41,12 +41,13 @@ install:
 before_script:
   - ros --version
   - ros config
-
-script:
   - ros -e '(princ (lisp-implementation-type))
             (terpri)
             (princ (lisp-implementation-version))
             (terpri)
+            (princ *features*)
+            (terpri)
             (uiop:quit 0)'
 
+script:
   - run-prove hamcrest-test.asd
