@@ -32,6 +32,7 @@ Contents
 
    matchers
    prove
+   changelog
 
 
 Indices and tables

@@ -110,31 +110,8 @@ And it's output:
 is not as clear, if you'll try to figure out
 what does ``NIL is expected to be T`` mean.
 
-
-Supported matchers
-==================
-
-Logical
--------
-
-* :cl:function:`any` – matches to any value, have shortcut ``_``.
-* ``has-all`` – matches only if all nested matchers match, like ``(and ...)`` logic.
-
-Sequences
----------
-
-* ``contains`` – checks is sequence contains only particular values in correct order.
-* ``contains-in-any-order`` – same as ``contains``, but order does not matter.
-
-Object matchers
----------------
-
-* ``has-alist-entries`` – checks that value is alist, having specified keys and values.
-* ``has-plist-entries`` – checks that value is a plist, having specified keys and values.
-* ``has-hash-entries`` – checks that value is a hashmap, which have specified keys and values.
-* ``has-properties`` – checks if symbol has given properties and values.
-* ``has-slots`` – checks if object has give slots and values.
-* ``hasnt-plist-keys`` – checks if give keys are missing in the object.
+Description of all supported matchers, you can `find in the
+documentation <http://cl-hamcrest.40ants.com>`_.
 
 Roadmap
 =======

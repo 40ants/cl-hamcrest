@@ -152,8 +152,7 @@ html_theme_options = {
     # 'navbar_class': "navbar navbar-inverse",
     'navbar_site_name': "Documentation",
 
-    'navbar_links': [("Contributing", "contributing"),
-                     ("Changelog", "changelog")],
+    'navbar_links': [("Changelog", "changelog")],
 
     # Fix navigation bar to top of page?
     # Values: "true" (default) or "false"
