@@ -11,6 +11,7 @@
   :depends-on (:iterate
                :alexandria
                :split-sequence
+               :cl-ppcre
                :cl-reexport)
   :components ((:module "src"
                 :components
