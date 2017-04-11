@@ -25,7 +25,32 @@ import sys, os
 
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = ['sphinx.ext.autodoc', 'sphinx.ext.doctest', 'sphinx.ext.viewcode']
+extensions = [
+    # 'sphinx.ext.autodoc',
+    # 'sphinx.ext.doctest',
+    # 'sphinx.ext.viewcode',
+    # 'sphinx.ext.intersphinx',
+
+    # Allow reference sections using its title
+    # http://www.sphinx-doc.org/en/stable/ext/autosectionlabel.html
+    'sphinx.ext.autosectionlabel',
+    'sphinxcontrib.cldomain',
+    'sphinxcontrib.hyperspec',
+]
+
+from os.path import join, dirname, realpath, expandvars
+cl_systems = [
+    {
+        'name': 'hamcrest-test',
+        'path': join(dirname(realpath(__file__)), '../../'),
+        'packages': [
+            'hamcrest.matchers',
+            'hamcrest.prove',
+        ]
+    },
+]
+
+cl_quicklisp = expandvars('$HOME/quicklisp/')
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -81,7 +106,8 @@ exclude_patterns = []
 #show_authors = False
 
 # The name of the Pygments (syntax highlighting) style to use.
-pygments_style = 'sphinx'
+highlight_language = 'common-lisp'
+pygments_style = 'emacs'
 
 # A list of ignored prefixes for module index sorting.
 #modindex_common_prefix = []
@@ -89,17 +115,69 @@ pygments_style = 'sphinx'
 
 # -- Options for HTML output ---------------------------------------------------
 
-# The theme to use for HTML and HTML Help pages.  See the documentation for
-# a list of builtin themes.
-html_theme = 'default'
+import sphinx_bootstrap_theme
+html_theme = 'bootstrap'
+
+# почему-то в модуле его нет
+#html_translator_class = 'sphinx_bootstrap_theme.BootstrapTranslator'
+
+html_theme_path = sphinx_bootstrap_theme.get_html_theme_path()
+
+html_theme_options = {
+    # Navigation bar title. (Default: ``project`` value)
+    # 'navbar_title': "Demo",
+
+    'navbar_sidebarrel': False,
+
+    'navbar_pagenav': False,
+
+    # Tab name for entire site. (Default: "Site")
+    "navbar_site_name": "Contents",
+
+    # Global TOC depth for "site" navbar tab. (Default: 1)
+    # Switching to -1 shows all levels.
+    # 'globaltoc_depth': 2,
+
+    # Include hidden TOCs in Site navbar?
+    #
+    # Note: If this is "false", you cannot have mixed ``:hidden:`` and
+    # non-hidden ``toctree`` directives in the same page, or else the build
+    # will break.
+    #
+    # Values: "true" (default) or "false"
+    # 'globaltoc_includehidden': "true",
+
+    # HTML navbar class (Default: "navbar") to attach to <div> element.
+    # For black navbar, do "navbar navbar-inverse"
+    # 'navbar_class': "navbar navbar-inverse",
+    'navbar_site_name': "Documentation",
+
+    'navbar_links': [("Contributing", "contributing"),
+                     ("Changelog", "changelog")],
+
+    # Fix navigation bar to top of page?
+    # Values: "true" (default) or "false"
+    # 'navbar_fixed_top': "true",
+
+    # Location of link to source.
+    # Options are "nav" (default), "footer" or anything else to exclude.
+    'source_link_position': "footer",
+
+    # Bootswatch (http://bootswatch.com/) theme.
+    #
+    # Options are nothing with "" (default) or the name of a valid theme
+    # such as "amelia" or "cosmo".
+    #
+    # Note that this is served off CDN, so won't be available offline.
+    'bootswatch_theme': "yeti",
+}
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
-#html_theme_options = {}
 
 # Add any paths that contain custom themes here, relative to this directory.
-#html_theme_path = []
+# html_theme_path = ["_themes/"]
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
@@ -132,6 +210,9 @@ html_static_path = ['_static']
 
 # Custom sidebar templates, maps document names to template names.
 #html_sidebars = {}
+html_sidebars = {'**': ['localtoc.html'],
+                 'search': None,
+                 'glossary': None}
 
 # Additional templates that should be rendered to pages, maps page names to
 # template names.
@@ -147,10 +228,10 @@ html_static_path = ['_static']
 #html_split_index = False
 
 # If true, links to the reST sources are added to the pages.
-#html_show_sourcelink = True
+html_show_sourcelink = True
 
 # If true, "Created using Sphinx" is shown in the HTML footer. Default is True.
-#html_show_sphinx = True
+html_show_sphinx = True
 
 # If true, "(C) Copyright ..." is shown in the HTML footer. Default is True.
 #html_show_copyright = True
@@ -165,6 +246,84 @@ html_static_path = ['_static']
 
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'cl-hamcrestdoc'
+
+
+# # The theme to use for HTML and HTML Help pages.  See the documentation for
+# # a list of builtin themes.
+# html_theme = 'default'
+
+# # Theme options are theme-specific and customize the look and feel of a theme
+# # further.  For a list of options available for each theme, see the
+# # documentation.
+# #html_theme_options = {}
+
+# # Add any paths that contain custom themes here, relative to this directory.
+# #html_theme_path = []
+
+# # The name for this set of Sphinx documents.  If None, it defaults to
+# # "<project> v<release> documentation".
+# #html_title = None
+
+# # A shorter title for the navigation bar.  Default is the same as html_title.
+# #html_short_title = None
+
+# # The name of an image file (relative to this directory) to place at the top
+# # of the sidebar.
+# #html_logo = None
+
+# # The name of an image file (within the static path) to use as favicon of the
+# # docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
+# # pixels large.
+# #html_favicon = None
+
+# # Add any paths that contain custom static files (such as style sheets) here,
+# # relative to this directory. They are copied after the builtin static files,
+# # so a file named "default.css" will overwrite the builtin "default.css".
+# html_static_path = ['_static']
+
+# # If not '', a 'Last updated on:' timestamp is inserted at every page bottom,
+# # using the given strftime format.
+# #html_last_updated_fmt = '%b %d, %Y'
+
+# # If true, SmartyPants will be used to convert quotes and dashes to
+# # typographically correct entities.
+# #html_use_smartypants = True
+
+# # Custom sidebar templates, maps document names to template names.
+# #html_sidebars = {}
+
+# # Additional templates that should be rendered to pages, maps page names to
+# # template names.
+# #html_additional_pages = {}
+
+# # If false, no module index is generated.
+# #html_domain_indices = True
+
+# # If false, no index is generated.
+# #html_use_index = True
+
+# # If true, the index is split into individual pages for each letter.
+# #html_split_index = False
+
+# # If true, links to the reST sources are added to the pages.
+# #html_show_sourcelink = True
+
+# # If true, "Created using Sphinx" is shown in the HTML footer. Default is True.
+# #html_show_sphinx = True
+
+# # If true, "(C) Copyright ..." is shown in the HTML footer. Default is True.
+# #html_show_copyright = True
+
+# # If true, an OpenSearch description file will be output, and all pages will
+# # contain a <link> tag referring to it.  The value of this option must be the
+# # base URL from which the finished HTML is served.
+# #html_use_opensearch = ''
+
+# # This is the file name suffix for HTML files (e.g. ".xhtml").
+# #html_file_suffix = None
+
+# # Output file base name for HTML help builder.
+# htmlhelp_basename = 'cl-hamcrestdoc'
 
 
 # -- Options for LaTeX output --------------------------------------------------

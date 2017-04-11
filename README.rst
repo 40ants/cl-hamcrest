@@ -5,17 +5,16 @@
 .. image:: https://travis-ci.org/40ants/cl-hamcrest.svg?branch=master
     :target: https://travis-ci.org/40ants/cl-hamcrest
 
+.. include-from
+
 It is implementation of `Hamcrest`_ idea in Common Lisp.
 
 It simplifes unittests and make them more readable. Hamcrest uses
 idea of pattern-matching, to construct matchers from different pieces and
 to apply them to the data.
 
-Reasoning
-=========
-
 Why not pattern-matching library?
----------------------------------
+=================================
 
 You may ask: "Why dont use a pattern-matching library, like `Optima`_?"
 
@@ -23,28 +22,30 @@ Here is another example from another library ``log4cl-json``, where I want
 to check that some fields in plist have special values and other key is not
 present. Here is the data:
 
-.. code:: common-lisp
+.. code-block:: common-lisp
 
-          (defvar log-item '(:|@message| "Some"
-                             :|@timestamp| 122434342
-                             ;; this field is wrong and
-                             ;; shouldn't be here
-                             :|@fields| nil))
+   (defvar log-item '(:|@message| "Some"
+                      :|@timestamp| 122434342
+                      ;; this field is wrong and
+                      ;; shouldn't be here
+                      :|@fields| nil))
 
 With `Optima`_ I could write this code to match the data:
 
-.. code:: common-lisp
+.. code-block:: common-lisp
 
-          (ok (ematch
-                log-item
-              ((and (guard (property :|@message| m)
-                           (equal m "Some"))
-                    (property :|@timestamp| _)
-                    (not (property :|@fields| _)))
-               t))
-            "Log entry has message, timestamp, but not fields")
+   (ok (ematch
+         log-item
+       ((and (guard (property :|@message| m)
+                    (equal m "Some"))
+             (property :|@timestamp| _)
+             (not (property :|@fields| _)))
+        t))
+     "Log entry has message, timestamp, but not fields")
 
-But error message will be quite cumbersome::
+But error message will be quite cumbersome:
+
+.. code-block:: none
 
   × Aborted due to an error in subtest "Simple match"
     Raised an error Can't match ((:|@fields| NIL :|@timestamp|
@@ -59,12 +60,13 @@ But error message will be quite cumbersome::
                                                    (PROPERTY :|@fields|
                                                     _)))). (expected: :NON-ERROR)
 
-CL-HAMCREST more concise and clear
-----------------------------------
+
+CL-HAMCREST is more concise and clear
+-------------------------------------
 
 With ``cl-hamcrest`` test becomes more readable:
 
-.. code:: common-lisp
+.. code-block:: common-lisp
 
    (assert-that
          log-item
@@ -72,7 +74,9 @@ With ``cl-hamcrest`` test becomes more readable:
                             :|@timestamp| _)
          (hasnt-plist-keys :|@fields|))
 
-As well, as output about the failure::
+As well, as output about the failure:
+
+.. code-block:: none
 
   × Key :|@fields| is present in object, but shouldn't
 
@@ -86,20 +90,22 @@ Why not just use Prove's assertions?
 To draw a full picture, here is test, written in plain Prove's
 assertions:
 
-.. code:: common-lisp
+.. code-block:: common-lisp
 
-          (ok (member :|@message| log-item))
-          (is (getf log-item :|@message|)
-              "Some")
-          (ok (member :|@timestamp| log-item))
-          (ok (not (member :|@fields| log-item)))
+   (ok (member :|@message| log-item))
+   (is (getf log-item :|@message|)
+       "Some")
+   (ok (member :|@timestamp| log-item))
+   (ok (not (member :|@fields| log-item)))
 
-And it's output::
+And it's output:
 
-      ✓ (:|@message| "Some") is expected to be T 
-      ✓ "Some" is expected to be "Some" 
-      ✓ (:|@timestamp| "2017-01-03T16:57:17.988810Z" :|@message| "Some") is expected to be T 
-      × NIL is expected to be T 
+.. code-block:: none
+
+   ✓ (:|@message| "Some") is expected to be T 
+   ✓ "Some" is expected to be "Some" 
+   ✓ (:|@timestamp| "2017-01-03T16:57:17.988810Z" :|@message| "Some") is expected to be T 
+   × NIL is expected to be T 
 
 is not as clear, if you'll try to figure out
 what does ``NIL is expected to be T`` mean.
@@ -108,15 +114,21 @@ what does ``NIL is expected to be T`` mean.
 Supported matchers
 ==================
 
-* Logical
-  - ``any`` – matches to any value, have shortcut ``_``.
-  - ``has-all`` – matches only if all nested matchers match, like ``(and ...)`` logic.
+Logical
+-------
 
-* Sequences
-  - ``contains`` – checks is sequence contains only particular values in correct order.
-  - ``contains-in-any-order`` – same as ``contains``, but order does not matter.
+* :cl:function:`any` – matches to any value, have shortcut ``_``.
+* ``has-all`` – matches only if all nested matchers match, like ``(and ...)`` logic.
 
-* Object matchers
+Sequences
+---------
+
+* ``contains`` – checks is sequence contains only particular values in correct order.
+* ``contains-in-any-order`` – same as ``contains``, but order does not matter.
+
+Object matchers
+---------------
+
 * ``has-alist-entries`` – checks that value is alist, having specified keys and values.
 * ``has-plist-entries`` – checks that value is a plist, having specified keys and values.
 * ``has-hash-entries`` – checks that value is a hashmap, which have specified keys and values.
@@ -124,11 +136,11 @@ Supported matchers
 * ``has-slots`` – checks if object has give slots and values.
 * ``hasnt-plist-keys`` – checks if give keys are missing in the object.
 
-
 Roadmap
 =======
 
 * Logical matchers:
+
   - ``all-of`` – rename ``has-all``.
   - ``any-of`` – Matches if any of the given matchers evaluate to True.
   - ``is-not`` – Inverts the given matcher to its logical negation (think if
@@ -136,15 +148,49 @@ Roadmap
     how it works `in PyHamcrest <https://gist.github.com/svetlyak40wt/fbe480384e9e3f75b10523aa0b4fb6ce>`_
     – it just sees that matcher returned True and raises Assertion error with full object's content and
     matcher's description with prepended 'not' particle).
+
 * Object matchers:
-  - Add ``hasnt-some-keys`` matchers, corresponding to ``has-some-entries``.
+
+  - Add ``hasnt-some-keys`` matchers, corresponding to
+    ``has-some-entries``.
+
 * Sequence matchers:
+
   - ``is-in`` – Matches if evaluated object is present in a given sequence.
   - ``has-items`` – Matches if all of the given matchers are satisfied by any elements of the sequence.
-  - ``only-contains`` – Matches if each element of sequence satisfies any of the given matchers.
+  - ``only-contains`` – Matches if each element of sequence satisfies
+    any of the given matchers.
+
 * Other features:
+
   - Use uniq CommonLisp feature to restart signaled conditions to collect
     all problems with data when there are few problems with keys.
 
 .. _Hamcrest: http://hamcrest.org
 .. _Optima: http://quickdocs.org/optima/
+
+.. include-to
+
+Building Documentation
+======================
+
+Requirements
+------------
+
+Python packages
+~~~~~~~~~~~~~~~
+
+sphinx
+sphinxcontrib-cldomain (https://github.com/russell/sphinxcontrib-cldomain)
+pygments-cl-repl
+sphinx-bootstrap-theme
+
+Lisp
+~~~~
+
+cl-launch (http://www.cliki.net/CL-Launch)
+
+To build
+--------
+
+cd docs && make html

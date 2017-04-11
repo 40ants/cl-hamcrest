@@ -1,0 +1,5 @@
+-e git+git@github.com:russell/sphinxcontrib-cldomain.git#egg=sphinxcontrib-cldomain
+
+sphinx
+pygments-cl-repl
+sphinx-bootstrap-theme
