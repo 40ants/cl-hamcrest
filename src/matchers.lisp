@@ -29,6 +29,10 @@ we'll store their docstrings in this cache")
 
 
 (defun matcher-description (fn)
+  "Returns description of a given matcher function.
+
+Can be used to print nested matchers in a nicely indented,
+human readable way. "
   (gethash fn *matcher-descriptions*))
 
 
@@ -182,6 +186,7 @@ for each indentation level."
 
 
 (defmacro def-has-macro (macro-name
+                         documentation
                          &key
                            check-obj-type
                            get-key-value
@@ -190,6 +195,7 @@ for each indentation level."
   "Defines a new macro to check if object has some properties."
   
   `(defmacro ,macro-name (&rest entries)
+     ,documentation
      (let ((get-key-value ',get-key-value)
            (check-obj-type ',check-obj-type)
            (format-matcher-description ',format-matcher-description)
@@ -247,6 +253,7 @@ condition 'assertion-error with reason \"Key ~S is missing\"."
 
 (def-has-macro
     has-plist-entries
+    "Matches plist entries"
     
     :check-obj-type (check-if-list object)
     :get-key-value (let ((key-value (getf object key 'absent)))
@@ -264,7 +271,8 @@ condition 'assertion-error with reason \"Key ~S is missing\"."
 
 (def-has-macro
     has-alist-entries
-    
+    "Matches alist entries"
+  
     :check-obj-type (check-if-alist object)
     :get-key-value (let* ((pair (assoc key object))
                           (key-value (cdr pair)))
@@ -281,7 +289,8 @@ condition 'assertion-error with reason \"Key ~S is missing\"."
 
 (def-has-macro
     has-hash-entries
-    
+    "Matches hash entries"
+  
     :check-obj-type (check-if-hash object)
     :get-key-value (let* ((key-value (gethash key object 'absent)))
                      (when (eql key-value 'absent)
@@ -297,7 +306,8 @@ condition 'assertion-error with reason \"Key ~S is missing\"."
 
 (def-has-macro
     has-properties
-    
+    "Matches object properties"
+  
     :check-obj-type (check-if-symbol object)
     :get-key-value (let* ((key-value (get object key 'absent)))
                      (when (eql key-value 'absent)
@@ -314,7 +324,8 @@ condition 'assertion-error with reason \"Key ~S is missing\"."
 
 (def-has-macro
     has-slots
-    
+    "Matches object slots"
+  
     :check-obj-type (check-if-has-slots object)
     :get-key-value (if (and (slot-exists-p object key)
                             ;; slot-bound-p works
