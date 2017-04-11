@@ -31,6 +31,8 @@ extensions = [
     # 'sphinx.ext.viewcode',
     # 'sphinx.ext.intersphinx',
 
+    # creates .nojekyll file on generated HTML directory
+    'sphinx.ext.githubpages',
     # Allow reference sections using its title
     # http://www.sphinx-doc.org/en/stable/ext/autosectionlabel.html
     'sphinx.ext.autosectionlabel',
