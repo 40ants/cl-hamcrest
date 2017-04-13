@@ -5,7 +5,7 @@
 
 
 (defsystem hamcrest
-  :version "0.1.0"
+  :version (:read-file-form "version.lisp-expr")
   :author "Alexander Artemenko"
   :license "BSD"
   :depends-on (:iterate

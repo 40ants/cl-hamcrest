@@ -13,6 +13,7 @@
            :has-slots
            :hasnt-plist-keys
            :any
+           :has-length
            :contains
            :contains-in-any-order
            :matcher-description
@@ -32,7 +33,26 @@ we'll store their docstrings in this cache")
   "Returns description of a given matcher function.
 
 Can be used to print nested matchers in a nicely indented,
-human readable way. "
+human readable way:
+
+.. code-block:: common-lisp-repl
+
+   TEST> (matcher-description (has-length 100500))
+   \"Has length of 100500 \"
+   
+   TEST> (matcher-description (contains
+                               (has-plist-entries :foo \"bar \")
+                               (has-plist-entries :foo \"minor \")))
+   \"Contains all given values \"
+   
+   TEST> (matcher-description (has-plist-entries
+                               :foo \"bar \"
+                               :blah (has-hash-entries :minor \"again \")))
+   \"Has plist entries:
+     :FOO = \"bar\"
+     :BLAH = Has hash entries:
+               :MINOR = \"again\"\"
+"
   (gethash fn *matcher-descriptions*))
 
 
@@ -253,7 +273,17 @@ condition 'assertion-error with reason \"Key ~S is missing\"."
 
 (def-has-macro
     has-plist-entries
-    "Matches plist entries"
+    "Matches plist entries:
+
+.. code-block:: common-lisp-repl
+
+   TEST> (let ((obj '(:foo :bar)))
+           (assert-that obj
+                        (has-plist-entries :foo \"bar\"
+                                           :blah \"minor\")))
+     × Key :FOO has :BAR value, but \"bar\" was expected
+
+This way you can test any number of plist's entries."
     
     :check-obj-type (check-if-list object)
     :get-key-value (let ((key-value (getf object key 'absent)))
@@ -271,7 +301,30 @@ condition 'assertion-error with reason \"Key ~S is missing\"."
 
 (def-has-macro
     has-alist-entries
-    "Matches alist entries"
+    "Matches alist entries:
+
+.. code-block:: common-lisp-repl
+
+   TEST> (let ((obj '((:the-key . \"value\"))))
+           (assert-that obj
+                        (has-alist-entries :the-key \"value\")))
+   
+     ✓ Has alist entries:
+         :THE-KEY = \"value\"
+   
+   TEST> (let ((obj '((:the-key . \"value\"))))
+           (assert-that obj
+                        (has-alist-entries :the-key \"value\"
+                                           :missing-key \"value\")))
+   
+     × Key :MISSING-KEY is missing
+   
+   TEST> (let ((obj '((:the-key . \"value\"))))
+           (assert-that obj
+                        (has-alist-entries :the-key \"other-value\")))
+   
+     × Key :THE-KEY has \"value\" value, but \"other-value\" was expected
+"
   
     :check-obj-type (check-if-alist object)
     :get-key-value (let* ((pair (assoc key object))
@@ -289,7 +342,32 @@ condition 'assertion-error with reason \"Key ~S is missing\"."
 
 (def-has-macro
     has-hash-entries
-    "Matches hash entries"
+    "Matches hash entries:
+
+.. code-block:: common-lisp-repl
+
+   TEST> (let ((obj (make-hash-table)))
+           (setf (gethash 'the-key obj) \"value\")
+           (assert-that obj
+                        (has-hash-entries 'the-key \"value\")))
+   
+     ✓ Has hash entries:
+         THE-KEY = \"value\"
+
+   TEST> (let ((obj (make-hash-table)))
+           (setf (gethash 'the-key obj) \"value\")
+           (assert-that obj
+                        (has-hash-entries 'missing-key \"value\")))
+   
+     × Key MISSING-KEY is missing
+
+   TEST> (let ((obj (make-hash-table)))
+           (setf (gethash 'the-key obj) \"value\")
+           (assert-that obj
+                        (has-hash-entries 'the-key \"other-value\")))
+   
+     × Key THE-KEY has \"value\" value, but \"other-value\" was expected
+"
   
     :check-obj-type (check-if-hash object)
     :get-key-value (let* ((key-value (gethash key object 'absent)))
@@ -306,7 +384,26 @@ condition 'assertion-error with reason \"Key ~S is missing\"."
 
 (def-has-macro
     has-properties
-    "Matches object properties"
+    "Matches object properties:
+
+.. code-block:: common-lisp-repl
+
+   TEST> (defvar the-object)
+   THE-OBJECT
+   TEST> (setf (getf the-object :tags) '(one two))
+   TEST> (assert-that 'the-object
+                      (has-properties :tags '(one two)))
+     ✓ Has properties:
+         :TAGS = (ONE TWO)
+   
+   TEST> (assert-that 'the-object
+                      (has-properties :tags 'wrong-value))
+     × Property :TAGS has (ONE TWO) value, but WRONG-VALUE was expected
+   
+   TEST> (assert-that 'the-object
+                      (has-properties :missing-property '(one two)))
+     × Property :MISSING-PROPERTY is missing
+"
   
     :check-obj-type (check-if-symbol object)
     :get-key-value (let* ((key-value (get object key 'absent)))
@@ -324,7 +421,30 @@ condition 'assertion-error with reason \"Key ~S is missing\"."
 
 (def-has-macro
     has-slots
-    "Matches object slots"
+    "Matches object slots:
+
+.. code-block:: common-lisp-repl
+
+   TEST> (defstruct task
+           title
+           description)
+   
+   TEST> (defvar task (make-task :title \"The title \"))
+   
+   TEST> (assert-that task
+                      (has-slots 'title \"The title \"))
+     ✓ Has slots:
+         TITLE = \"The title \"
+   
+   TEST> (assert-that task
+                      (has-slots 'title \"Wrong title \"))
+     × Slot TITLE has \"The title \" value, but \"Wrong title \" was expected
+   
+   TEST> (assert-that task
+                      (has-slots 'description nil))
+     ✓ Has slots:
+         DESCRIPTION = NIL
+"
   
     :check-obj-type (check-if-has-slots object)
     :get-key-value (if (and (slot-exists-p object key)
@@ -346,6 +466,25 @@ condition 'assertion-error with reason \"Key ~S is missing\"."
 
 
 (defmacro hasnt-plist-keys (&rest keys)
+"Checks if given keys are missing from an object:
+
+.. code-block:: common-lisp-repl
+
+   TEST> (let ((obj '(:foo \"bar\")))
+           (assert-that obj
+                        (hasnt-plist-keys :blah :minor)))
+     ✓ Keys :BLAH, :MINOR are absent
+
+Assertion fails if at least one key is present in the object:
+
+.. code-block:: common-lisp-repl
+
+   TEST> (let ((obj '(:foo \"bar\")))
+           (assert-that obj
+                        (hasnt-plist-keys :blah :foo)))
+     × Key :FOO is present in object, but shouldn't.
+"
+
   (with-gensyms (matcher)
     `(flet ((,matcher (value)
               (check-if-list value)
@@ -368,10 +507,26 @@ condition 'assertion-error with reason \"Key ~S is missing\"."
          (function ,matcher)))))
 
 (defun any ()
+  "Assertion is passed regardles of value of the object:
+
+.. code-block:: common-lisp-repl
+
+   TEST> (assert-that 1 (any))
+     ✓ Any value if good enough
+   
+   TEST> (assert-that \"the-string\" (any))
+     ✓ Any value if good enough
+   
+   TEST> (assert-that 'the-symbol (any))
+     ✓ Any value if good enough
+   
+   TEST> (assert-that '(1 2 3) (any))
+     ✓ Any value if good enough
+"
   (let ((matcher (lambda (value)
                    (declare (ignore value))
                    t))
-        (description "Any value if good enough"))
+        (description "Any value is good enough"))
     
     (setf (matcher-description matcher)
           description)
@@ -379,6 +534,27 @@ condition 'assertion-error with reason \"Key ~S is missing\"."
 
 
 (defun has-all (&rest matchers)
+  "Makes a matcher which groups another matchers with AND logic.
+
+This way we can check if plist has one key and hasn't another.
+And if all matchers succeed, then ``has-all`` succeed as well:
+
+.. code-block:: common-lisp-repl
+
+   TEST> (assert-that '(:foo \"bar\")
+                      (has-all (has-plist-entries :foo \"bar\")
+                               (hasnt-plist-keys :blah)))
+     ✓ All checks are passed
+
+If at least one check is failed, then ``has-all`` fails too:
+
+.. code-block:: common-lisp-repl
+
+   TEST> (assert-that '(:foo \"bar\" :blah \"minor\")
+                      (has-all (has-plist-entries :foo \"bar\")
+                               (hasnt-plist-keys :blah)))
+     × Key :BLAH is present in object, but shouldn't
+"
   (let ((matcher (lambda (value)
                    (iterate (for matcher :in matchers)
                             (funcall matcher value))
@@ -387,7 +563,78 @@ condition 'assertion-error with reason \"Key ~S is missing\"."
     (setf (matcher-description matcher) description)
     matcher))
 
+
+(defun has-length (expected-length)
+  "Checks if a list have specivied length.
+
+.. code-block:: common-lisp-repl
+
+   TEST> (assert-that 'nil (has-length 0))
+     ✓ Has length of 0
+   
+   TEST> (assert-that '(a b c d) (has-length 4))
+     ✓ Has length of 4
+   
+   TEST> (assert-that '(a b c d) (has-length 100500))
+     × List (A B C D) has length of 4, but 100500 was expected
+"
+
+  (let ((matcher (lambda (value)
+                   ;; does nothing yet
+                   (let ((obj-length (typecase value
+                                       (sequence (length value))
+                                       (t (error 'assertion-error
+                                                 :reason (format nil "Object ~S is not of type SEQUENCE"
+                                                                 value))))))
+                     (when (not (eql obj-length
+                                     expected-length))
+                       (error 'assertion-error
+                              :reason (format nil "List ~S has length of ~a, but ~a was expected"
+                                              value
+                                              obj-length
+                                              expected-length))))
+                   t))
+        (description (format nil "Has length of ~a"
+                             expected-length)))
+    (setf (matcher-description matcher) description)
+    matcher))
+
+
 (defmacro contains (&rest entries)
+  "Checks if each item from a list matches to given matchers.
+
+Contains can accept as raw values, as another matchers:
+
+.. code-block:: common-lisp-repl
+
+   TEST> (assert-that '(:foo
+                        (a b c)
+                        d)
+                      (contains :foo
+                                (has-length 3)
+                                'd))
+     ✓ Contains all given values
+
+Given list should have a length equal to count of matchers:
+
+.. code-block:: common-lisp-repl
+
+   TEST> (assert-that '(:foo
+                        (a b c)
+                        d)
+                      (contains :foo))
+     × Expected value is shorter than result
+
+You can ignore value of some list items, by using ``(any)`` matcher:
+
+.. code-block:: common-lisp-repl
+
+   TEST> (assert-that '(:foo
+                        (a b c)
+                        d)
+                      (contains :foo (any) (any)))
+     ✓ Contains all given values
+"
   (with-gensyms (matcher)
     `(symbol-macrolet ((_ (any)))
        (flet ((,matcher (value)
@@ -428,6 +675,20 @@ condition 'assertion-error with reason \"Key ~S is missing\"."
 
 
 (defmacro contains-in-any-order (&rest entries)
+  "Same as ``contains``, but items in the sequence can be in any order:
+
+.. code-block:: common-lisp-repl
+
+   TEST> (assert-that '(:foo
+                        (a b c)
+                        d)
+                      (contains-in-any-order
+                       (has-length 3)
+                       'd
+                       :foo))
+   
+     ✓ Contains all given values
+"
   (with-gensyms (matcher)
     `(flet ((,matcher (value)
               

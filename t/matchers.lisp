@@ -12,7 +12,7 @@
 (in-package :hamcrest.t.matchers)
 
 
-(plan 11)
+(plan 12)
 
 
 (defmacro test-if-matcher-fails (title matcher value expected-error-message)
@@ -288,7 +288,7 @@
    "'Any' matcher matches any value"
    (any)
    1
-   "Any value if good enough"))
+   "Any value is good enough"))
 
 
 (subtest "Contains matcher"
@@ -447,5 +447,25 @@
      (hasnt-plist-keys :foo)
      obj
      "Key :FOO is present in object, but shouldn't")))
+
+
+(subtest "List length matcher"
+  (test-if-matcher-ok
+   "If list length is equal to specified, it is OK"
+   (has-length 4)
+   '(a b c d)
+   "Has length of 4")
+
+  (test-if-matcher-fails
+   "If list length is not equal to specified, it fails"
+   (has-length 42)
+   '(a b c d)
+   "List (A B C D) has length of 4, but 42 was expected")
+  
+  (test-if-matcher-fails
+   "If not a sequence was given, it fails"
+   (has-length 42)
+   :foo
+   "Object :FOO is not of type SEQUENCE"))
 
 (finalize)

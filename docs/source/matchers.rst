@@ -30,6 +30,8 @@ alists and property lists.
 Sequence matchers
 =================
 
+.. cl:function:: has-length
+
 .. cl:macro:: contains
 
 .. cl:macro:: contains-in-any-order
@@ -41,6 +43,7 @@ Boolean matchers
 .. cl:function:: any
 
 .. cl:function:: has-all
+
 
 
 Utility functions

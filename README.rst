@@ -130,6 +130,8 @@ Roadmap
 
   - Add ``hasnt-some-keys`` matchers, corresponding to
     ``has-some-entries``.
+  - Make ``has-alist-entries`` work with keys other than keyword
+    right now it uses `eql` to compare keys.
 
 * Sequence matchers:
 
