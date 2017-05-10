@@ -186,7 +186,7 @@ for each indentation level."
                         (if (functionp value)
                             (let* ((value-prefix (format nil "~S = "
                                                          key))
-                                   (indent (prove.reporter::indent
+                                   (indent (hamcrest.utils:indent
                                             1
                                             (+ (length value-prefix)
                                                ;; add two spaces becase

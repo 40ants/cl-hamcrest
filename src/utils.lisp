@@ -4,7 +4,8 @@
         :iterate)
   (:export :alistp
            :deindent
-           :shift-rest-lines))
+           :shift-rest-lines
+           :indent))
 (in-package :hamcrest.utils)
 
 
@@ -50,6 +51,13 @@ which match a predicate."
 (defun empty-line-p (line)
   "Checks if line of text is empty."
   (equal line ""))
+
+
+(defun indent (space &optional (count 0))
+  "Creates a string with a number of spaces to indent new line
+of a test report."
+  (make-string (* count space)
+               :initial-element #\space))
 
 
 (defun deindent (text)
