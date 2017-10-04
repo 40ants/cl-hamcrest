@@ -2,6 +2,13 @@
  ChangeLog
 ===========
 
+0.2.1 (2017-10-04)
+==================
+
+* Previously, matcher ``contains`` reported "Result is shorter than
+  expected" if checked sequence length is lesser than expected, now it
+  reports "Result is empty" in case if checked sequence has zero length.
+
 0.2.0 (2017-04-13)
 ==================
 

@@ -642,7 +642,9 @@ You can ignore value of some list items, by using ``(any)`` matcher:
                       (value-len (length value)))
                   (when (< value-len entries-len)
                     (error 'assertion-error
-                           :reason "Result is shorter than expected"))
+                           :reason (if (zerop value-len)
+                                       "Result is empty"
+                                       "Result is shorter than expected")))
                   (when (> value-len entries-len)
                     (error 'assertion-error
                            :reason "Expected value is shorter than result"))
