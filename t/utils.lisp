@@ -2,7 +2,7 @@
 (defpackage hamcrest.t.utils
   (:use :cl
         :prove
-        :hamcrest.utils))
+        :hamcrest/src/utils))
 (in-package :hamcrest.t.utils)
 
 

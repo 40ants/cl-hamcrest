@@ -2,6 +2,15 @@
  ChangeLog
 ===========
 
+0.3.0 (2018-01-26)
+==================
+
+* System was refactored to use ``:package-inferred-system`` ASDF option.
+  Now all packages use ``/`` instead of dots.
+* Now cl-hamcrest supports ``Rove`` test framework, but you need a
+  patched version from https://github.com/40ants/rove, because it wasn't
+  accepted to the upstream yet.
+
 0.2.1 (2017-10-04)
 ==================
 

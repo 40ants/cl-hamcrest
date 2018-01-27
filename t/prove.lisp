@@ -3,7 +3,7 @@
   (:use :cl
         :prove
         :hamcrest.prove
-        :hamcrest.utils)
+        :hamcrest/src/utils)
   (:import-from :alexandria
                 :with-gensyms)
   (:import-from :hamcrest.matchers

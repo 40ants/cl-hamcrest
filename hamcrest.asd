@@ -1,22 +1,11 @@
-(in-package :cl-user)
-(defpackage hamcrest-asd
-  (:use :cl :asdf))
-(in-package :hamcrest-asd)
-
-
 (defsystem hamcrest
   :version (:read-file-form "version.lisp-expr")
+  :class :package-inferred-system
   :author "Alexander Artemenko"
   :license "New BSD License"
-  :depends-on (:iterate
-               :alexandria
-               :split-sequence
-               :cl-ppcre
-               :cl-reexport)
-  :components ((:module "src"
-                :components
-                ((:file "utils")
-                 (:file "matchers"))))
+  :pathname "src"
+  :depends-on ("hamcrest/utils"
+               "hamcrest/matchers")
   :description "A set of helpers to make your unittests more readable by using Hamcrest assertions."
   :long-description
   #.(with-open-file (stream (merge-pathnames
@@ -32,4 +21,3 @@
                 (read-sequence seq stream))
           seq)))
   :in-order-to ((test-op (test-op hamcrest-test))))
-

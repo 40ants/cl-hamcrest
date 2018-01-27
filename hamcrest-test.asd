@@ -1,9 +1,3 @@
-(in-package :cl-user)
-(defpackage hamcrest-test-asd
-  (:use :cl :asdf))
-(in-package :hamcrest-test-asd)
-
-
 (defsystem hamcrest-test
   :version (:read-file-form "version.lisp-expr")
   :author "Alexander Artemenko"
@@ -19,5 +13,5 @@
 
   :defsystem-depends-on (:prove-asdf)
   :perform (test-op :after (op c)
-                    (funcall (intern #.(string :run-test-system) :prove-asdf) c)
-                    (asdf:clear-system c)))
+                    (symbol-call :prove-asdf :run-test-system c)
+                    (clear-system c)))

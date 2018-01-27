@@ -1,12 +1,14 @@
 (in-package :cl-user)
-(defpackage hamcrest.utils
-  (:use :cl
-        :iterate)
+(defpackage hamcrest/utils
+  (:use #:cl
+        #:iterate)
+  (:import-from #:split-sequence
+                #:split-sequence)
   (:export :alistp
            :deindent
            :shift-rest-lines
            :indent))
-(in-package :hamcrest.utils)
+(in-package :hamcrest/utils)
 
 
 (defun alistp (value)
@@ -64,7 +66,7 @@ of a test report."
   "Removes empty new lines at the begining and at the end of the text,
 and removes common number of whitespaces from rest of the lines."
   ;; remove empty lines at beginning
-  (let* ((all-lines (split-sequence:split-sequence
+  (let* ((all-lines (split-sequence
                      #\Newline
                      text))
          (left-trimmed (left-remove-if

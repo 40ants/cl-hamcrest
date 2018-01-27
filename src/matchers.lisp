@@ -1,25 +1,30 @@
 (in-package :cl-user)
-(defpackage hamcrest.matchers
-  (:use :cl
-        :iterate
-        :hamcrest.utils)
-  (:import-from :alexandria
-                :with-gensyms)
-  (:export :has-all
-           :has-alist-entries
-           :has-plist-entries
-           :has-hash-entries
-           :has-properties
-           :has-slots
-           :hasnt-plist-keys
-           :any
-           :has-length
-           :contains
-           :contains-in-any-order
-           :matcher-description
-           :_))
+(defpackage hamcrest/matchers
+  (:use #:cl
+        #:iterate)
+  
+  (:import-from #:alexandria
+                #:with-gensyms)
+  (:import-from #:hamcrest/utils
+                #:indent
+                #:alistp
+                #:shift-rest-lines)
+  (:export #:has-all
+           #:has-alist-entries
+           #:has-plist-entries
+           #:has-hash-entries
+           #:has-properties
+           #:has-slots
+           #:hasnt-plist-keys
+           #:any
+           #:has-length
+           #:contains
+           #:contains-in-any-order
+           #:matcher-description
+           #:_
+           #:matcher-form))
 
-(in-package :hamcrest.matchers)
+(in-package :hamcrest/matchers)
 
 
 (defvar *matcher-descriptions*
@@ -27,6 +32,11 @@
   "In some implementation it is impossible to have documentation
 in functions created with flet, labels or lambda, that is why
 we'll store their docstrings in this cache")
+
+
+(defvar *matcher-forms*
+  (make-hash-table)
+  "TODO: ..")
 
 
 (defun matcher-description (fn)
@@ -58,6 +68,38 @@ human readable way:
 
 (defsetf matcher-description (fn) (value)
   `(setf (gethash ,fn *matcher-descriptions*)
+         ,value))
+
+
+(defun matcher-form (fn)
+  "Returns description of a given matcher function.
+
+Can be used to print nested matchers in a nicely indented,
+human readable way:
+
+.. code-block:: common-lisp-repl
+
+   TEST> (matcher-description (has-length 100500))
+   \"Has length of 100500 \"
+   
+   TEST> (matcher-description (contains
+                               (has-plist-entries :foo \"bar \")
+                               (has-plist-entries :foo \"minor \")))
+   \"Contains all given values \"
+   
+   TEST> (matcher-description (has-plist-entries
+                               :foo \"bar \"
+                               :blah (has-hash-entries :minor \"again \")))
+   \"Has plist entries:
+     :FOO = \"bar\"
+     :BLAH = Has hash entries:
+               :MINOR = \"again\"\"
+"
+  (gethash fn *matcher-forms*))
+
+
+(defsetf matcher-form (fn) (value)
+  `(setf (gethash ,fn *matcher-forms*)
          ,value))
 
 
@@ -186,7 +228,7 @@ for each indentation level."
                         (if (functionp value)
                             (let* ((value-prefix (format nil "~S = "
                                                          key))
-                                   (indent (hamcrest.utils:indent
+                                   (indent (indent
                                             1
                                             (+ (length value-prefix)
                                                ;; add two spaces becase
@@ -213,14 +255,15 @@ for each indentation level."
                            format-error-message
                            format-matcher-description)
   "Defines a new macro to check if object has some properties."
-  
+
+  ;; TODO: тут я хотел добавить сохранение matcher-forms
   `(defmacro ,macro-name (&rest entries)
      ,documentation
      (let ((get-key-value ',get-key-value)
            (check-obj-type ',check-obj-type)
            (format-matcher-description ',format-matcher-description)
            (format-error-message ',format-error-message))
-       
+      
        (with-gensyms (expected-key expected-value matcher)
          `(symbol-macrolet ((_ (any)))
             (labels ((format-matcher-description (entries)
@@ -264,11 +307,22 @@ condition 'assertion-error with reason \"Key ~S is missing\"."
                                   ;; Here we need a little magic quoting
                                   ;; to make symbols appear as BLAH instead
                                   ;; of 'BLAH or (QUOTE BLAH) (depending on LISP implementaion).
-                                  (list ,@(mapcar #'quote-underline entries)))))
+                                  (list ,@(mapcar #'quote-underline entries))))
+                    (matcher-function (function ,matcher)))
                 
-                (setf (matcher-description (function ,matcher))
+                (setf (matcher-description matcher-function)
                       description)
-                (function ,matcher))))))))
+                
+                ;; Store the form in which this matcher was called
+                ;; we quote matcher's arguments to keep their original
+                ;; form.
+                (setf (matcher-form matcher-function)
+                      (list ',',macro-name
+                            ,@(iter (for item :in entries)
+                                    (appending `(',item)))))
+                
+                ;; Return function as the value
+                matcher-function)))))))
 
 
 (def-has-macro
@@ -506,6 +560,7 @@ Assertion fails if at least one key is present in the object:
                description)
          (function ,matcher)))))
 
+
 (defun any ()
   "Assertion is passed regardles of value of the object:
 
@@ -555,12 +610,24 @@ If at least one check is failed, then ``has-all`` fails too:
                                (hasnt-plist-keys :blah)))
      × Key :BLAH is present in object, but shouldn't
 "
-  (let ((matcher (lambda (value)
+  (let ( ;;(matcher-symbol (gensym "HAS-ALL-"))
+        (matcher (lambda (value)
                    (iterate (for matcher :in matchers)
                             (funcall matcher value))
                    t))
         (description "All checks are passed"))
+    ;; (setf (symbol-function matcher-symbol)
+    ;;       matcher)
     (setf (matcher-description matcher) description)
+    (setf (matcher-form matcher)
+          `(has-all
+            ,@(loop for m in matchers
+                    collect (matcher-form m))))
+    ;; (setf (matcher-description matcher-symbol) description)
+    
+    ;; (defmethod print-object ((func (eql matcher)) stream)
+    ;;   (format stream "~A" description))
+    
     matcher))
 
 
