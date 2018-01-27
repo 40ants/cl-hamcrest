@@ -1,14 +1,15 @@
-(in-package :cl-user)
 (defpackage hamcrest/utils
   (:use #:cl
         #:iterate)
   (:import-from #:split-sequence
                 #:split-sequence)
+  (:import-from #:cl-ppcre
+                #:regex-replace-all)
   (:export :alistp
            :deindent
            :shift-rest-lines
            :indent))
-(in-package :hamcrest/utils)
+(in-package hamcrest/utils)
 
 
 (defun alistp (value)
@@ -91,6 +92,6 @@ and removes common number of whitespaces from rest of the lines."
 (defun shift-rest-lines (text indent)
   "Adds text from 'indent' to all lines from the 'text' except the first
   one."
-  (ppcre:regex-replace-all "(\\n)(?m)(?!$)"
-                           text
-                           (format nil "\\1~A" indent)))
+  (regex-replace-all "(\\n)(?m)(?!$)"
+                     text
+                     (format nil "\\1~A" indent)))
