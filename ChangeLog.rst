@@ -2,7 +2,12 @@
  ChangeLog
 ===========
 
-0.3.2 (2018-01-26)
+0.3.3 (2018-01-28)
+==================
+
+* Fixed system's version number.
+
+0.3.2 (2018-01-27)
 ==================
 
 * Fixed a way how hamcrest/rove reexports symbols from hamcrest/matchers.
