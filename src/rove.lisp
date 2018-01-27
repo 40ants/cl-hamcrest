@@ -1,9 +1,8 @@
 (uiop:define-package hamcrest/rove
-  (:use #:cl
-        #:prove
-        #:iterate
-;;        #:hamcrest/matchers
-        )
+    (:use #:cl
+          #:prove
+          #:iterate
+          #:hamcrest/matchers)
   (:import-from #:rove/core/result
                 #:passed-assertion
                 #:*print-assertion*
@@ -14,18 +13,13 @@
                 #:form)
   (:import-from #:rove/core/assertion
                 #:%okng)
-  (:import-from #:hamcrest/matchers
-                #:assertion-error
-                #:assertion-error-reason-with-context
-                #:has-plist-entries)
   (:import-from #:alexandria
                 #:with-gensyms)
+  ;; reexport matchers for convenience
   (:reexport #:hamcrest/matchers)
+  
   (:export :assert-that))
 (in-package :hamcrest/rove)
-
-;; reexport matchers for convenience
-;;(cl-reexport:reexport-from 'hamcrest/matchers)
 
 
 (defvar *current-matcher-description*)

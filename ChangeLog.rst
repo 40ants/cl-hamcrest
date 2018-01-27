@@ -2,6 +2,11 @@
  ChangeLog
 ===========
 
+0.3.2 (2018-01-26)
+==================
+
+* Fixed a way how hamcrest/rove reexports symbols from hamcrest/matchers.
+
 0.3.1 (2018-01-26)
 ==================
 
