@@ -2,6 +2,20 @@
  ChangeLog
 ===========
 
+0.3.4 (2018-01-29)
+==================
+
+* These symbols were exported to fix Rove integration:
+  
+  * ``assertion-error``
+  * ``assertion-error-reason``
+  * ``assertion-context``
+  * ``assertion-error-reason-with-context``
+
+* ``contains`` matcher now saves it's form to make
+  error report better under the Rove.
+
+
 0.3.3 (2018-01-28)
 ==================
 

@@ -22,7 +22,11 @@
            #:contains-in-any-order
            #:matcher-description
            #:_
-           #:matcher-form))
+           #:matcher-form
+           #:assertion-error
+           #:assertion-error-reason
+           #:assertion-context
+           #:assertion-error-reason-with-context))
 
 (in-package :hamcrest/matchers)
 
@@ -737,10 +741,16 @@ You can ignore value of some list items, by using ``(any)`` matcher:
                                                      expected-value))))))
                 ;; to show that everything is ok
                 t))
-         (let ((description "Contains all given values"))
-           (setf (matcher-description (function ,matcher))
+         (let ((description "Contains all given values")
+               (matcher-function (function ,matcher)))
+           (setf (matcher-description matcher-function)
                  description)
-           (function ,matcher))))))
+
+           (setf (matcher-form matcher-function)
+                 (list 'contains ,@entries))
+           
+           ;; Return resulting matcher
+           matcher-function)))))
 
 
 (defmacro contains-in-any-order (&rest entries)
