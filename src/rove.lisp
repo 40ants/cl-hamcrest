@@ -53,32 +53,6 @@
   )
 
 
-;; (defmacro assert-that-one (value &rest matchers)
-;;   "Main macro to test values agains matchers."
-  
-;;   (let ((matcher (if (> (length matchers)
-;;                         1)
-;;                      ;; if there is more than one matcher,
-;;                      ;; then we need to combine them implicitly
-;;                      `(has-all ,@matchers)
-;;                      ;; otherwise, just use single matcher
-;;                      (first matchers))))
-    
-;;     (with-gensyms (matcher-var matcher-description)
-;;       `(symbol-macrolet ((_ (any)))
-;;          (let* ((,matcher-var ,matcher)
-;;                 (,*current-matcher-description* (matcher-description ,matcher-var)))
-
-;;            (rove/core/assertion::%okng
-;;             (funcall ,matcher-var ,value)
-;;             ,*current-matcher-description*
-;;             (lambda (result error)
-;;               (declare (ignorable error))
-;;               (if result
-;;                   'rove/core/result:passed-assertion
-;;                   'failed-assertion))))))))
-
-
 (defmacro assert-that (value &rest matchers)
   "Main macro to test values agains matchers."
   
