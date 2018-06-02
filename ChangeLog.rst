@@ -2,6 +2,12 @@
  ChangeLog
 ===========
 
+0.4.0 (2018-06-02)
+==================
+
+* System ``hamcrest-prove`` was replaced with ``hamcrest/prove`` and
+  now uses ``package-inferred`` asdf class.
+
 0.3.4 (2018-01-29)
 ==================
 

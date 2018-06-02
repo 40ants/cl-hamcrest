@@ -1,19 +1,21 @@
-(in-package :cl-user)
-(defpackage hamcrest.prove
+(defpackage hamcrest/prove
   (:use :cl
-        :prove
+   :prove
         :iterate
-        :hamcrest.matchers)
-  (:import-from :hamcrest.matchers
-                :assertion-error
+        ;; :hamcrest/matchers
+        )
+  (:import-from :hamcrest/matchers
+   :assertion-error
                 :assertion-error-reason-with-context)
   (:import-from :alexandria
-                :with-gensyms)
+   :with-gensyms)
+  (:import-from #:cl-reexport
+                #:reexport-from)
   (:export :assert-that))
-(in-package :hamcrest.prove)
+(in-package :hamcrest/prove)
 
 ;; reexport matchers for convenience
-(cl-reexport:reexport-from 'hamcrest.matchers)
+(reexport-from 'hamcrest/matchers)
 
 
 (defclass assertion-report (prove.report:failed-test-report)
