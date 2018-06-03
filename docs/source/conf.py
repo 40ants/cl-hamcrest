@@ -46,8 +46,8 @@ cl_systems = [
         'name': 'hamcrest-test',
         'path': join(dirname(realpath(__file__)), '../../'),
         'packages': [
-            'hamcrest.matchers',
-            'hamcrest.prove',
+            'hamcrest/matchers',
+            'hamcrest/prove',
         ]
     },
 ]

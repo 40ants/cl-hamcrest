@@ -1,18 +1,16 @@
-(in-package :cl-user)
-(defpackage hamcrest.t.prove
+(defpackage hamcrest-test/prove
   (:use :cl
-        :prove
-        :hamcrest.prove
-        :hamcrest/src/utils)
+        :rove
+        :hamcrest/prove
+        :hamcrest/utils)
   (:import-from :alexandria
                 :with-gensyms)
-  (:import-from :hamcrest.matchers
+  (:import-from :hamcrest/matchers
                 :assertion-error
-                :assertion-error-reason))
-(in-package :hamcrest.t.prove)
-
-
-(plan 2)
+                :assertion-error-reason)
+  (:import-from #:cl-ppcre
+                #:scan))
+(in-package hamcrest-test/prove)
 
 
 (defmacro test-assertion (title body expected)
@@ -20,11 +18,11 @@
 matches given regular expression.
 
 Body evaluated and it's result is matched agains expected string,
-using prove:like. Dangling spaces and newlines are trimmed from
+using ppcre:scan. Dangling spaces and newlines are trimmed from
 the result before trying to match."
   
   (with-gensyms (result trimmed)
-    `(subtest ,title
+    `(testing ,title
        (let* ((,result
                ;; All output during the test, should be captured
                ;; to test against give regex
@@ -47,10 +45,13 @@ the result before trying to match."
 
               (,trimmed (string-trim '(#\Space #\Newline)
                                      (deindent ,result))))
-         (like ,trimmed (deindent ,expected))))))
+         (ok (not (null (scan ,trimmed
+                              (deindent ,expected)))))))))
 
 
-(subtest "Nested matchers in Prove's assert-that"
+(deftest nested-matchers
+  "Checking nested matchers in Prove's assert-that"
+  
   (let ((value '(((:name . "Maria"))
                  ((:name . "Alexander")))))
     (test-assertion
@@ -82,7 +83,9 @@ the result before trying to match."
     Key :AGE is missing")))
 
 
-(subtest "Assert-that uses implicit has-all, to combine multiple matchers"
+(deftest implicit-has-all
+  "Assert-that should use implicit has-all, to combine multiple matchers"
+  
   (let ((value '(:name "Irina")))
     (test-assertion
      "Check if object have :name key, but not :husband key"
@@ -90,6 +93,3 @@ the result before trying to match."
                   (has-plist-entries :name "Irina")
                   (hasnt-plist-keys :husband))
      "✓ All checks are passed")))
-
-
-(finalize)

@@ -1,57 +1,59 @@
-(in-package :cl-user)
-(defpackage hamcrest.t.matchers
+(defpackage hamcrest-test/matchers
   (:use :cl
-        :prove
-        :hamcrest.matchers)
+        :rove
+        :hamcrest/matchers)
   (:import-from :alexandria
                 :with-gensyms)
-  (:import-from :hamcrest.matchers
+  (:import-from :hamcrest/matchers
                 :assertion-error
                 :assertion-error-reason
                 :assertion-error-reason-with-context))
-(in-package :hamcrest.t.matchers)
-
-
-(plan 12)
+(in-package hamcrest-test/matchers)
 
 
 (defmacro test-if-matcher-fails (title matcher value expected-error-message)
-  `(subtest ,title
-     (is-condition
-      (funcall ,matcher
-               ,value)
-      assertion-error
-      (list :test (lambda (got expected)
-                    (when (typep got expected)
-                      (let ((reason (assertion-error-reason-with-context got)))
-                        ;; if there is .* in expected message, then
-                        ;; we'll choose to use "like" macro for checking
-                        ;; assertion reason against expected value
-                        (,(if (search ".*" expected-error-message)
-                              'like
-                              'is)
-                          reason ,expected-error-message
-                          "Condition should have correct error message"))))
-            "Matcher should signal ASSERTION-ERROR condition"))))
+  "This macro generates a test which checks that
+   matcher applied to the given value will signal assertion-error
+   and it's error message will match to expected-error-message."
+  `(testing ,title
+     (let* ((condition nil)
+            (result (handler-case (funcall ,matcher
+                                           ,value)
+                      (assertion-error (c)
+                        (setf condition c))))
+            (reason (when condition
+                      (assertion-error-reason-with-context condition))))
+       ;; We don't interested in the matching result
+       ;; because here we are checking if a condition was signaled
+       (declare (ignorable result))
+       
+       (ok (and condition reason)
+           "Matcher should signal ASSERTION-ERROR condition")
+       
+       (ok (if (search ".*" ,expected-error-message)
+               (cl-ppcre:scan ,expected-error-message
+                              reason)
+               (equal reason
+                      ,expected-error-message))
+           "Condition should have correct error message"))))
 
 
 (defmacro test-if-matcher-ok (title matcher value expected-matcher-docstring)
   (with-gensyms (matcher-var matcher-description)
-    `(subtest ,title
+    `(testing ,title
        (let* ((,matcher-var ,matcher)
               (,matcher-description (matcher-description ,matcher-var)))
          (ok
           (funcall ,matcher-var
                    ,value)
           "Matcher should return t.")
-         (is ,matcher-description
-             ,expected-matcher-docstring
+         (ok (equal ,matcher-description
+                    ,expected-matcher-docstring)
              (format nil "Matcher description should be:~%\"~a\"."
                      ,expected-matcher-docstring))))))
 
 
-(subtest
-    "Alist assertions"
+(deftest alist-assertions
   (let ((value '((:foo . 1)
                  (:bar . 2)))
         (not-alist '(:foo 1 :bar 2)))
@@ -90,8 +92,7 @@
        "Value is not alist"))))
 
 
-(subtest
-    "Plist assertions"
+(deftest plist-assertions
   (let ((value '(:foo 1
                  :bar 2))
         (not-list 1))
@@ -130,8 +131,7 @@
        "Value is not a list"))))
 
 
-(subtest
-    "Hash assertions"
+(deftest hash-assertions
   (let ((value (make-hash-table :test #'equal))
         (a-number 1)
         (a-list '(1 2 3)))
@@ -181,8 +181,7 @@
 
 
 
-(subtest
-    "Properties assertions"
+(deftest properties-assertions
   (let ((object (make-symbol "Test-Symbol"))
         (a-number 1)
         (a-list '(1 2 3)))
@@ -237,7 +236,7 @@
   (bar))
 
 
-(subtest
+(deftest slot-assertions
     "Slots assertions"
   (let ((object (make-test-class :foo 1 :bar 2))
         (a-number 1)
@@ -283,7 +282,7 @@
        "Value is not an instance"))))
 
 
-(subtest "'Any' matcher  and placeholder"
+(deftest any-matcher-and-placeholder
   (test-if-matcher-ok
    "'Any' matcher matches any value"
    (any)
@@ -291,7 +290,7 @@
    "Any value is good enough"))
 
 
-(subtest "Contains matcher"
+(deftest contains-matcher
   (test-if-matcher-ok
    "Good scenario"
    (contains 1 :two "three")
@@ -358,7 +357,7 @@
   Key :AGE is missing")))
 
 
-(subtest "Contains in any order"
+(deftest contains-in-anyorder
   (let ((value (list 4 5 3 1))
         (complex (list 3 2 '((:foo "bar")) 1)))
     (test-if-matcher-ok
@@ -367,7 +366,8 @@
      value
      "Contains all given values")
     ;; now check that original value does not touched
-    (is value (list 4 5 3 1))
+    (ok (equal value
+               (list 4 5 3 1)))
 
     (test-if-matcher-fails
      "And fails if some item not found in given list"
@@ -384,7 +384,8 @@
      "(?s)Value which \"Has alist entries:.*\" is missing")))
 
 
-(subtest "Grouping matchers with (has-all ...)"
+(deftest test-has-all
+    "Grouping matchers with (has-all ...)"
 
   (let ((value '(:foo "bar" :blah "minor")))
     
@@ -403,19 +404,19 @@
      "Key :BLAH has \"minor\" value, but \"other\" was expected")))
 
 
-(subtest "Nested object matchers"
+(deftest nested-object-matchers
   (let* ((matcher (has-plist-entries
                    :foo (has-alist-entries
                          :bar :minor)))
          (description (matcher-description matcher)))
     
-    (is description
-        "Has plist entries:
+    (ok (equal description
+               "Has plist entries:
   :FOO = Has alist entries:
-           :BAR = :MINOR")))
+           :BAR = :MINOR"))))
 
 
-(subtest "Hasn't plist keys matcher"
+(deftest test-hasnt-plist-keys
   (let ((obj '(:foo "bar")))
 
     (locally
@@ -449,7 +450,7 @@
      "Key :FOO is present in object, but shouldn't")))
 
 
-(subtest "List length matcher"
+(deftest test-list-length-matcher
   (test-if-matcher-ok
    "If list length is equal to specified, it is OK"
    (has-length 4)
@@ -468,4 +469,3 @@
    :foo
    "Object :FOO is not of type SEQUENCE"))
 
-(finalize)

@@ -1,15 +1,11 @@
-(in-package :cl-user)
-(defpackage hamcrest.t.utils
+(defpackage hamcrest-test/utils
   (:use :cl
-        :prove
-        :hamcrest/src/utils))
-(in-package :hamcrest.t.utils)
+        :rove
+        :hamcrest/utils))
+(in-package hamcrest-test/utils)
 
 
-(plan 2)
-
-(subtest
-    "Checking alistp predicate"
+(deftest test-alistp-predicate
   (let ((good-values (list nil
                            '((:foo . 1)
                              (:bar . 2))))
@@ -22,19 +18,18 @@
     (loop
        :for value
        :in good-values
-       :do (is (alistp value)
-               t
+       :do (ok (equal (alistp value)
+                      t)
                (format nil "~S is a proper alist" value)))
 
     (loop
        :for value
        :in bad-values
-       :do (is (alistp value)
-               nil
+       :do (ok (null (alistp value))
                (format nil "~S is not a proper alist" value)))))
 
 
-(subtest "Deindent text"
+(deftest deindent-text
   (let ((text "
     Blah
       Minor
@@ -45,7 +40,6 @@
   Minor
     - again;
     - and again."))
-    (is (deindent text) expected)))
+    (ok (equal (deindent text)
+               expected))))
 
-
-(finalize)
