@@ -1,21 +1,16 @@
-(defpackage hamcrest/prove
-  (:use :cl
-   :prove
-        :iterate
-        ;; :hamcrest/matchers
-        )
-  (:import-from :hamcrest/matchers
-   :assertion-error
-                :assertion-error-reason-with-context)
-  (:import-from :alexandria
-   :with-gensyms)
-  (:import-from #:cl-reexport
-                #:reexport-from)
+(uiop:define-package hamcrest/prove
+    (:use #:cl
+          #:prove
+          #:iterate
+          #:hamcrest/matchers)
+  (:reexport #:hamcrest/matchers)
+  (:import-from #:hamcrest/matchers
+                #:assertion-error
+                #:assertion-error-reason-with-context)
+  (:import-from #:alexandria
+                #:with-gensyms)
   (:export :assert-that))
-(in-package :hamcrest/prove)
-
-;; reexport matchers for convenience
-(reexport-from 'hamcrest/matchers)
+(in-package hamcrest/prove)
 
 
 (defclass assertion-report (prove.report:failed-test-report)

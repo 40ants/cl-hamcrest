@@ -2,6 +2,12 @@
  ChangeLog
 ===========
 
+0.4.2 (2018-06-03)
+==================
+
+* Fixed hamcrest/prove compilation under SBCL.
+* Travis config now contains only SBCL and CCL.
+
 0.4.1 (2018-06-03)
 ==================
 
