@@ -17,11 +17,11 @@ env:
     - ROSWELL_BRANCH=master
     - ROSWELL_INSTALL_DIR=$HOME/.roswell
   matrix:
-    - LISP=sbcl
+    - LISP=sbcl-bin/1.4.3
     # - LISP=ecl
     # - LISP=abcl
     # - LISP=allegro
-    - LISP=ccl
+    # - LISP=ccl
     # - LISP=clisp
     # - LISP=cmucl
 
