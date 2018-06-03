@@ -17,7 +17,7 @@ env:
     - ROSWELL_BRANCH=master
     - ROSWELL_INSTALL_DIR=$HOME/.roswell
   matrix:
-    - LISP=sbcl-bin/1.4.7
+    - LISP=sbcl-bin
     # - LISP=ecl
     # - LISP=abcl
     # - LISP=allegro
