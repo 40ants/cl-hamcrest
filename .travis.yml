@@ -27,9 +27,7 @@ env:
 
 matrix:
   allow_failures:
-    - env: LISP=ecl
     - env: LISP=abcl
-    - env: LISP=allegro
     - env: LISP=clisp
     - env: LISP=cmucl
 
