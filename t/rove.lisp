@@ -35,7 +35,12 @@ the result before trying to match."
                 (with-reporter :spec
                   ;; Here we catch output of a single assertion
                   (rove/core/assertion::output-of
-                      ,body)))
+                      ;; Also, we need to turn of coloring
+                      ;; because terminal escape characters
+                      ;; will prevent text matching when running
+                      ;; tests in console or on CI
+                      (let ((rove:*enable-colors* nil))
+                        ,body))))
 
               (,trimmed (string-trim '(#\Space #\Newline)
                                      (deindent ,result))))
