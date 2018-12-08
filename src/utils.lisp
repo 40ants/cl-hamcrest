@@ -30,16 +30,17 @@
   "Returns a new list, without rightmost items
 which match a predicate."
   (labels ((recur (items)
-             (destructuring-bind (head . tail) items
-               (if tail
-                   (let ((tail (recur tail)))
-                     (if tail
-                         (cons head tail)
-                         (unless (funcall predicate head)
-                           (list head))))
-                   (if (funcall predicate head)
-                       nil
-                       (list head))))))
+             (when items
+               (destructuring-bind (head . tail) items
+                 (if tail
+                     (let ((tail (recur tail)))
+                       (if tail
+                           (cons head tail)
+                           (unless (funcall predicate head)
+                             (list head))))
+                     (if (funcall predicate head)
+                         nil
+                         (list head)))))))
     (recur items)))
 
 
@@ -78,7 +79,9 @@ and removes common number of whitespaces from rest of the lines."
                  #'empty-line-p))
          
          ;; calculate common indentation
-         (min-indent (apply #'min (mapcar #'get-indentation lines)))
+         (min-indent (if lines
+                         (apply #'min (mapcar #'get-indentation lines))
+                         0))
          
          ;; remove common indentation from lines
          (new-lines (iter (for line in lines)
