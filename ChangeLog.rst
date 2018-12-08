@@ -2,6 +2,15 @@
  ChangeLog
 ===========
 
+0.4.3 (2018-12-08)
+==================
+
+* Fixed compatibility with the latest ``rove``.
+  Bug was caused by this commit:
+
+  https://github.com/fukamachi/rove/commit/1f84d70a0b4db03bd0ec9b837fbc961189462f0d
+* Also, now ``hamcrest/rove`` is covered by tests.
+
 0.4.2 (2018-06-03)
 ==================
 
