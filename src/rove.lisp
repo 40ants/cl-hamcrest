@@ -77,7 +77,9 @@
               (declare (ignorable error))
               (if result
                   'passed-assertion
-                  'failed-assertion))))))))
+                  'failed-assertion))
+            ;; positive? sure!
+            t))))))
 
 
 (defmethod initialize-instance :after ((assertion failed-assertion) &rest init-args)
