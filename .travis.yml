@@ -38,6 +38,8 @@ os:
   - linux
 
 install:
+  - env | sort
+  - locale
   - curl -L https://raw.githubusercontent.com/snmsts/roswell/release/scripts/install-for-ci.sh | sh
   - ros install asdf/3.3.1.1
   - ros install rove
