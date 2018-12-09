@@ -6,6 +6,7 @@
   :license "New BSD License"
   :pathname "t"
   :depends-on ("hamcrest-test/prove"
+               "hamcrest-test/rove"
                "hamcrest-test/matchers"
                "hamcrest-test/utils")
   :description "Test system for cl-hamcrest."
