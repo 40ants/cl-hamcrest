@@ -30,6 +30,7 @@ matrix:
     - env: LISP=abcl
     - env: LISP=clisp
     - env: LISP=cmucl
+    - env: LISP=allegro
 
 os:
   - osx
