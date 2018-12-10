@@ -17,7 +17,7 @@ packaging==16.8           # via setuptools
 pygments-cl-repl==0.1
 pygments==2.2.0           # via pygments-cl-repl, sphinx
 pyparsing==2.2.0          # via packaging
-pytz==2017.2              # via babel
+pytz==2018.7              # via babel
 requests==2.13.0          # via sphinx
 six==1.10.0               # via packaging, setuptools, sphinx
 snowballstemmer==1.2.1    # via sphinx
