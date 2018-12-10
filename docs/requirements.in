@@ -1,5 +1,5 @@
 -e git+git@github.com:russell/sphinxcontrib-cldomain.git#egg=sphinxcontrib-cldomain
 
-sphinx
+sphinx<1.6
 pygments-cl-repl
 sphinx-bootstrap-theme
