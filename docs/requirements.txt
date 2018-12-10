@@ -11,7 +11,7 @@ appdirs==1.4.3            # via setuptools
 babel==2.4.0              # via sphinx
 docutils==0.13.1          # via sphinx
 imagesize==0.7.1          # via sphinx
-Jinja2==2.9.6             # via sphinx
+Jinja2==2.10             # via sphinx
 MarkupSafe==1.0           # via jinja2
 packaging==16.8           # via setuptools
 pygments-cl-repl==0.1
