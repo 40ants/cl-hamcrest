@@ -10,12 +10,14 @@ jobs:
           command: |
             ros install rove
             ros install 40ants/cldomain
+            touch qlfile
+            qlot install
       - run:
           name: Check environment
           command: env | sort && pwd && echo 'Current dir:' && ls -lh && echo "/app dir:" && ls -lh /app/
       - run:
           name: Run tests
-          command: rove hamcrest-test.asd
+          command: qlot exec rove hamcrest-test.asd
       - run:
           name: Build docs
           command: ./build-docs-on-ci.sh
