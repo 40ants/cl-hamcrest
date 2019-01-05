@@ -1,4 +1,4 @@
--e git+https://github.com/russell/sphinxcontrib-cldomain.git#egg=sphinxcontrib-cldomain
+-e git+https://github.com/40ants/sphinxcontrib-cldomain.git#egg=sphinxcontrib-cldomain
 
 sphinx<1.6
 pygments-cl-repl
