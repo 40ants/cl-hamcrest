@@ -14,6 +14,7 @@ jobs:
             ros install 40ants/cldomain
             touch qlfile
             qlot install
+            export LISP=ccl-bin
       - run:
           name: Check environment
           command: env | sort && pwd && echo 'Current dir:' && ls -lh && echo "/app dir:" && ls -lh /app/
