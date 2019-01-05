@@ -142,5 +142,6 @@ behaviour could be overriden by keyword argument ``:raise t``."
                           (uiop:print-condition-backtrace condition :stream *error-output*)
                           (uiop:quit 1))))
     (build-docs)
-    (push-gh-pages)))
+    (when (member "--push" argv :test #'string-equal)
+      (push-gh-pages))))
 
