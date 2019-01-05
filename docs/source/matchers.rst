@@ -12,7 +12,7 @@ This kind of matchers checks some sort of properties on an object. In
 this case objects are not only the CLOS objects but also, hashmaps,
 alists and property lists.
 
-.. cl:package:: hamcrest.matchers
+.. cl:package:: hamcrest/matchers
 
 .. cl:macro:: has-plist-entries
 
@@ -26,7 +26,7 @@ alists and property lists.
 
 .. cl:macro:: has-slots
               
-.. cl:macro:: has-type
+.. cl:function:: has-type
 
 
 Sequence matchers
