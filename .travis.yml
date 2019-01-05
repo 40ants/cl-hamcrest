@@ -43,6 +43,7 @@ install:
   - ros install asdf/3.3.1.1
   - ros install rove
   - ros install 40ants/cl-info
+  - ros install 40ants/cldomain
 
 before_script:
   - ros --version
