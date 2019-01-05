@@ -11,7 +11,7 @@ set -e
 sudo pip install -r docs/requirements.txt
 
 if [ "$LISP" = "ccl-bin" ]; then
-    if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false"]; then
+    if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then
         echo "Building and uploading documentaion."
         ./build-docs.ros --push
     else
