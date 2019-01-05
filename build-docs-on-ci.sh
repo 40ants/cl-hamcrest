@@ -10,7 +10,7 @@ set -e
 # and TRAVIS_PULL_REQUEST=42 where 42 is a pull request number
 sudo pip install -r docs/requirements.txt
 
-if [ "$LISP" = "ccl" ]; then
+if [ "$LISP" = "ccl-bin" ]; then
     if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false"]; then
         echo "Building and uploading documentaion."
         ./build-docs.ros --push
