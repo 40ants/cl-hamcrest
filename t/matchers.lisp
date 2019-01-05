@@ -469,3 +469,17 @@
    :foo
    "Object :FOO is not of type SEQUENCE"))
 
+
+(deftest test-type-matcher
+  (test-if-matcher-ok
+   "If object is of given type, it is OK"
+   (has-type 'cons)
+   '(a b c d)
+   "Has type CONS")
+
+  (test-if-matcher-fails
+   "If type mismatch, it fails"
+   (has-type 'integer)
+   '(a b c d)
+   "(A B C D) has type CONS, but INTEGER was expected"))
+

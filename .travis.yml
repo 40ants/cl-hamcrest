@@ -51,3 +51,4 @@ before_script:
 
 script:
   - rove hamcrest-test.asd
+  - ./build-docs-on-ci.sh

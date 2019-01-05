@@ -1,4 +1,3 @@
-(in-package :cl-user)
 (defpackage hamcrest/matchers
   (:use #:cl
         #:iterate)
@@ -16,6 +15,7 @@
            #:has-properties
            #:has-slots
            #:hasnt-plist-keys
+           #:has-type
            #:any
            #:has-length
            #:contains
@@ -815,3 +815,29 @@ You can ignore value of some list items, by using ``(any)`` matcher:
          (setf (matcher-description (function ,matcher))
                description)
          (function ,matcher)))))
+
+
+(defun has-type (expected-type)
+  "Checks if a list have specivied length.
+
+.. code-block:: common-lisp-repl
+
+   TEST> \(matcher-description \(has-type 'cons\)\)
+   \"Has type CONS\"
+   
+   TEST> \(funcall \(has-type 'cons\) 100500\)
+   ; Debugger entered on #<ASSERTION-ERROR 100500 has type (INTEGER 0 4611686018427387903), but CONS was expected>
+"
+
+  (let ((matcher (lambda (value)
+                   (when (not (typep value expected-type))
+                     (error 'assertion-error
+                            :reason (format nil "~S has type ~A, but ~A was expected"
+                                            value
+                                            (type-of value)
+                                            expected-type)))
+                   t))
+        (description (format nil "Has type ~A"
+                             expected-type)))
+    (setf (matcher-description matcher) description)
+    matcher))
