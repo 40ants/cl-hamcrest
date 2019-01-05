@@ -3,6 +3,8 @@ jobs:
   ccl:
     docker:
       - image: 40ants/base-lisp-image:0.6.0-ccl-bin
+    environment:
+      LISP: ccl-bin
     steps:
       - checkout
       - run:
@@ -14,7 +16,6 @@ jobs:
             ros install 40ants/cldomain
             touch qlfile
             qlot install
-            export LISP=ccl-bin
       - run:
           name: Check environment
           command: env | sort && pwd && echo 'Current dir:' && ls -lh && echo "/app dir:" && ls -lh /app/
