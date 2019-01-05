@@ -25,6 +25,8 @@ alists and property lists.
 .. cl:macro:: has-properties
 
 .. cl:macro:: has-slots
+              
+.. cl:macro:: has-type
 
 
 Sequence matchers

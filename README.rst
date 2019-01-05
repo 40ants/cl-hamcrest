@@ -118,7 +118,6 @@ Roadmap
 
 * Logical matchers:
 
-  - ``all-of`` – rename ``has-all``.
   - ``any-of`` – Matches if any of the given matchers evaluate to True.
   - ``is-not`` – Inverts the given matcher to its logical negation (think if
     we need it, and how to show the results, here are results
@@ -136,9 +135,6 @@ Roadmap
 * Sequence matchers:
 
   - ``is-in`` – Matches if evaluated object is present in a given sequence.
-  - ``has-items`` – Matches if all of the given matchers are satisfied by any elements of the sequence.
-  - ``only-contains`` – Matches if each element of sequence satisfies
-    any of the given matchers.
 
 * Other features:
 
