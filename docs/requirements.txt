@@ -5,7 +5,7 @@
 #    pip-compile --output-file docs/requirements.txt docs/requirements.in
 #
 
--e git+git@github.com:russell/sphinxcontrib-cldomain.git#egg=sphinxcontrib-cldomain
+-e git+https://github.com/russell/sphinxcontrib-cldomain.git#egg=sphinxcontrib-cldomain
 alabaster==0.7.12         # via sphinx
 appdirs==1.4.3            # via setuptools
 babel==2.6.0              # via sphinx
