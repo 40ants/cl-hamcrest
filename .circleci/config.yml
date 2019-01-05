@@ -5,7 +5,9 @@ jobs:
       - image: 40ants/base-lisp-image:0.6.0-ccl-bin
     steps:
       - checkout
-      - ros install 40ants/cldomain
+      - run:
+          name: Install cldomain
+          command: ros install 40ants/cldomain
       - run:
           name: Check environment
           command: env | sort && pwd && echo 'Current dir:' && ls -lh && echo "/app dir:" && ls -lh /app/
