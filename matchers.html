@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Matchers library &#8212; cl-hamcrest 0.4.3 documentation</title>
+    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Integration with Prove" href="prove.html" />
+    <link rel="prev" title="Welcome to cl-hamcrest’s documentation!" href="index.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html">
+          cl-hamcrest</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.4</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="changelog.html">Changelog</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="index.html">Documentation <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Matchers library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="prove.html">Integration with Prove</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">ChangeLog</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+      <div class="col-md-3">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
+<li><a class="reference internal" href="#">Matchers library</a><ul>
+<li><a class="reference internal" href="#object-matchers">Object matchers</a></li>
+<li><a class="reference internal" href="#sequence-matchers">Sequence matchers</a></li>
+<li><a class="reference internal" href="#boolean-matchers">Boolean matchers</a></li>
+<li><a class="reference internal" href="#utility-functions">Utility functions</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    <div class="col-md-9 content">
+      
+  <div class="section" id="matchers-library">
+<h1>Matchers library<a class="headerlink" href="#matchers-library" title="Permalink to this headline">¶</a></h1>
+<p>Here you will find all matchers, supported by CL-HAMCREST, grouped by
+their purpose.</p>
+<div class="section" id="object-matchers">
+<h2>Object matchers<a class="headerlink" href="#object-matchers" title="Permalink to this headline">¶</a></h2>
+<p>This kind of matchers checks some sort of properties on an object. In
+this case objects are not only the CLOS objects but also, hashmaps,
+alists and property lists.</p>
+<dl class="macro">
+<dt id="macro:hamcrest/matchers:has-plist-entries">
+<em class="property">macro </em> (<code class="descname">has-plist-entries</code> <em class="lambda_keyword text-muted">&amp;rest</em> <em>entries</em>)<a class="headerlink" href="#macro:hamcrest/matchers:has-plist-entries" title="Permalink to this definition">¶</a></dt>
+<dd><p>Matches plist entries:</p>
+<div class="highlight-common-lisp-repl notranslate"><div class="highlight"><pre><span></span><span class="gp">TEST&gt; </span><span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">obj</span> <span class="o">&#39;</span><span class="p">(</span><span class="ss">:foo</span> <span class="ss">:bar</span><span class="p">)))</span>
+        <span class="p">(</span><span class="nv">assert-that</span> <span class="nv">obj</span>
+                     <span class="p">(</span><span class="nv">has-plist-entries</span> <span class="ss">:foo</span> <span class="s">&quot;bar&quot;</span>
+                                        <span class="ss">:blah</span> <span class="s">&quot;minor&quot;</span><span class="p">)))</span><span class="go"></span>
+<span class="go">  × Key :FOO has :BAR value, but &quot;bar&quot; was expected</span>
+</pre></div>
+</div>
+<p>This way you can test any number of plist’s entries.</p>
+</dd></dl>
+
+<dl class="macro">
+<dt id="macro:hamcrest/matchers:hasnt-plist-keys">
+<em class="property">macro </em> (<code class="descname">hasnt-plist-keys</code> <em class="lambda_keyword text-muted">&amp;rest</em> <em>keys</em>)<a class="headerlink" href="#macro:hamcrest/matchers:hasnt-plist-keys" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if given keys are missing from an object:</p>
+<div class="highlight-common-lisp-repl notranslate"><div class="highlight"><pre><span></span><span class="gp">TEST&gt; </span><span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">obj</span> <span class="o">&#39;</span><span class="p">(</span><span class="ss">:foo</span> <span class="s">&quot;bar&quot;</span><span class="p">)))</span>
+        <span class="p">(</span><span class="nv">assert-that</span> <span class="nv">obj</span>
+                     <span class="p">(</span><span class="nv">hasnt-plist-keys</span> <span class="ss">:blah</span> <span class="ss">:minor</span><span class="p">)))</span><span class="go"></span>
+<span class="go">  ✓ Keys :BLAH, :MINOR are absent</span>
+</pre></div>
+</div>
+<p>Assertion fails if at least one key is present in the object:</p>
+<div class="highlight-common-lisp-repl notranslate"><div class="highlight"><pre><span></span><span class="gp">TEST&gt; </span><span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">obj</span> <span class="o">&#39;</span><span class="p">(</span><span class="ss">:foo</span> <span class="s">&quot;bar&quot;</span><span class="p">)))</span>
+        <span class="p">(</span><span class="nv">assert-that</span> <span class="nv">obj</span>
+                     <span class="p">(</span><span class="nv">hasnt-plist-keys</span> <span class="ss">:blah</span> <span class="ss">:foo</span><span class="p">)))</span><span class="go"></span>
+<span class="go">  × Key :FOO is present in object, but shouldn&#39;t.</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="macro">
+<dt id="macro:hamcrest/matchers:has-alist-entries">
+<em class="property">macro </em> (<code class="descname">has-alist-entries</code> <em class="lambda_keyword text-muted">&amp;rest</em> <em>entries</em>)<a class="headerlink" href="#macro:hamcrest/matchers:has-alist-entries" title="Permalink to this definition">¶</a></dt>
+<dd><p>Matches alist entries:</p>
+<div class="highlight-common-lisp-repl notranslate"><div class="highlight"><pre><span></span><span class="gp">TEST&gt; </span><span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">obj</span> <span class="o">&#39;</span><span class="p">((</span><span class="ss">:the-key</span> <span class="o">.</span> <span class="s">&quot;value&quot;</span><span class="p">))))</span>
+        <span class="p">(</span><span class="nv">assert-that</span> <span class="nv">obj</span>
+                     <span class="p">(</span><span class="nv">has-alist-entries</span> <span class="ss">:the-key</span> <span class="s">&quot;value&quot;</span><span class="p">)))</span><span class="go"></span>
+
+<span class="go">  ✓ Has alist entries:</span>
+<span class="go">      :THE-KEY = &quot;value&quot;</span>
+
+<span class="gp">TEST&gt; </span><span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">obj</span> <span class="o">&#39;</span><span class="p">((</span><span class="ss">:the-key</span> <span class="o">.</span> <span class="s">&quot;value&quot;</span><span class="p">))))</span>
+        <span class="p">(</span><span class="nv">assert-that</span> <span class="nv">obj</span>
+                     <span class="p">(</span><span class="nv">has-alist-entries</span> <span class="ss">:the-key</span> <span class="s">&quot;value&quot;</span>
+                                        <span class="ss">:missing-key</span> <span class="s">&quot;value&quot;</span><span class="p">)))</span><span class="go"></span>
+
+<span class="go">  × Key :MISSING-KEY is missing</span>
+
+<span class="gp">TEST&gt; </span><span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">obj</span> <span class="o">&#39;</span><span class="p">((</span><span class="ss">:the-key</span> <span class="o">.</span> <span class="s">&quot;value&quot;</span><span class="p">))))</span>
+        <span class="p">(</span><span class="nv">assert-that</span> <span class="nv">obj</span>
+                     <span class="p">(</span><span class="nv">has-alist-entries</span> <span class="ss">:the-key</span> <span class="s">&quot;other-value&quot;</span><span class="p">)))</span><span class="go"></span>
+
+<span class="go">  × Key :THE-KEY has &quot;value&quot; value, but &quot;other-value&quot; was expected</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="macro">
+<dt id="macro:hamcrest/matchers:has-hash-entries">
+<em class="property">macro </em> (<code class="descname">has-hash-entries</code> <em class="lambda_keyword text-muted">&amp;rest</em> <em>entries</em>)<a class="headerlink" href="#macro:hamcrest/matchers:has-hash-entries" title="Permalink to this definition">¶</a></dt>
+<dd><p>Matches hash entries:</p>
+<div class="highlight-common-lisp-repl notranslate"><div class="highlight"><pre><span></span><span class="gp">TEST&gt; </span><span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">obj</span> <span class="p">(</span><span class="nb">make-hash-table</span><span class="p">)))</span>
+        <span class="p">(</span><span class="nb">setf</span> <span class="p">(</span><span class="nb">gethash</span> <span class="ss">&#39;the-key</span> <span class="nv">obj</span><span class="p">)</span> <span class="s">&quot;value&quot;</span><span class="p">)</span>
+        <span class="p">(</span><span class="nv">assert-that</span> <span class="nv">obj</span>
+                     <span class="p">(</span><span class="nv">has-hash-entries</span> <span class="ss">&#39;the-key</span> <span class="s">&quot;value&quot;</span><span class="p">)))</span><span class="go"></span>
+
+<span class="go">  ✓ Has hash entries:</span>
+<span class="go">      THE-KEY = &quot;value&quot;</span>
+
+<span class="gp">TEST&gt; </span><span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">obj</span> <span class="p">(</span><span class="nb">make-hash-table</span><span class="p">)))</span>
+        <span class="p">(</span><span class="nb">setf</span> <span class="p">(</span><span class="nb">gethash</span> <span class="ss">&#39;the-key</span> <span class="nv">obj</span><span class="p">)</span> <span class="s">&quot;value&quot;</span><span class="p">)</span>
+        <span class="p">(</span><span class="nv">assert-that</span> <span class="nv">obj</span>
+                     <span class="p">(</span><span class="nv">has-hash-entries</span> <span class="ss">&#39;missing-key</span> <span class="s">&quot;value&quot;</span><span class="p">)))</span><span class="go"></span>
+
+<span class="go">  × Key MISSING-KEY is missing</span>
+
+<span class="gp">TEST&gt; </span><span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">obj</span> <span class="p">(</span><span class="nb">make-hash-table</span><span class="p">)))</span>
+        <span class="p">(</span><span class="nb">setf</span> <span class="p">(</span><span class="nb">gethash</span> <span class="ss">&#39;the-key</span> <span class="nv">obj</span><span class="p">)</span> <span class="s">&quot;value&quot;</span><span class="p">)</span>
+        <span class="p">(</span><span class="nv">assert-that</span> <span class="nv">obj</span>
+                     <span class="p">(</span><span class="nv">has-hash-entries</span> <span class="ss">&#39;the-key</span> <span class="s">&quot;other-value&quot;</span><span class="p">)))</span><span class="go"></span>
+
+<span class="go">  × Key THE-KEY has &quot;value&quot; value, but &quot;other-value&quot; was expected</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="macro">
+<dt id="macro:hamcrest/matchers:has-properties">
+<em class="property">macro </em> (<code class="descname">has-properties</code> <em class="lambda_keyword text-muted">&amp;rest</em> <em>entries</em>)<a class="headerlink" href="#macro:hamcrest/matchers:has-properties" title="Permalink to this definition">¶</a></dt>
+<dd><p>Matches object properties:</p>
+<div class="highlight-common-lisp-repl notranslate"><div class="highlight"><pre><span></span><span class="gp">TEST&gt; </span><span class="p">(</span><span class="nb">defvar</span> <span class="nv">the-object</span><span class="p">)</span><span class="go"></span>
+<span class="go">THE-OBJECT</span>
+<span class="gp">TEST&gt; </span><span class="p">(</span><span class="nb">setf</span> <span class="p">(</span><span class="nb">getf</span> <span class="nv">the-object</span> <span class="ss">:tags</span><span class="p">)</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">one</span> <span class="nv">two</span><span class="p">))</span><span class="go"></span>
+<span class="gp">TEST&gt; </span><span class="p">(</span><span class="nv">assert-that</span> <span class="ss">&#39;the-object</span>
+                   <span class="p">(</span><span class="nv">has-properties</span> <span class="ss">:tags</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">one</span> <span class="nv">two</span><span class="p">)))</span><span class="go"></span>
+<span class="go">  ✓ Has properties:</span>
+<span class="go">      :TAGS = (ONE TWO)</span>
+
+<span class="gp">TEST&gt; </span><span class="p">(</span><span class="nv">assert-that</span> <span class="ss">&#39;the-object</span>
+                   <span class="p">(</span><span class="nv">has-properties</span> <span class="ss">:tags</span> <span class="ss">&#39;wrong-value</span><span class="p">))</span><span class="go"></span>
+<span class="go">  × Property :TAGS has (ONE TWO) value, but WRONG-VALUE was expected</span>
+
+<span class="gp">TEST&gt; </span><span class="p">(</span><span class="nv">assert-that</span> <span class="ss">&#39;the-object</span>
+                   <span class="p">(</span><span class="nv">has-properties</span> <span class="ss">:missing-property</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">one</span> <span class="nv">two</span><span class="p">)))</span><span class="go"></span>
+<span class="go">  × Property :MISSING-PROPERTY is missing</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="macro">
+<dt id="macro:hamcrest/matchers:has-slots">
+<em class="property">macro </em> (<code class="descname">has-slots</code> <em class="lambda_keyword text-muted">&amp;rest</em> <em>entries</em>)<a class="headerlink" href="#macro:hamcrest/matchers:has-slots" title="Permalink to this definition">¶</a></dt>
+<dd><p>Matches object slots:</p>
+<div class="highlight-common-lisp-repl notranslate"><div class="highlight"><pre><span></span><span class="gp">TEST&gt; </span><span class="p">(</span><span class="nb">defstruct</span> <span class="nv">task</span>
+        <span class="nv">title</span>
+        <span class="nv">description</span><span class="p">)</span><span class="go"></span>
+
+<span class="gp">TEST&gt; </span><span class="p">(</span><span class="nb">defvar</span> <span class="nv">task</span> <span class="p">(</span><span class="nv">make-task</span> <span class="ss">:title</span> <span class="s">&quot;The title &quot;</span><span class="p">))</span><span class="go"></span>
+
+<span class="gp">TEST&gt; </span><span class="p">(</span><span class="nv">assert-that</span> <span class="nv">task</span>
+                   <span class="p">(</span><span class="nv">has-slots</span> <span class="ss">&#39;title</span> <span class="s">&quot;The title &quot;</span><span class="p">))</span><span class="go"></span>
+<span class="go">  ✓ Has slots:</span>
+<span class="go">      TITLE = &quot;The title &quot;</span>
+
+<span class="gp">TEST&gt; </span><span class="p">(</span><span class="nv">assert-that</span> <span class="nv">task</span>
+                   <span class="p">(</span><span class="nv">has-slots</span> <span class="ss">&#39;title</span> <span class="s">&quot;Wrong title &quot;</span><span class="p">))</span><span class="go"></span>
+<span class="go">  × Slot TITLE has &quot;The title &quot; value, but &quot;Wrong title &quot; was expected</span>
+
+<span class="gp">TEST&gt; </span><span class="p">(</span><span class="nv">assert-that</span> <span class="nv">task</span>
+                   <span class="p">(</span><span class="nv">has-slots</span> <span class="ss">&#39;description</span> <span class="no">nil</span><span class="p">))</span><span class="go"></span>
+<span class="go">  ✓ Has slots:</span>
+<span class="go">      DESCRIPTION = NIL</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="function:hamcrest/matchers:has-type">
+<em class="property">function </em> (<code class="descname">has-type</code> <em>expected-type</em>)<a class="headerlink" href="#function:hamcrest/matchers:has-type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if a list have specivied length.</p>
+<div class="highlight-common-lisp-repl notranslate"><div class="highlight"><pre><span></span><span class="gp">TEST&gt; </span><span class="p">(</span><span class="nv">matcher-description</span> <span class="p">(</span><span class="nv">has-type</span> <span class="ss">&#39;cons</span><span class="p">))</span><span class="go"></span>
+<span class="go">&quot;Has type CONS&quot;</span>
+
+<span class="gp">TEST&gt; </span><span class="p">(</span><span class="nb">funcall</span> <span class="p">(</span><span class="nv">has-type</span> <span class="ss">&#39;cons</span><span class="p">)</span> <span class="mi">100500</span><span class="p">)</span><span class="go"></span>
+<span class="go">; Debugger entered on #&lt;ASSERTION-ERROR 100500 has type (INTEGER 0 4611686018427387903), but CONS was expected&gt;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+<div class="section" id="sequence-matchers">
+<h2>Sequence matchers<a class="headerlink" href="#sequence-matchers" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="function:hamcrest/matchers:has-length">
+<em class="property">function </em> (<code class="descname">has-length</code> <em>expected-length</em>)<a class="headerlink" href="#function:hamcrest/matchers:has-length" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if a list have specivied length.</p>
+<div class="highlight-common-lisp-repl notranslate"><div class="highlight"><pre><span></span><span class="gp">TEST&gt; </span><span class="p">(</span><span class="nv">assert-that</span> <span class="ss">&#39;nil</span> <span class="p">(</span><span class="nv">has-length</span> <span class="mi">0</span><span class="p">))</span><span class="go"></span>
+<span class="go">  ✓ Has length of 0</span>
+
+<span class="gp">TEST&gt; </span><span class="p">(</span><span class="nv">assert-that</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">a</span> <span class="nv">b</span> <span class="nv">c</span> <span class="nv">d</span><span class="p">)</span> <span class="p">(</span><span class="nv">has-length</span> <span class="mi">4</span><span class="p">))</span><span class="go"></span>
+<span class="go">  ✓ Has length of 4</span>
+
+<span class="gp">TEST&gt; </span><span class="p">(</span><span class="nv">assert-that</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">a</span> <span class="nv">b</span> <span class="nv">c</span> <span class="nv">d</span><span class="p">)</span> <span class="p">(</span><span class="nv">has-length</span> <span class="mi">100500</span><span class="p">))</span><span class="go"></span>
+<span class="go">  × List (A B C D) has length of 4, but 100500 was expected</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="macro">
+<dt id="macro:hamcrest/matchers:contains">
+<em class="property">macro </em> (<code class="descname">contains</code> <em class="lambda_keyword text-muted">&amp;rest</em> <em>entries</em>)<a class="headerlink" href="#macro:hamcrest/matchers:contains" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if each item from a list matches to given matchers.</p>
+<p>Contains can accept as raw values, as another matchers:</p>
+<div class="highlight-common-lisp-repl notranslate"><div class="highlight"><pre><span></span><span class="gp">TEST&gt; </span><span class="p">(</span><span class="nv">assert-that</span> <span class="o">&#39;</span><span class="p">(</span><span class="ss">:foo</span>
+                     <span class="p">(</span><span class="nv">a</span> <span class="nv">b</span> <span class="nv">c</span><span class="p">)</span>
+                     <span class="nv">d</span><span class="p">)</span>
+                   <span class="p">(</span><span class="nv">contains</span> <span class="ss">:foo</span>
+                             <span class="p">(</span><span class="nv">has-length</span> <span class="mi">3</span><span class="p">)</span>
+                             <span class="ss">&#39;d</span><span class="p">))</span><span class="go"></span>
+<span class="go">  ✓ Contains all given values</span>
+</pre></div>
+</div>
+<p>Given list should have a length equal to count of matchers:</p>
+<div class="highlight-common-lisp-repl notranslate"><div class="highlight"><pre><span></span><span class="gp">TEST&gt; </span><span class="p">(</span><span class="nv">assert-that</span> <span class="o">&#39;</span><span class="p">(</span><span class="ss">:foo</span>
+                     <span class="p">(</span><span class="nv">a</span> <span class="nv">b</span> <span class="nv">c</span><span class="p">)</span>
+                     <span class="nv">d</span><span class="p">)</span>
+                   <span class="p">(</span><span class="nv">contains</span> <span class="ss">:foo</span><span class="p">))</span><span class="go"></span>
+<span class="go">  × Expected value is shorter than result</span>
+</pre></div>
+</div>
+<p>You can ignore value of some list items, by using <code class="docutils literal notranslate"><span class="pre">(any)</span></code> matcher:</p>
+<div class="highlight-common-lisp-repl notranslate"><div class="highlight"><pre><span></span><span class="gp">TEST&gt; </span><span class="p">(</span><span class="nv">assert-that</span> <span class="o">&#39;</span><span class="p">(</span><span class="ss">:foo</span>
+                     <span class="p">(</span><span class="nv">a</span> <span class="nv">b</span> <span class="nv">c</span><span class="p">)</span>
+                     <span class="nv">d</span><span class="p">)</span>
+                   <span class="p">(</span><span class="nv">contains</span> <span class="ss">:foo</span> <span class="p">(</span><span class="nv">any</span><span class="p">)</span> <span class="p">(</span><span class="nv">any</span><span class="p">)))</span><span class="go"></span>
+<span class="go">  ✓ Contains all given values</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="macro">
+<dt id="macro:hamcrest/matchers:contains-in-any-order">
+<em class="property">macro </em> (<code class="descname">contains-in-any-order</code> <em class="lambda_keyword text-muted">&amp;rest</em> <em>entries</em>)<a class="headerlink" href="#macro:hamcrest/matchers:contains-in-any-order" title="Permalink to this definition">¶</a></dt>
+<dd><p>Same as <code class="docutils literal notranslate"><span class="pre">contains</span></code>, but items in the sequence can be in any order:</p>
+<div class="highlight-common-lisp-repl notranslate"><div class="highlight"><pre><span></span><span class="gp">TEST&gt; </span><span class="p">(</span><span class="nv">assert-that</span> <span class="o">&#39;</span><span class="p">(</span><span class="ss">:foo</span>
+                     <span class="p">(</span><span class="nv">a</span> <span class="nv">b</span> <span class="nv">c</span><span class="p">)</span>
+                     <span class="nv">d</span><span class="p">)</span>
+                   <span class="p">(</span><span class="nv">contains-in-any-order</span>
+                    <span class="p">(</span><span class="nv">has-length</span> <span class="mi">3</span><span class="p">)</span>
+                    <span class="ss">&#39;d</span>
+                    <span class="ss">:foo</span><span class="p">))</span><span class="go"></span>
+
+<span class="go">  ✓ Contains all given values</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+<div class="section" id="boolean-matchers">
+<h2>Boolean matchers<a class="headerlink" href="#boolean-matchers" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="function:hamcrest/matchers:any">
+<em class="property">function </em> (<code class="descname">any</code>)<a class="headerlink" href="#function:hamcrest/matchers:any" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assertion is passed regardles of value of the object:</p>
+<div class="highlight-common-lisp-repl notranslate"><div class="highlight"><pre><span></span><span class="gp">TEST&gt; </span><span class="p">(</span><span class="nv">assert-that</span> <span class="mi">1</span> <span class="p">(</span><span class="nv">any</span><span class="p">))</span><span class="go"></span>
+<span class="go">  ✓ Any value if good enough</span>
+
+<span class="gp">TEST&gt; </span><span class="p">(</span><span class="nv">assert-that</span> <span class="s">&quot;the-string&quot;</span> <span class="p">(</span><span class="nv">any</span><span class="p">))</span><span class="go"></span>
+<span class="go">  ✓ Any value if good enough</span>
+
+<span class="gp">TEST&gt; </span><span class="p">(</span><span class="nv">assert-that</span> <span class="ss">&#39;the-symbol</span> <span class="p">(</span><span class="nv">any</span><span class="p">))</span><span class="go"></span>
+<span class="go">  ✓ Any value if good enough</span>
+
+<span class="gp">TEST&gt; </span><span class="p">(</span><span class="nv">assert-that</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span> <span class="p">(</span><span class="nv">any</span><span class="p">))</span><span class="go"></span>
+<span class="go">  ✓ Any value if good enough</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="function:hamcrest/matchers:has-all">
+<em class="property">function </em> (<code class="descname">has-all</code> <em class="lambda_keyword text-muted">&amp;rest</em> <em>matchers</em>)<a class="headerlink" href="#function:hamcrest/matchers:has-all" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes a matcher which groups another matchers with <a class="reference external" href="http://www.lispworks.com/reference/HyperSpec/Body/a_and.htm" title="(in Hyperspec)"><code class="docutils literal notranslate"><span class="pre">AND</span></code></a> logic.</p>
+<p>This way we can check if plist has one key and hasn’t another.
+And if all matchers succeed, then <code class="docutils literal notranslate"><span class="pre">has-all</span></code> succeed as well:</p>
+<div class="highlight-common-lisp-repl notranslate"><div class="highlight"><pre><span></span><span class="gp">TEST&gt; </span><span class="p">(</span><span class="nv">assert-that</span> <span class="o">&#39;</span><span class="p">(</span><span class="ss">:foo</span> <span class="s">&quot;bar&quot;</span><span class="p">)</span>
+                   <span class="p">(</span><span class="nv">has-all</span> <span class="p">(</span><span class="nv">has-plist-entries</span> <span class="ss">:foo</span> <span class="s">&quot;bar&quot;</span><span class="p">)</span>
+                            <span class="p">(</span><span class="nv">hasnt-plist-keys</span> <span class="ss">:blah</span><span class="p">)))</span><span class="go"></span>
+<span class="go">  ✓ All checks are passed</span>
+</pre></div>
+</div>
+<p>If at least one check is failed, then <code class="docutils literal notranslate"><span class="pre">has-all</span></code> fails too:</p>
+<div class="highlight-common-lisp-repl notranslate"><div class="highlight"><pre><span></span><span class="gp">TEST&gt; </span><span class="p">(</span><span class="nv">assert-that</span> <span class="o">&#39;</span><span class="p">(</span><span class="ss">:foo</span> <span class="s">&quot;bar&quot;</span> <span class="ss">:blah</span> <span class="s">&quot;minor&quot;</span><span class="p">)</span>
+                   <span class="p">(</span><span class="nv">has-all</span> <span class="p">(</span><span class="nv">has-plist-entries</span> <span class="ss">:foo</span> <span class="s">&quot;bar&quot;</span><span class="p">)</span>
+                            <span class="p">(</span><span class="nv">hasnt-plist-keys</span> <span class="ss">:blah</span><span class="p">)))</span><span class="go"></span>
+<span class="go">  × Key :BLAH is present in object, but shouldn&#39;t</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+<div class="section" id="utility-functions">
+<h2>Utility functions<a class="headerlink" href="#utility-functions" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="function:hamcrest/matchers:matcher-description">
+<em class="property">function </em> (<code class="descname">matcher-description</code> <em>fn</em>)<a class="headerlink" href="#function:hamcrest/matchers:matcher-description" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns description of a given matcher function.</p>
+<p>Can be used to print nested matchers in a nicely indented,
+human readable way:</p>
+<div class="highlight-common-lisp-repl notranslate"><div class="highlight"><pre><span></span><span class="gp">TEST&gt; </span><span class="p">(</span><span class="nv">matcher-description</span> <span class="p">(</span><span class="nv">has-length</span> <span class="mi">100500</span><span class="p">))</span><span class="go"></span>
+<span class="go">&quot;Has length of 100500 &quot;</span>
+
+<span class="gp">TEST&gt; </span><span class="p">(</span><span class="nv">matcher-description</span> <span class="p">(</span><span class="nv">contains</span>
+                            <span class="p">(</span><span class="nv">has-plist-entries</span> <span class="ss">:foo</span> <span class="s">&quot;bar &quot;</span><span class="p">)</span>
+                            <span class="p">(</span><span class="nv">has-plist-entries</span> <span class="ss">:foo</span> <span class="s">&quot;minor &quot;</span><span class="p">)))</span><span class="go"></span>
+<span class="go">&quot;Contains all given values &quot;</span>
+
+<span class="gp">TEST&gt; </span><span class="p">(</span><span class="nv">matcher-description</span> <span class="p">(</span><span class="nv">has-plist-entries</span>
+                            <span class="ss">:foo</span> <span class="s">&quot;bar &quot;</span>
+                            <span class="ss">:blah</span> <span class="p">(</span><span class="nv">has-hash-entries</span> <span class="ss">:minor</span> <span class="s">&quot;again &quot;</span><span class="p">)))</span><span class="go"></span>
+<span class="go">&quot;Has plist entries:</span>
+<span class="go">  :FOO = &quot;bar&quot;</span>
+<span class="go">  :BLAH = Has hash entries:</span>
+<span class="go">            :MINOR = &quot;again&quot;&quot;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+<div id="sourcelink">
+  <a href="_sources/matchers.rst.txt"
+     rel="nofollow">Source</a>
+</div>
+      
+    </p>
+    <p>
+        &copy; Copyright 2017, Alexander Artemenko.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.3.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Welcome to cl-hamcrest’s documentation! &#8212; cl-hamcrest 0.4.3 documentation</title>
+    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Matchers library" href="matchers.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">
+          cl-hamcrest</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.4</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="changelog.html">Changelog</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Documentation <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="matchers.html">Matchers library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="prove.html">Integration with Prove</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">ChangeLog</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+      <div class="col-md-3">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
+<li><a class="reference internal" href="#">Welcome to cl-hamcrest’s documentation!</a><ul>
+<li><a class="reference internal" href="#here-are-some-examples">Here are some examples</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#why-not-pattern-matching-library">Why not pattern-matching library?</a><ul>
+<li><a class="reference internal" href="#cl-hamcrest-is-more-concise-and-clear">CL-HAMCREST is more concise and clear</a></li>
+<li><a class="reference internal" href="#why-not-just-use-prove-s-assertions">Why not just use Prove’s assertions?</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#roadmap">Roadmap</a></li>
+<li><a class="reference internal" href="#contents">Contents</a></li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+</ul>
+
+        </div>
+      </div>
+    <div class="col-md-9 content">
+      
+  <div class="section" id="welcome-to-cl-hamcrest-s-documentation">
+<h1>Welcome to cl-hamcrest’s documentation!<a class="headerlink" href="#welcome-to-cl-hamcrest-s-documentation" title="Permalink to this headline">¶</a></h1>
+<p>This is an implementation of Hamcrest for Common Lisp.</p>
+<div class="section" id="here-are-some-examples">
+<h2>Here are some examples<a class="headerlink" href="#here-are-some-examples" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-common-lisp-repl notranslate"><div class="highlight"><pre><span></span><span class="gp">GIT&gt; </span><span class="p">(</span><span class="nv">assert-that</span>
+       <span class="nv">log-item</span>
+       <span class="p">(</span><span class="nv">has-plist-entries</span> <span class="ss">:|@message|</span> <span class="s">&quot;Some&quot;</span>
+                          <span class="ss">:|@timestamp|</span> <span class="nv">_</span><span class="p">)</span>
+       <span class="p">(</span><span class="nv">hasnt-plist-keys</span> <span class="ss">:|@fields|</span><span class="p">))</span><span class="go"></span>
+</pre></div>
+</div>
+<p>It is implementation of <a class="reference external" href="http://hamcrest.org">Hamcrest</a> idea in Common Lisp.</p>
+<p>It simplifes unittests and make them more readable. Hamcrest uses
+idea of pattern-matching, to construct matchers from different pieces and
+to apply them to the data.</p>
+</div>
+</div>
+<div class="section" id="why-not-pattern-matching-library">
+<h1>Why not pattern-matching library?<a class="headerlink" href="#why-not-pattern-matching-library" title="Permalink to this headline">¶</a></h1>
+<p>You may ask: “Why dont use a pattern-matching library, like <a class="reference external" href="http://quickdocs.org/optima/">Optima</a>?”</p>
+<p>Here is another example from another library <code class="docutils literal notranslate"><span class="pre">log4cl-json</span></code>, where I want
+to check that some fields in plist have special values and other key is not
+present. Here is the data:</p>
+<div class="highlight-common-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nb">defvar</span> <span class="nv">log-item</span> <span class="o">&#39;</span><span class="p">(</span><span class="ss">:|@message|</span> <span class="s">&quot;Some&quot;</span>
+                   <span class="ss">:|@timestamp|</span> <span class="mi">122434342</span>
+                   <span class="c1">;; this field is wrong and</span>
+                   <span class="c1">;; shouldn&#39;t be here</span>
+                   <span class="ss">:|@fields|</span> <span class="no">nil</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>With <a class="reference external" href="http://quickdocs.org/optima/">Optima</a> I could write this code to match the data:</p>
+<div class="highlight-common-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">ok</span> <span class="p">(</span><span class="nv">ematch</span>
+      <span class="nv">log-item</span>
+    <span class="p">((</span><span class="nb">and</span> <span class="p">(</span><span class="nv">guard</span> <span class="p">(</span><span class="nv">property</span> <span class="ss">:|@message|</span> <span class="nv">m</span><span class="p">)</span>
+                 <span class="p">(</span><span class="nb">equal</span> <span class="nv">m</span> <span class="s">&quot;Some&quot;</span><span class="p">))</span>
+          <span class="p">(</span><span class="nv">property</span> <span class="ss">:|@timestamp|</span> <span class="nv">_</span><span class="p">)</span>
+          <span class="p">(</span><span class="nb">not</span> <span class="p">(</span><span class="nv">property</span> <span class="ss">:|@fields|</span> <span class="nv">_</span><span class="p">)))</span>
+     <span class="no">t</span><span class="p">))</span>
+  <span class="s">&quot;Log entry has message, timestamp, but not fields&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>But error message will be quite cumbersome:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>× Aborted due to an error in subtest &quot;Simple match&quot;
+  Raised an error Can&#39;t match ((:|@fields| NIL :|@timestamp|
+                                &quot;2017-01-03T16:42:00.991444Z&quot; :|@message|
+                                &quot;Some&quot;)) with ((COMMON-LISP:AND
+                                                (GUARD
+                                                 (PROPERTY :|@message| M)
+                                                 (EQUAL M &quot;Some&quot;))
+                                                (PROPERTY :|@timestamp|
+                                                 _)
+                                                (NOT
+                                                 (PROPERTY :|@fields|
+                                                  _)))). (expected: :NON-ERROR)
+</pre></div>
+</div>
+<div class="section" id="cl-hamcrest-is-more-concise-and-clear">
+<h2>CL-HAMCREST is more concise and clear<a class="headerlink" href="#cl-hamcrest-is-more-concise-and-clear" title="Permalink to this headline">¶</a></h2>
+<p>With <code class="docutils literal notranslate"><span class="pre">cl-hamcrest</span></code> test becomes more readable:</p>
+<div class="highlight-common-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">assert-that</span>
+      <span class="nv">log-item</span>
+      <span class="p">(</span><span class="nv">has-plist-entries</span> <span class="ss">:|@message|</span> <span class="s">&quot;Some&quot;</span>
+                         <span class="ss">:|@timestamp|</span> <span class="nv">_</span><span class="p">)</span>
+      <span class="p">(</span><span class="nv">hasnt-plist-keys</span> <span class="ss">:|@fields|</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>As well, as output about the failure:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>× Key :|@fields| is present in object, but shouldn&#39;t
+</pre></div>
+</div>
+<p>That is because <code class="docutils literal notranslate"><span class="pre">cl-hamcrest</span></code> tracks the context and works
+together with testing framework, to output all information
+to let you understand where the problem is.</p>
+</div>
+<div class="section" id="why-not-just-use-prove-s-assertions">
+<h2>Why not just use Prove’s assertions?<a class="headerlink" href="#why-not-just-use-prove-s-assertions" title="Permalink to this headline">¶</a></h2>
+<p>To draw a full picture, here is test, written in plain Prove’s
+assertions:</p>
+<div class="highlight-common-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">ok</span> <span class="p">(</span><span class="nb">member</span> <span class="ss">:|@message|</span> <span class="nv">log-item</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">is</span> <span class="p">(</span><span class="nb">getf</span> <span class="nv">log-item</span> <span class="ss">:|@message|</span><span class="p">)</span>
+    <span class="s">&quot;Some&quot;</span><span class="p">)</span>
+<span class="p">(</span><span class="nv">ok</span> <span class="p">(</span><span class="nb">member</span> <span class="ss">:|@timestamp|</span> <span class="nv">log-item</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">ok</span> <span class="p">(</span><span class="nb">not</span> <span class="p">(</span><span class="nb">member</span> <span class="ss">:|@fields|</span> <span class="nv">log-item</span><span class="p">)))</span>
+</pre></div>
+</div>
+<p>And it’s output:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>✓ (:|@message| &quot;Some&quot;) is expected to be T
+✓ &quot;Some&quot; is expected to be &quot;Some&quot;
+✓ (:|@timestamp| &quot;2017-01-03T16:57:17.988810Z&quot; :|@message| &quot;Some&quot;) is expected to be T
+× NIL is expected to be T
+</pre></div>
+</div>
+<p>is not as clear, if you’ll try to figure out
+what does <code class="docutils literal notranslate"><span class="pre">NIL</span> <span class="pre">is</span> <span class="pre">expected</span> <span class="pre">to</span> <span class="pre">be</span> <span class="pre">T</span></code> mean.</p>
+<p>Description of all supported matchers, you can <a class="reference external" href="http://cl-hamcrest.40ants.com">find in the
+documentation</a>.</p>
+</div>
+</div>
+<div class="section" id="roadmap">
+<h1>Roadmap<a class="headerlink" href="#roadmap" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li>Logical matchers:<ul>
+<li><code class="docutils literal notranslate"><span class="pre">any-of</span></code> – Matches if any of the given matchers evaluate to True.</li>
+<li><code class="docutils literal notranslate"><span class="pre">is-not</span></code> – Inverts the given matcher to its logical negation (think if
+we need it, and how to show the results, here are results
+how it works <a class="reference external" href="https://gist.github.com/svetlyak40wt/fbe480384e9e3f75b10523aa0b4fb6ce">in PyHamcrest</a>
+– it just sees that matcher returned True and raises Assertion error with full object’s content and
+matcher’s description with prepended ‘not’ particle).</li>
+</ul>
+</li>
+<li>Object matchers:<ul>
+<li>Add <code class="docutils literal notranslate"><span class="pre">hasnt-some-keys</span></code> matchers, corresponding to
+<code class="docutils literal notranslate"><span class="pre">has-some-entries</span></code>.</li>
+<li>Make <code class="docutils literal notranslate"><span class="pre">has-alist-entries</span></code> work with keys other than keyword
+right now it uses <cite>eql</cite> to compare keys.</li>
+</ul>
+</li>
+<li>Sequence matchers:<ul>
+<li><code class="docutils literal notranslate"><span class="pre">is-in</span></code> – Matches if evaluated object is present in a given sequence.</li>
+</ul>
+</li>
+<li>Other features:<ul>
+<li>Use uniq CommonLisp feature to restart signaled conditions to collect
+all problems with data when there are few problems with keys.</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="contents">
+<h1>Contents<a class="headerlink" href="#contents" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="matchers.html">Matchers library</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="matchers.html#object-matchers">Object matchers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="matchers.html#sequence-matchers">Sequence matchers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="matchers.html#boolean-matchers">Boolean matchers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="matchers.html#utility-functions">Utility functions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="prove.html">Integration with Prove</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="prove.html#package-hamcrest-prove">Package <cite>hamcrest/prove</cite></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">ChangeLog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id1">0.4.3 (2018-12-08)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id2">0.4.2 (2018-06-03)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id3">0.4.1 (2018-06-03)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id4">0.4.0 (2018-06-02)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id5">0.3.4 (2018-01-29)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id6">0.3.3 (2018-01-28)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id7">0.3.2 (2018-01-27)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id8">0.3.1 (2018-01-26)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id9">0.3.0 (2018-01-26)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id10">0.2.1 (2017-10-04)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id11">0.2.0 (2017-04-13)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#unreleased">0.1.0 (unreleased)</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></li>
+<li><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></li>
+<li><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></li>
+</ul>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+<div id="sourcelink">
+  <a href="_sources/index.rst.txt"
+     rel="nofollow">Source</a>
+</div>
+      
+    </p>
+    <p>
+        &copy; Copyright 2017, Alexander Artemenko.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.3.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
