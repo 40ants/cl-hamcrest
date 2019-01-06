@@ -21,7 +21,7 @@ env:
     - LISP=ccl-bin
     - LISP=ecl
 #    - LISP=abcl
-    - LISP=allegro
+#    - LISP=allegro
 #    - LISP=clisp
 #    - LISP=cmucl
 
