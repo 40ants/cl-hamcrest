@@ -20,17 +20,16 @@ env:
     - LISP=sbcl-bin
     - LISP=ccl-bin
     - LISP=ecl
-    - LISP=abcl
+#    - LISP=abcl
     - LISP=allegro
-    - LISP=clisp
-    - LISP=cmucl
+#    - LISP=clisp
+#    - LISP=cmucl
 
 matrix:
   allow_failures:
     - env: LISP=abcl
     - env: LISP=clisp
     - env: LISP=cmucl
-    - env: LISP=allegro
 
 os:
 #  - osx
