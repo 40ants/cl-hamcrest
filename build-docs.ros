@@ -95,26 +95,39 @@ behaviour could be overriden by keyword argument ``:raise t``."
               (search "/" upstream)))))
 
 
+(defun get-repo-slug ()
+  (let ((result (or (uiop:getenv "TRAVIS_REPO_SLUG")
+                    (when (uiop:getenv "CIRCLE_PROJECT_REPONAME")
+                      (format nil "~A/~A"
+                              (uiop:getenv "CIRCLE_PROJECT_USERNAME")
+                              (uiop:getenv "CIRCLE_PROJECT_REPONAME"))))))
+    (unless result
+      (error 'unable-to-proceed
+             :message "There is no TRAVIS_REPO_SLUG or CIRCLE_PROJECT_REPONAME env variables. Where to push gh-pages branch?"))
+    result))
+
+
+(defun get-repo-token ()
+  (let ((result (uiop:getenv "GH_REPO_TOKEN")))
+    (unless result
+      (error 'unable-to-proceed
+             :message "There is no GH_REPO_TOKEN env variable. Get this token here: https://github.com/settings/tokens"))
+    result))
+
+
 (defun get-origin-to-push ()
   (let ((upstream (get-git-upstream)))
     (if upstream
         ;; If there is already some remote upstream, then use it
         (run (concatenate 'string "git remote get-url " upstream))
-      ;; otherwise make it from travis secret token and repo slug
-      (let ((repo-slug (uiop:getenv "TRAVIS_REPO_SLUG"))
-            (repo-token (uiop:getenv "GH_REPO_TOKEN")))
-        
-        (unless (and repo-slug repo-token)
-          (error 'unable-to-proceed
-                 :message "Current branch does not track any upstream and there is no TRAVIS_REPO_SLUG and GH_REPO_TOKEN env variables. Where to push gh-pages branch?"))
-
+        ;; otherwise make it from travis secret token and repo slug
         (format nil "https://~A@github.com/~A"
-                repo-token
-                repo-slug)))))
+                (get-repo-token)
+                (get-repo-slug)))))
 
 
-(defun push-gh-pages ()
-  (log:info "Pushing changes to gh-pages branch")
+(defun push-gh-pages (branch)
+  (log:info "Pushing changes to remote branch" branch)
   
   (unless (gh-pages-repository-initialized-p)
     (git "init")
@@ -126,9 +139,11 @@ behaviour could be overriden by keyword argument ``:raise t``."
   
   (cond
    ((git-repository-was-changed-p)
+    (git "config --global user.email \"svetlyak.40wt@gmail.com\"")
+    (git "config --global user.name \"Alexander Artemenko\"")
     (git "commit -m 'Update docs'")
     
-    (git "push --force origin master:gh-pages"))
+    (git (format nil "push --force origin master:~A" branch)))
    ;; or
    (t (log:info "Everything is up to date."))))
 
@@ -142,5 +157,18 @@ behaviour could be overriden by keyword argument ``:raise t``."
                           (uiop:print-condition-backtrace condition :stream *error-output*)
                           (uiop:quit 1))))
     (build-docs)
-    (push-gh-pages)))
+    
+    (let ((branch (second (member "--push-to"
+                                  argv
+                                  :test #'string-equal)))
+          (on-master
+           (or (and (string-equal (uiop:getenv "TRAVIS_BRANCH")
+                                  "master")
+                    (string-equal (uiop:getenv "TRAVIS_PULL_REQUEST")
+                                  "false"))
+               (and (string-equal (uiop:getenv "CIRCLE_BRANCH")
+                                  "master")
+                    (null (uiop:getenv "CIRCLE_PULL_REQUEST"))))))
+      (when (and on-master branch)
+        (push-gh-pages branch)))))
 

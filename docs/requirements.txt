@@ -5,24 +5,24 @@
 #    pip-compile --output-file docs/requirements.txt docs/requirements.in
 #
 
--e git+git@github.com:russell/sphinxcontrib-cldomain.git#egg=sphinxcontrib-cldomain
+-e git+https://github.com/40ants/sphinxcontrib-cldomain.git#egg=sphinxcontrib-cldomain
 alabaster==0.7.12         # via sphinx
 appdirs==1.4.3            # via setuptools
-babel==2.4.0              # via sphinx
-docutils==0.13.1          # via sphinx
-imagesize==0.7.1          # via sphinx
-Jinja2==2.9.6             # via sphinx
-MarkupSafe==1.0           # via jinja2
-packaging==16.8           # via setuptools
+babel==2.6.0              # via sphinx
+docutils==0.14          # via sphinx
+imagesize==1.1.0          # via sphinx
+Jinja2==2.10             # via sphinx
+MarkupSafe==1.1.0           # via jinja2
+packaging==18.0           # via setuptools
 pygments-cl-repl==0.1
-pygments==2.2.0           # via pygments-cl-repl, sphinx
-pyparsing==2.2.0          # via packaging
-pytz==2017.2              # via babel
-requests==2.13.0          # via sphinx
-six==1.10.0               # via packaging, setuptools, sphinx
+pygments==2.3.1           # via pygments-cl-repl, sphinx
+pyparsing==2.3.0          # via packaging
+pytz==2018.7              # via babel
+requests==2.21.0          # via sphinx
+six==1.12.0               # via packaging, setuptools, sphinx
 snowballstemmer==1.2.1    # via sphinx
-sphinx-bootstrap-theme==0.4.14
-sphinx==1.5.5
+sphinx-bootstrap-theme==0.6.5
+sphinx==1.8.3
 
 # The following packages are commented out because they are
 # considered to be unsafe in a requirements file:

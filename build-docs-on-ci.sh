@@ -8,9 +8,16 @@ set -e
 # builds which are running for pull requests will have
 # TRAVIS_BRANCH=master, but TRAVIS_PULL_REQUEST_BRANCH=the-branch
 # and TRAVIS_PULL_REQUEST=42 where 42 is a pull request number
-if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" -a "$LISP" = "ccl" ]; then
-    sudo pip install -r docs/requirements.txt
-    ./build-docs.ros
-else
-    echo "Skipping documentation build because environment is not suitable."
+# sudo pip install -r docs/requirements.txt
+
+# CIRCLE_BRANCH
+# CIRCLE_PULL_REQUEST
+if [ "$LISP" = "ccl-bin" ]; then
+    if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then
+        echo "Building and uploading documentaion."
+        ./build-docs.ros --push
+    else
+        echo "Checking how does documentation build."
+        ./build-docs.ros
+    fi
 fi

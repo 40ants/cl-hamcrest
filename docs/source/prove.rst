@@ -36,10 +36,10 @@ This is the simple case, but nested objects can be checked too.
 
 All available matchers are described in chapter :ref:`Matchers library`.
 
-Package `hamcrest.prove`
+Package `hamcrest/prove`
 ========================
 
-.. cl:package:: hamcrest.prove
+.. cl:package:: hamcrest/prove
 
 .. cl:macro:: assert-that
 
