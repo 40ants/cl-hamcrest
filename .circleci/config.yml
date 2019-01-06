@@ -36,3 +36,6 @@ workflows:
   build:
     jobs:
       - ccl
+  filter:
+    branches:
+      ignore: gh-pages
