@@ -17,9 +17,9 @@ env:
     - ROSWELL_BRANCH=master
     - ROSWELL_INSTALL_DIR=$HOME/.roswell
   matrix:
-#    - LISP=sbcl-bin
+    - LISP=sbcl-bin
     - LISP=ccl-bin
-#    - LISP=ecl
+    - LISP=ecl
 #    - LISP=abcl
 #    - LISP=allegro
 #    - LISP=clisp
@@ -30,11 +30,10 @@ matrix:
     - env: LISP=abcl
     - env: LISP=clisp
     - env: LISP=cmucl
-    - env: LISP=allegro
 
 os:
-  - osx
-#  - linux
+#  - osx
+  - linux
 
 install:
   - env | sort
