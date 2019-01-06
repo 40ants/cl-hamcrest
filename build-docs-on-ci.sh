@@ -8,8 +8,10 @@ set -e
 # builds which are running for pull requests will have
 # TRAVIS_BRANCH=master, but TRAVIS_PULL_REQUEST_BRANCH=the-branch
 # and TRAVIS_PULL_REQUEST=42 where 42 is a pull request number
-sudo pip install -r docs/requirements.txt
+# sudo pip install -r docs/requirements.txt
 
+# CIRCLE_BRANCH
+# CIRCLE_PULL_REQUEST
 if [ "$LISP" = "ccl-bin" ]; then
     if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then
         echo "Building and uploading documentaion."

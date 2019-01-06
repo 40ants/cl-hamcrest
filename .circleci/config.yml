@@ -12,19 +12,24 @@ jobs:
           command: |
             apt-get update
             apt-get install -y python-pip
+            pip install -r docs/requirements.txt
             ros install rove
             ros install 40ants/cldomain
             touch qlfile
             qlot install
       - run:
           name: Check environment
-          command: env | sort && pwd && echo 'Current dir:' && ls -lh && echo "/app dir:" && ls -lh /app/
+          command: |
+            env | grep -v -i token | sort
+            echo 'Current dir:'
+            pwd
+            ls -lh
       - run:
           name: Run tests
           command: qlot exec rove hamcrest-test.asd
       - run:
           name: Build docs
-          command: ./build-docs-on-ci.sh
+          command: ./build-docs.ros --push-to gh-pages
 
 workflows:
   version: 2
