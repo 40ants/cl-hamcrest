@@ -32,17 +32,20 @@ exec ros -Q -- $0 "$@"
                      (subprocess-error-stderr condition))
              )))
 
-(defun run (command &key (raise t))
+(defun run (command &key (raise t) (directory "./"))
   "Runs command and returns it's stdout stderr and code.
 
 If there was an error, raises subprocess-error-with-output, but this
 behaviour could be overriden by keyword argument ``:raise t``."
+
+  (log:info "Running" command "in" directory)
   
   (multiple-value-bind (stdout stderr code)
-      (uiop:run-program command
-                        :output '(:string :stripped t)
-                        :error-output '(:string :stripped t)
-                        :ignore-error-status t)
+      (uiop:with-current-directory (directory)
+        (uiop:run-program command
+                          :output '(:string :stripped t)
+                          :error-output '(:string :stripped t)
+                          :ignore-error-status t))
     
     (when (and raise
                (not (eql code 0)))
@@ -66,17 +69,15 @@ behaviour could be overriden by keyword argument ``:raise t``."
   (uiop:directory-exists-p "docs/build/html/.git"))
 
 
-(defun git (&rest commands)
+(defun git (command &key raise)
   "Calls git command in gh-pages repository."
-  
-  (let ((directory "docs/build/html/"))
-    (uiop:with-current-directory (directory)
-      (let ((command (apply #'concatenate 'string
-                            "git "
-                            commands)))
+  (let ((command (concatenate 'string
+                              "git "
+                              command)))
         
-        (log:info "Running" command "in" directory)
-        (run command)))))
+    (run command
+         :raise raise
+         :directory "docs/build/html/")))
 
 
 (defun git-repository-was-changed-p ()
@@ -87,7 +88,7 @@ behaviour could be overriden by keyword argument ``:raise t``."
 
 (defun get-git-upstream ()
   ;; taken from http://stackoverflow.com/a/9753364/70293
-  (let ((upstream (run "git rev-parse --abbrev-ref --symbolic-full-name @{u}" :raise nil)))
+  (let ((upstream (git "rev-parse --abbrev-ref --symbolic-full-name @{u}" :raise nil)))
     (when (> (length upstream)
            0)
       (subseq upstream
@@ -115,11 +116,22 @@ behaviour could be overriden by keyword argument ``:raise t``."
     result))
 
 
+(defun get-remote-url (upstream)
+  ;; Previously it was:
+  ;; (run (concatenate 'string "git remote get-url " upstream))
+  ;; but get-url is only supported in git >= 2.7
+  ;; and it is absent in my base lisp image:
+  ;; https://github.com/40ants/base-lisp-image/blob/master/Dockerfile
+  ;; because it uses Ubuntu 14.04
+  (run (format nil "git remote --verbose | grep '~A.*fetch' | awk '{print $2}'"
+               upstream)))
+
+
 (defun get-origin-to-push ()
   (let ((upstream (get-git-upstream)))
     (if upstream
         ;; If there is already some remote upstream, then use it
-        (run (concatenate 'string "git remote get-url " upstream))
+        (get-remote-url upstream)
         ;; otherwise make it from travis secret token and repo slug
         (format nil "https://~A@github.com/~A"
                 (get-repo-token)
@@ -132,8 +144,9 @@ behaviour could be overriden by keyword argument ``:raise t``."
   (unless (gh-pages-repository-initialized-p)
     (git "init")
     
-    (git "remote add origin "
-         (get-origin-to-push)))
+    (git (concatenate 'string
+                      "remote add origin "
+                      (get-origin-to-push))))
 
   (git "add .")
   
