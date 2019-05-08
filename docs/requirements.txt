@@ -15,7 +15,7 @@ Jinja2==2.10             # via sphinx
 MarkupSafe==1.1.0           # via jinja2
 packaging==18.0           # via setuptools
 pygments-cl-repl==0.1
-pygments==2.3.1           # via pygments-cl-repl, sphinx
+pygments==2.4.0           # via pygments-cl-repl, sphinx
 pyparsing==2.3.0          # via packaging
 pytz==2018.7              # via babel
 requests==2.21.0          # via sphinx
