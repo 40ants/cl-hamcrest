@@ -2,6 +2,22 @@
  ChangeLog
 ===========
 
+0.4.4 (2019-06-07)
+==================
+
+* Fixed an issue how ``assert-that`` reports about failure under the Rove.
+  Previously, it always reported that "Object" is ``nil``, but now it is fixed,
+  and output will look like that::
+
+    Expected value is shorter than result
+      Matcher:
+      (HAMCREST/MATCHERS:CONTAINS 1 2)
+ 
+      Object:
+      (LIST 1 2 3) -> 
+      (1 2 3)
+
+
 0.4.3 (2018-12-08)
 ==================
 
