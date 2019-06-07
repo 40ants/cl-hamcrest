@@ -24,6 +24,8 @@
 
 (defvar *current-matcher-description*)
 (defvar *current-matcher-form*)
+(defvar *current-object-form*)
+(defvar *current-object-value*)
 
 
 (defclass failed-assertion (rove/core/result:failed-assertion)
@@ -33,23 +35,25 @@
    (matcher-description :initform *current-matcher-description*
                         :reader get-matcher-description)
    (matcher-form :initform *current-matcher-form*
-                 :reader get-matcher-form)))
+                 :reader get-matcher-form)
+   (object-form :initform *current-object-form*
+                :reader get-object-form)
+   (object-value :initform *current-object-value*
+                 :reader get-object-value)))
 
 
 (defmethod print-object ((assertion failed-assertion) stream)
   ;;  (format stream "Some failed assertion")
-  (if *print-assertion*
-      (let* ((rove-form-args (assertion-values assertion))
-             ;; We call Rove's ok macro with like that:
-             ;; (ok (funcall matcher-func object-to-match) ...)
-             ;; that is why here we take object-to-match as the
-             ;; second argument of the failed form.
-             (matcher-arg (second rove-form-args)))
-        (format stream "Matcher:")
-        (pprint (get-matcher-form assertion) stream)
-        (format stream "~2&Object:")
-        (pprint matcher-arg stream))
-      (call-next-method))
+  (cond (*print-assertion*
+         (setf cl-user::ass assertion)
+         (format stream "Matcher:")
+         (pprint (get-matcher-form assertion) stream)
+         (format stream "~2&Object:")
+         (pprint (get-object-form assertion) stream)
+         (format stream " -> ")
+         (pprint (get-object-value assertion) stream))
+        (t
+         (call-next-method)))
   )
 
 
@@ -68,7 +72,9 @@
       `(symbol-macrolet ((_ (any)))
          (let* ((,matcher-var ,matcher)
                 (*current-matcher-description* (matcher-description ,matcher-var))
-                (*current-matcher-form* (matcher-form ,matcher-var)))
+                (*current-matcher-form* (matcher-form ,matcher-var))
+                (*current-object-form* ',value)
+                (*current-object-value* ,value))
 
            (%okng
             (funcall ,matcher-var ,value)
