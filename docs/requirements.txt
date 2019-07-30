@@ -13,7 +13,7 @@ docutils==0.14          # via sphinx
 imagesize==1.1.0          # via sphinx
 Jinja2==2.10             # via sphinx
 MarkupSafe==1.1.1           # via jinja2
-packaging==18.0           # via setuptools
+packaging==19.1           # via setuptools
 pygments-cl-repl==0.1
 pygments==2.3.1           # via pygments-cl-repl, sphinx
 pyparsing==2.3.0          # via packaging
