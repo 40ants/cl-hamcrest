@@ -19,6 +19,7 @@ jobs:
           name: Install dependencies
           command: |
             ros install rove
+            touch qlfile
             qlot install
       - run:
           name: Check environment
@@ -41,6 +42,7 @@ jobs:
           name: Install dependencies
           command: |
             ros install rove
+            touch qlfile
             qlot install
       - run:
           name: Check environment
@@ -64,6 +66,7 @@ jobs:
             apt-get install -y python-pip
             pip install -r docs/requirements.txt
             ros install 40ants/cldomain
+            touch qlfile
             qlot install
       - run:
           name: Check environment
