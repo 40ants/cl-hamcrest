@@ -85,6 +85,11 @@ workflows:
             branches:
               ignore: gh-pages
 
+      - sbcl:
+          filters:
+            branches:
+              ignore: gh-pages
+
       - build_docs:
           filters:
             branches:
