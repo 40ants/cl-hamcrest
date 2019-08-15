@@ -65,15 +65,13 @@ workflows:
   version: 2
   build:
     jobs:
-      - ccl:
+      - ccl: &except-gh-pages
           filters:
             branches:
               ignore: gh-pages
 
       - sbcl:
-          filters:
-            branches:
-              ignore: gh-pages
+          <<: *except-gh-pages
 
       - build_docs:
           filters:
