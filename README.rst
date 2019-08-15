@@ -2,8 +2,8 @@
  cl-hamcrest
 =============
 
-.. image:: https://travis-ci.org/40ants/cl-hamcrest.svg?branch=master
-    :target: https://travis-ci.org/40ants/cl-hamcrest
+.. image:: https://circleci.com/gh/40ants/cl-hamcrest.svg?style=svg
+    :target: https://circleci.com/gh/40ants/cl-hamcrest
 
 .. include-from
 
