@@ -3,16 +3,14 @@ version: 2.1
 executors:
   ccl-executor:
     docker:
-      - image: 40ants/base-lisp-image:0.6.0-ccl-bin
+      - image: 40ants/base-lisp-image:0.7.0-ccl-bin
   sbcl-executor:
     docker:
-      - image: 40ants/base-lisp-image:0.6.0-sbcl-bin
+      - image: 40ants/base-lisp-image:0.7.0-sbcl-bin
 
 jobs:
-  ccl:
-    executor: ccl-executor
-    # environment:
-    #   LISP: ccl-bin
+  base-job: &base-job
+    executor: sbcl-executor
     steps:
       - checkout
       - run:
@@ -32,28 +30,12 @@ jobs:
           name: Run tests
           command: qlot exec rove hamcrest-test.asd
 
+  ccl:
+    <<: *base-job
+    executor: ccl-executor
   sbcl:
+    <<: *base-job
     executor: sbcl-executor
-    # environment:
-    #   LISP: ccl-bin
-    steps:
-      - checkout
-      - run:
-          name: Install dependencies
-          command: |
-            ros install rove
-            touch qlfile
-            qlot install
-      - run:
-          name: Check environment
-          command: |
-            env | grep -v -i token | sort
-            echo 'Current dir:'
-            pwd
-            ls -lh
-      - run:
-          name: Run tests
-          command: qlot exec rove hamcrest-test.asd
 
   build_docs:
     executor: ccl-executor
@@ -83,15 +65,13 @@ workflows:
   version: 2
   build:
     jobs:
-      - ccl:
+      - ccl: &except-gh-pages
           filters:
             branches:
               ignore: gh-pages
 
       - sbcl:
-          filters:
-            branches:
-              ignore: gh-pages
+          <<: *except-gh-pages
 
       - build_docs:
           filters:
