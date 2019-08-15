@@ -10,6 +10,7 @@ executors:
 
 jobs:
   base-job: &base-job
+    executor: sbcl-executor
     steps:
       - checkout
       - run:
