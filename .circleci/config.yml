@@ -39,7 +39,7 @@ jobs:
 
   build_docs:
     executor: ccl-executor
-    parameter:
+    parameters:
       upload:
         type: boolean
         default: false
