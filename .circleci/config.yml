@@ -62,18 +62,18 @@ jobs:
             pwd
             ls -lh
       - when:
-        condition: <<parameters.upload>>
-        steps:
-          - run:
-              name: Build docs and upload to github
-              command: ./build-docs.ros --push-to gh-pages
+          condition: <<parameters.upload>>
+          steps:
+            - run:
+                name: Build docs and upload to github
+                command: ./build-docs.ros --push-to gh-pages
       # Just building docs to check if everything is OK
       - unless:
-        condition: <<parameters.upload>>
-        steps:
-          - run:
-              name: Build docs
-              command: ./build-docs.ros
+          condition: <<parameters.upload>>
+          steps:
+            - run:
+                name: Build docs
+                command: ./build-docs.ros
 
 workflows:
   version: 2
