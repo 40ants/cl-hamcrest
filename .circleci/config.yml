@@ -3,10 +3,10 @@ version: 2.1
 executors:
   ccl-executor:
     docker:
-      - image: 40ants/base-lisp-image:0.7.0-ccl-bin
+      - image: 40ants/base-lisp-image:0.8.0-ccl-bin
   sbcl-executor:
     docker:
-      - image: 40ants/base-lisp-image:0.7.0-sbcl-bin
+      - image: 40ants/base-lisp-image:0.8.0-sbcl-bin
 
 jobs:
   base-job: &base-job
@@ -45,8 +45,8 @@ jobs:
           name: Install dependencies
           command: |
             apt-get update
-            apt-get install -y python-pip
-            pip install -r docs/requirements.txt
+            apt-get install -y python3-pip
+            pip3 install -r docs/requirements.txt
             ros install 40ants/cldomain
             touch qlfile
             qlot install
