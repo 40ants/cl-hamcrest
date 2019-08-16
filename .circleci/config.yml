@@ -39,6 +39,10 @@ jobs:
 
   build_docs:
     executor: ccl-executor
+    parameter:
+      upload:
+        type: boolean
+        default: false
     steps:
       - checkout
       - run:
@@ -57,9 +61,19 @@ jobs:
             echo 'Current dir:'
             pwd
             ls -lh
-      - run:
-          name: Build docs
-          command: ./build-docs.ros --push-to gh-pages
+      - when:
+        condition: <<parameters.upload>>
+        steps:
+          - run:
+              name: Build docs and upload to github
+              command: ./build-docs.ros --push-to gh-pages
+      # Just building docs to check if everything is OK
+      - unless:
+        condition: <<parameters.upload>>
+        steps:
+          - run:
+              name: Build docs
+              command: ./build-docs.ros
 
 workflows:
   version: 2
@@ -74,6 +88,13 @@ workflows:
           <<: *except-gh-pages
 
       - build_docs:
+          upload: true
           filters:
             branches:
               only: master
+
+      - build_docs:
+          upload: false
+          filters:
+            branches:
+              except: master
