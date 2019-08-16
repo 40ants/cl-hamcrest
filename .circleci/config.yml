@@ -77,4 +77,5 @@ workflows:
       - build_docs:
           filters:
             branches:
+              # only: master
               only: new-base-image
