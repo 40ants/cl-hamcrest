@@ -97,4 +97,4 @@ workflows:
           upload: false
           filters:
             branches:
-              except: master
+              ignore: master
