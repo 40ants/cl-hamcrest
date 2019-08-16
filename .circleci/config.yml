@@ -45,8 +45,8 @@ jobs:
           name: Install dependencies
           command: |
             apt-get update
-            apt-get install -y python-pip
-            pip install -r docs/requirements.txt
+            apt-get install -y python3-pip
+            pip3 install -r docs/requirements.txt
             ros install 40ants/cldomain
             touch qlfile
             qlot install
