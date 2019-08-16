@@ -59,7 +59,8 @@ jobs:
             ls -lh
       - run:
           name: Build docs
-          command: ./build-docs.ros --push-to gh-pages
+          # command: ./build-docs.ros --push-to gh-pages
+          command: ./build-docs.ros
 
 workflows:
   version: 2
@@ -76,4 +77,4 @@ workflows:
       - build_docs:
           filters:
             branches:
-              only: master
+              only: new-base-image
