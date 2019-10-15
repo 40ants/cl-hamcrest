@@ -7,7 +7,7 @@
 -e git+https://github.com/40ants/pygments-cl-repl.git#egg=pygments-cl-repl
 -e git+https://github.com/40ants/sphinxcontrib-cldomain.git#egg=sphinxcontrib-cldomain
 alabaster==0.7.12         # via sphinx
-attrs==19.1.0             # via packaging
+attrs==19.3.0             # via packaging
 babel==2.6.0              # via sphinx
 certifi==2019.6.16        # via requests
 chardet==3.0.4            # via requests
