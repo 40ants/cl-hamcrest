@@ -1,6 +1,5 @@
 (uiop:define-package hamcrest/rove
     (:use #:cl
-          #:iterate
           #:hamcrest/matchers)
   (:import-from #:rove/core/result
                 #:passed-assertion
