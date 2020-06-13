@@ -43,7 +43,6 @@
 (defmethod print-object ((assertion failed-assertion) stream)
   ;;  (format stream "Some failed assertion")
   (cond (*print-assertion*
-         (setf cl-user::ass assertion)
          (format stream "Matcher:")
          (pprint (get-matcher-form assertion) stream)
          (format stream "~2&Object:")
