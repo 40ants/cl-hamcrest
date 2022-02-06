@@ -1,6 +1,6 @@
 (uiop:define-package hamcrest/rove
-    (:use #:cl
-          #:hamcrest/matchers)
+  (:use #:cl
+        #:hamcrest/matchers)
   (:import-from #:rove/core/result
                 #:passed-assertion
                 #:*print-assertion*
@@ -9,8 +9,10 @@
                 #:stacks
                 #:reason
                 #:form)
-  (:import-from #:rove/core/assertion
-                #:%okng)
+  ;; I had to rewrite some Rove internals
+  ;; after the https://github.com/fukamachi/rove/commit/13176ebf2a7ae0f534c66fc9b9dbf1acfa0797ca
+  ;; (:import-from #:rove/core/assertion
+  ;;               #:%okng)
   (:import-from #:alexandria
                 #:with-gensyms)
   ;; reexport matchers for convenience
@@ -41,7 +43,6 @@
 
 
 (defmethod print-object ((assertion failed-assertion) stream)
-  ;;  (format stream "Some failed assertion")
   (cond (*print-assertion*
          (format stream "Matcher:")
          (pprint (get-matcher-form assertion) stream)
@@ -50,8 +51,81 @@
          (format stream " -> ")
          (pprint (get-object-value assertion) stream))
         (t
-         (call-next-method)))
-  )
+         (call-next-method))))
+
+
+;; These functions were borrowed from Rove and modified to pass our assertion-error class
+
+(defun ok-assertion-class (result error)
+  (declare (ignore error))
+  (if result
+      'passed-assertion
+      'failed-assertion))
+
+(defun ng-assertion-class (result error)
+  (cond
+    (error 'failed-assertion)
+    (result 'failed-assertion)
+    (t 'passed-assertion)))
+
+(defun %okng-record (form result args-symbols args-values steps stacks reason duration desc positive)
+  (let* ((class-fn (if positive
+                       #'ok-assertion-class
+                       #'ng-assertion-class))
+         (assertion
+           (make-instance (funcall class-fn
+                                   (if (eq result rove/core/assertion::*fail*)
+                                       (not positive)
+                                       (not (null result)))
+                                   reason)
+                          :form form
+                          :steps steps
+                          :args args-symbols
+                          :values args-values
+                          :reason reason
+                          :desc desc
+                          :duration duration
+                          :stacks stacks
+                          :labels (and rove/core/stats::*stats*
+                                       (rove/core/stats::stats-context-labels rove/core/stats::*stats*))
+                          :negative (not positive))))
+    (rove/core/stats::record rove/core/stats::*stats* assertion)
+    result))
+
+(defun record-error (form steps reason duration description positive)
+  (%okng-record form rove/core/assertion::*fail* nil nil steps (dissect:stack) reason duration description positive))
+
+(defmacro %okng (form desc positive &environment env)
+  (declare (ignore env))
+  (let* ((form-steps (rove/core/assertion::form-steps form))
+         (form (gensym "FORM"))
+         (expanded-form (first form-steps))
+         (result (gensym "RESULT"))
+         (args-symbols (gensym "ARGS-SYMBOLS"))
+         (args-values (gensym "ARGS-VALUES"))
+         (steps (gensym "STEPS"))
+         (e (gensym "E"))
+         (start (gensym "START"))
+         (block-label (gensym "BLOCK")))
+    `(let* ((,start (get-internal-real-time))
+            (,form ',expanded-form)
+            (,steps ',(reverse form-steps)))
+       (block ,block-label
+         (handler-bind
+             ((error (lambda (,e)
+                       (record-error ,form ,steps ,e (rove/core/assertion::calc-duration ,start) ,desc ,positive)
+                       (unless (rove/core/assertion::debug-on-error-p)
+                         (return-from ,block-label rove/core/assertion::*fail*)))))
+           (multiple-value-bind (,result ,args-symbols ,args-values)
+               (rove/core/assertion::form-inspect ,expanded-form)
+             (%okng-record ,form
+                           ,result ,args-symbols ,args-values
+                           ,steps
+                           nil
+                           nil
+                           (rove/core/assertion::calc-duration ,start)
+                           ,desc
+                           ,positive)))))))
 
 
 (defmacro assert-that (value &rest matchers)
@@ -76,11 +150,6 @@
            (%okng
             (funcall ,matcher-var ,value)
             *current-matcher-description*
-            (lambda (result error)
-              (declare (ignorable error))
-              (if result
-                  'passed-assertion
-                  'failed-assertion))
             ;; positive? sure!
             t))))))
 

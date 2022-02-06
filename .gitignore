@@ -1,5 +1,4 @@
 /docs/build/
 /env/
-/qlfile
-/qlfile.lock
 /quicklisp/
+/.qlot/
