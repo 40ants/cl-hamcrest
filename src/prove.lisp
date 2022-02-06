@@ -1,7 +1,6 @@
 (uiop:define-package hamcrest/prove
     (:use #:cl
           #:prove
-          #:iterate
           #:hamcrest/matchers)
   (:reexport #:hamcrest/matchers)
   (:import-from #:hamcrest/matchers
