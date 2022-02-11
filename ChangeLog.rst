@@ -2,6 +2,11 @@
  ChangeLog
 ===========
 
+0.4.5 (2022-02-11)
+==================
+
+* Fixed `assert-that` for working with latest Rove.
+
 0.4.4 (2019-06-07)
 ==================
 

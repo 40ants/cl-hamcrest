@@ -11,8 +11,7 @@
                 #:form)
   ;; I had to rewrite some Rove internals
   ;; after the https://github.com/fukamachi/rove/commit/13176ebf2a7ae0f534c66fc9b9dbf1acfa0797ca
-  ;; (:import-from #:rove/core/assertion
-  ;;               #:%okng)
+  (:import-from #:rove/core/assertion)
   (:import-from #:alexandria
                 #:with-gensyms)
   ;; reexport matchers for convenience
