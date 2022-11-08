@@ -1,14 +1,15 @@
-(defpackage hamcrest-test/matchers
-  (:use :cl
-        :rove
-        :hamcrest/matchers)
-  (:import-from :alexandria
-                :with-gensyms)
-  (:import-from :hamcrest/matchers
-                :assertion-error
-                :assertion-error-reason
-                :assertion-error-reason-with-context))
-(in-package hamcrest-test/matchers)
+(uiop:define-package #:hamcrest-tests/matchers
+  (:use #:cl
+        #:rove
+        #:hamcrest/matchers)
+  (:import-from #:alexandria
+                #:with-gensyms)
+  (:import-from #:cl-ppcre)
+  (:import-from #:hamcrest/matchers
+                #:assertion-error
+                #:assertion-error-reason
+                #:assertion-error-reason-with-context))
+(in-package #:hamcrest-tests/matchers)
 
 
 (defmacro test-if-matcher-fails (title matcher value expected-error-message)

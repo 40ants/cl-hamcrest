@@ -1,15 +1,15 @@
-(defpackage hamcrest/utils
+(uiop:define-package #:hamcrest/utils
   (:use #:cl
         #:iterate)
   (:import-from #:split-sequence
                 #:split-sequence)
   (:import-from #:cl-ppcre
                 #:regex-replace-all)
-  (:export :alistp
-           :deindent
-           :shift-rest-lines
-           :indent))
-(in-package hamcrest/utils)
+  (:export #:alistp
+           #:deindent
+           #:shift-rest-lines
+           #:indent))
+(in-package #:hamcrest/utils)
 
 
 (defun alistp (value)

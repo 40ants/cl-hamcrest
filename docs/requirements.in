@@ -1,5 +1,0 @@
-sphinx
-sphinx-bootstrap-theme
-
--e git+https://github.com/40ants/pygments-cl-repl.git#egg=pygments-cl-repl
--e git+https://github.com/40ants/sphinxcontrib-cldomain.git#egg=sphinxcontrib-cldomain

@@ -1,4 +1,4 @@
-(uiop:define-package hamcrest/rove
+(uiop:define-package #:hamcrest/rove
   (:use #:cl
         #:hamcrest/matchers)
   (:import-from #:rove/core/result
@@ -17,8 +17,8 @@
   ;; reexport matchers for convenience
   (:reexport #:hamcrest/matchers)
   
-  (:export :assert-that))
-(in-package :hamcrest/rove)
+  (:export #:assert-that))
+(in-package #:hamcrest/rove)
 
 
 (defvar *current-matcher-description*)

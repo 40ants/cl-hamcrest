@@ -1,16 +1,17 @@
-(defpackage hamcrest-test/rove
-  (:use :cl
-        :rove
-        :hamcrest/rove
-        :hamcrest/utils)
-  (:import-from :alexandria
-                :with-gensyms)
-  (:import-from :hamcrest/matchers
-                :assertion-error
-                :assertion-error-reason)
+(uiop:define-package #:hamcrest-tests/rove
+  (:use #:cl
+        #:rove
+        #:hamcrest/rove
+        #:hamcrest/utils)
+  (:import-from #:alexandria
+                #:with-gensyms)
+  (:import-from #:rove/core/assertion)
+  (:import-from #:hamcrest/matchers
+                #:assertion-error
+                #:assertion-error-reason)
   (:import-from #:cl-ppcre
                 #:scan))
-(in-package hamcrest-test/rove)
+(in-package #:hamcrest-tests/rove)
 
 
 (defmacro test-assertion (title body expected &key (regexp t))

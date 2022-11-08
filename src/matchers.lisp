@@ -1,7 +1,6 @@
-(defpackage hamcrest/matchers
+(uiop:define-package #:hamcrest/matchers
   (:use #:cl
         #:iterate)
-  
   (:import-from #:alexandria
                 #:with-gensyms)
   (:import-from #:hamcrest/utils
@@ -27,8 +26,7 @@
            #:assertion-error-reason
            #:assertion-context
            #:assertion-error-reason-with-context))
-
-(in-package :hamcrest/matchers)
+(in-package #:hamcrest/matchers)
 
 
 (defvar *matcher-descriptions*
@@ -46,11 +44,10 @@ we'll store their docstrings in this cache")
 (defun matcher-description (fn)
   "Returns description of a given matcher function.
 
-Can be used to print nested matchers in a nicely indented,
-human readable way:
+   Can be used to print nested matchers in a nicely indented,
+   human readable way:
 
-.. code-block:: common-lisp-repl
-
+   ```
    TEST> (matcher-description (has-length 100500))
    \"Has length of 100500 \"
    
@@ -66,6 +63,7 @@ human readable way:
      :FOO = \"bar\"
      :BLAH = Has hash entries:
                :MINOR = \"again\"\"
+   ```
 "
   (gethash fn *matcher-descriptions*))
 
@@ -78,11 +76,10 @@ human readable way:
 (defun matcher-form (fn)
   "Returns description of a given matcher function.
 
-Can be used to print nested matchers in a nicely indented,
-human readable way:
+   Can be used to print nested matchers in a nicely indented,
+   human readable way:
 
-.. code-block:: common-lisp-repl
-
+   ```
    TEST> (matcher-description (has-length 100500))
    \"Has length of 100500 \"
    
@@ -98,6 +95,7 @@ human readable way:
      :FOO = \"bar\"
      :BLAH = Has hash entries:
                :MINOR = \"again\"\"
+   ```
 "
   (gethash fn *matcher-forms*))
 
@@ -219,6 +217,15 @@ for each indentation level."
       value))
 
 
+(define-symbol-macro _ (error "Symbol _ should be used inside Hamcrest matchers."))
+
+;; For some reason 40ants-doc searches for function with the same name as symbol-macro
+;; and also, it ignores it's documentation.
+(defun _ ()
+  "Symbol _ should be used as is not as a function."
+  (error "Symbol _ should be used inside Hamcrest matchers."))
+
+
 (defmacro format-expected-entries (prefix-text)
   "This macro is for formatting description of matchers which expect
   some key/value entries, like (has-plist-entries :foo 1 :bar 2)."
@@ -228,27 +235,27 @@ for each indentation level."
                                    ":~%  ~{~a~^~%  ~}")))
     `(format nil ,message-text
              (iterate (for (key value) :on entries :by #'cddr)
-                      (collecting
-                        (if (functionp value)
-                            (let* ((value-prefix (format nil "~S = "
-                                                         key))
-                                   (indent (indent
-                                            1
-                                            (+ (length value-prefix)
-                                               ;; add two spaces becase
-                                               ;; this is additional
-                                               ;; shift for key values
-                                               2)))
-                                   (description (matcher-description value))
-                                   (shifted-value (shift-rest-lines
-                                                   description
-                                                   indent)))
-                              (concatenate 'string
-                                           value-prefix
-                                           shifted-value))
-                            (format nil "~S = ~S"
-                                    key
-                                    value)))))))
+               (collecting
+                 (if (functionp value)
+                     (let* ((value-prefix (format nil "~S = "
+                                                  key))
+                            (indent (indent
+                                     1
+                                     (+ (length value-prefix)
+                                        ;; add two spaces becase
+                                        ;; this is additional
+                                        ;; shift for key values
+                                        2)))
+                            (description (matcher-description value))
+                            (shifted-value (shift-rest-lines
+                                            description
+                                            indent)))
+                       (concatenate 'string
+                                    value-prefix
+                                    shifted-value))
+                     (format nil "~S = ~S"
+                             key
+                             value)))))))
 
 
 (defmacro def-has-macro (macro-name
@@ -331,38 +338,37 @@ condition 'assertion-error with reason \"Key ~S is missing\"."
 
 (def-has-macro
     has-plist-entries
-    "Matches plist entries:
+  "Matches plist entries:
 
-.. code-block:: common-lisp-repl
-
-   TEST> (let ((obj '(:foo :bar)))
-           (assert-that obj
-                        (has-plist-entries :foo \"bar\"
-                                           :blah \"minor\")))
-     × Key :FOO has :BAR value, but \"bar\" was expected
+```
+TEST> (let ((obj '(:foo :bar)))
+        (assert-that obj
+                     (has-plist-entries :foo \"bar\"
+                                        :blah \"minor\")))
+  × Key :FOO has :BAR value, but \"bar\" was expected
+```
 
 This way you can test any number of plist's entries."
     
-    :check-obj-type (check-if-list object)
-    :get-key-value (let ((key-value (getf object key 'absent)))
-                     (when (eql key-value 'absent)
-                       (error 'assertion-error
-                              :reason (format nil "Key ~S is missing" key)))
-                     key-value)
-    :format-error-message (format nil "Key ~S has ~S value, but ~S was expected"
-                                  expected-key
-                                  key-value
-                                  expected-value)
-    :format-matcher-description (format-expected-entries "Has plist entries"))
+  :check-obj-type (check-if-list object)
+  :get-key-value (let ((key-value (getf object key 'absent)))
+                   (when (eql key-value 'absent)
+                     (error 'assertion-error
+                            :reason (format nil "Key ~S is missing" key)))
+                   key-value)
+  :format-error-message (format nil "Key ~S has ~S value, but ~S was expected"
+                                expected-key
+                                key-value
+                                expected-value)
+  :format-matcher-description (format-expected-entries "Has plist entries"))
 
 
 
 (def-has-macro
     has-alist-entries
-    "Matches alist entries:
+  "Matches alist entries:
 
-.. code-block:: common-lisp-repl
-
+   ```
    TEST> (let ((obj '((:the-key . \"value\"))))
            (assert-that obj
                         (has-alist-entries :the-key \"value\")))
@@ -382,28 +388,28 @@ This way you can test any number of plist's entries."
                         (has-alist-entries :the-key \"other-value\")))
    
      × Key :THE-KEY has \"value\" value, but \"other-value\" was expected
+   ```
 "
   
-    :check-obj-type (check-if-alist object)
-    :get-key-value (let* ((pair (assoc key object))
-                          (key-value (cdr pair)))
-                     (when (null pair)
-                       (error 'assertion-error
-                              :reason (format nil "Key ~S is missing" key)))
-                     key-value)
-    :format-error-message (format nil "Key ~S has ~S value, but ~S was expected"
-                                  expected-key
-                                  key-value
-                                  expected-value)
-    :format-matcher-description (format-expected-entries "Has alist entries"))
+  :check-obj-type (check-if-alist object)
+  :get-key-value (let* ((pair (assoc key object))
+                        (key-value (cdr pair)))
+                   (when (null pair)
+                     (error 'assertion-error
+                            :reason (format nil "Key ~S is missing" key)))
+                   key-value)
+  :format-error-message (format nil "Key ~S has ~S value, but ~S was expected"
+                                expected-key
+                                key-value
+                                expected-value)
+  :format-matcher-description (format-expected-entries "Has alist entries"))
 
 
 (def-has-macro
     has-hash-entries
-    "Matches hash entries:
+  "Matches hash entries:
 
-.. code-block:: common-lisp-repl
-
+   ```
    TEST> (let ((obj (make-hash-table)))
            (setf (gethash 'the-key obj) \"value\")
            (assert-that obj
@@ -425,27 +431,27 @@ This way you can test any number of plist's entries."
                         (has-hash-entries 'the-key \"other-value\")))
    
      × Key THE-KEY has \"value\" value, but \"other-value\" was expected
+   ```
 "
   
-    :check-obj-type (check-if-hash object)
-    :get-key-value (let* ((key-value (gethash key object 'absent)))
-                     (when (eql key-value 'absent)
-                       (error 'assertion-error
-                              :reason (format nil "Key ~S is missing" key)))
-                     key-value)
-    :format-error-message (format nil "Key ~S has ~S value, but ~S was expected"
-                                  expected-key
-                                  key-value
-                                  expected-value)
-    :format-matcher-description (format-expected-entries "Has hash entries"))
+  :check-obj-type (check-if-hash object)
+  :get-key-value (let* ((key-value (gethash key object 'absent)))
+                   (when (eql key-value 'absent)
+                     (error 'assertion-error
+                            :reason (format nil "Key ~S is missing" key)))
+                   key-value)
+  :format-error-message (format nil "Key ~S has ~S value, but ~S was expected"
+                                expected-key
+                                key-value
+                                expected-value)
+  :format-matcher-description (format-expected-entries "Has hash entries"))
 
 
 (def-has-macro
     has-properties
-    "Matches object properties:
+  "Matches object properties:
 
-.. code-block:: common-lisp-repl
-
+   ```
    TEST> (defvar the-object)
    THE-OBJECT
    TEST> (setf (getf the-object :tags) '(one two))
@@ -461,28 +467,28 @@ This way you can test any number of plist's entries."
    TEST> (assert-that 'the-object
                       (has-properties :missing-property '(one two)))
      × Property :MISSING-PROPERTY is missing
+   ```
 "
   
-    :check-obj-type (check-if-symbol object)
-    :get-key-value (let* ((key-value (get object key 'absent)))
-                     (when (eql key-value 'absent)
-                       (error 'assertion-error
-                              :reason (format nil "Property ~S is missing" key)))
-                     key-value)
-    :format-error-message (format nil "Property ~S has ~S value, but ~S was expected"
-                                  expected-key
-                                  key-value
-                                  expected-value)
-    :format-matcher-description (format-expected-entries "Has properties"))
+  :check-obj-type (check-if-symbol object)
+  :get-key-value (let* ((key-value (get object key 'absent)))
+                   (when (eql key-value 'absent)
+                     (error 'assertion-error
+                            :reason (format nil "Property ~S is missing" key)))
+                   key-value)
+  :format-error-message (format nil "Property ~S has ~S value, but ~S was expected"
+                                expected-key
+                                key-value
+                                expected-value)
+  :format-matcher-description (format-expected-entries "Has properties"))
 
 
 
 (def-has-macro
     has-slots
-    "Matches object slots:
+  "Matches object slots:
 
-.. code-block:: common-lisp-repl
-
+   ```
    TEST> (defstruct task
            title
            description)
@@ -502,45 +508,46 @@ This way you can test any number of plist's entries."
                       (has-slots 'description nil))
      ✓ Has slots:
          DESCRIPTION = NIL
+   ```
 "
   
-    :check-obj-type (check-if-has-slots object)
-    :get-key-value (if (and (slot-exists-p object key)
-                            ;; slot-bound-p works
-                            ;; only for decendants of standard-class
-                            ;; for structure-class it always returns
-                            ;; true or signals error on some implementations.
-                            (typecase (class-of object)
-                              (standard-class (slot-boundp object key))
-                              (otherwise t)))
-                       (slot-value object key)
-                       (error 'assertion-error
-                              :reason (format nil "Slot ~S is missing" key)))
-    :format-error-message (format nil "Slot ~S has ~S value, but ~S was expected"
-                                  expected-key
-                                  key-value
-                                  expected-value)
-    :format-matcher-description (format-expected-entries "Has slots"))
+  :check-obj-type (check-if-has-slots object)
+  :get-key-value (if (and (slot-exists-p object key)
+                          ;; slot-bound-p works
+                          ;; only for decendants of standard-class
+                          ;; for structure-class it always returns
+                          ;; true or signals error on some implementations.
+                          (typecase (class-of object)
+                            (standard-class (slot-boundp object key))
+                            (otherwise t)))
+                     (slot-value object key)
+                     (error 'assertion-error
+                            :reason (format nil "Slot ~S is missing" key)))
+  :format-error-message (format nil "Slot ~S has ~S value, but ~S was expected"
+                                expected-key
+                                key-value
+                                expected-value)
+  :format-matcher-description (format-expected-entries "Has slots"))
 
 
 (defmacro hasnt-plist-keys (&rest keys)
-"Checks if given keys are missing from an object:
+  "Checks if given keys are missing from an object:
 
-.. code-block:: common-lisp-repl
-
+   ```
    TEST> (let ((obj '(:foo \"bar\")))
            (assert-that obj
                         (hasnt-plist-keys :blah :minor)))
      ✓ Keys :BLAH, :MINOR are absent
+   ```
 
-Assertion fails if at least one key is present in the object:
+   Assertion fails if at least one key is present in the object:
 
-.. code-block:: common-lisp-repl
-
+   ```
    TEST> (let ((obj '(:foo \"bar\")))
            (assert-that obj
                         (hasnt-plist-keys :blah :foo)))
      × Key :FOO is present in object, but shouldn't.
+   ```
 "
 
   (with-gensyms (matcher)
@@ -548,11 +555,11 @@ Assertion fails if at least one key is present in the object:
               (check-if-list value)
               
               (iterate (for key :in ',keys)
-                       (for key-value next (getf value key 'absent))
-                       (when (not (eql key-value 'absent))
-                         (error 'assertion-error
-                                :reason (format nil "Key ~S is present in object, but shouldn't"
-                                                key))))
+                (for key-value next (getf value key 'absent))
+                (when (not (eql key-value 'absent))
+                  (error 'assertion-error
+                         :reason (format nil "Key ~S is present in object, but shouldn't"
+                                         key))))
               ;; if everything is OK, then
               t))
 
@@ -568,8 +575,7 @@ Assertion fails if at least one key is present in the object:
 (defun any ()
   "Assertion is passed regardles of value of the object:
 
-.. code-block:: common-lisp-repl
-
+   ```
    TEST> (assert-that 1 (any))
      ✓ Any value if good enough
    
@@ -581,6 +587,7 @@ Assertion fails if at least one key is present in the object:
    
    TEST> (assert-that '(1 2 3) (any))
      ✓ Any value if good enough
+   ```
 "
   (let ((matcher (lambda (value)
                    (declare (ignore value))
@@ -595,29 +602,29 @@ Assertion fails if at least one key is present in the object:
 (defun has-all (&rest matchers)
   "Makes a matcher which groups another matchers with AND logic.
 
-This way we can check if plist has one key and hasn't another.
-And if all matchers succeed, then ``has-all`` succeed as well:
+   This way we can check if plist has one key and hasn't another.
+   And if all matchers succeed, then ``has-all`` succeed as well:
 
-.. code-block:: common-lisp-repl
-
+   ```
    TEST> (assert-that '(:foo \"bar\")
                       (has-all (has-plist-entries :foo \"bar\")
                                (hasnt-plist-keys :blah)))
      ✓ All checks are passed
+   ```
 
-If at least one check is failed, then ``has-all`` fails too:
+   If at least one check is failed, then ``has-all`` fails too:
 
-.. code-block:: common-lisp-repl
-
+   ```
    TEST> (assert-that '(:foo \"bar\" :blah \"minor\")
                       (has-all (has-plist-entries :foo \"bar\")
                                (hasnt-plist-keys :blah)))
      × Key :BLAH is present in object, but shouldn't
+   ```
 "
-  (let ( ;;(matcher-symbol (gensym "HAS-ALL-"))
+  (let (;;(matcher-symbol (gensym "HAS-ALL-"))
         (matcher (lambda (value)
                    (iterate (for matcher :in matchers)
-                            (funcall matcher value))
+                     (funcall matcher value))
                    t))
         (description "All checks are passed"))
     ;; (setf (symbol-function matcher-symbol)
@@ -638,8 +645,7 @@ If at least one check is failed, then ``has-all`` fails too:
 (defun has-length (expected-length)
   "Checks if a list have specivied length.
 
-.. code-block:: common-lisp-repl
-
+   ```
    TEST> (assert-that 'nil (has-length 0))
      ✓ Has length of 0
    
@@ -648,6 +654,7 @@ If at least one check is failed, then ``has-all`` fails too:
    
    TEST> (assert-that '(a b c d) (has-length 100500))
      × List (A B C D) has length of 4, but 100500 was expected
+   ```
 "
 
   (let ((matcher (lambda (value)
@@ -674,10 +681,9 @@ If at least one check is failed, then ``has-all`` fails too:
 (defmacro contains (&rest entries)
   "Checks if each item from a list matches to given matchers.
 
-Contains can accept as raw values, as another matchers:
+   Contains can accept as raw values, as another matchers:
 
-.. code-block:: common-lisp-repl
-
+   ```
    TEST> (assert-that '(:foo
                         (a b c)
                         d)
@@ -685,79 +691,80 @@ Contains can accept as raw values, as another matchers:
                                 (has-length 3)
                                 'd))
      ✓ Contains all given values
+   ```
 
-Given list should have a length equal to count of matchers:
+   Given list should have a length equal to count of matchers:
 
-.. code-block:: common-lisp-repl
-
+   ```
    TEST> (assert-that '(:foo
                         (a b c)
                         d)
                       (contains :foo))
      × Expected value is shorter than result
+   ```
 
-You can ignore value of some list items, by using ``(any)`` matcher:
+   You can ignore value of some list items, by using ``(any)`` matcher:
 
-.. code-block:: common-lisp-repl
-
+   ```
    TEST> (assert-that '(:foo
                         (a b c)
                         d)
                       (contains :foo (any) (any)))
      ✓ Contains all given values
+   ```
 "
-  (with-gensyms (matcher)
-    `(symbol-macrolet ((_ (any)))
-       (flet ((,matcher (value)
-                (let ((entries-len (length (list ,@entries)))
-                      (value-len (length value)))
-                  (when (< value-len entries-len)
-                    (error 'assertion-error
-                           :reason (if (zerop value-len)
-                                       "Result is empty"
-                                       "Result is shorter than expected")))
-                  (when (> value-len entries-len)
-                    (error 'assertion-error
-                           :reason "Expected value is shorter than result"))
-                  (iter (for checked-value
-                             :in value)
-                        (for expected-value
-                             :in (list ,@entries))
-                        (for index
-                             :upfrom 0)
+  (with-gensyms (matcher entries-var)
+    `(let ((,entries-var (list ,@entries)))
+       (symbol-macrolet ((_ (any)))
+         (flet ((,matcher (value)
+                  (let ((entries-len (length ,entries-var))
+                        (value-len (length value)))
+                    (when (< value-len entries-len)
+                      (error 'assertion-error
+                             :reason (if (zerop value-len)
+                                         "Result is empty"
+                                         "Result is shorter than expected")))
+                    (when (> value-len entries-len)
+                      (error 'assertion-error
+                             :reason "Expected value is shorter than result"))
+                    (iter (for checked-value
+                               :in value)
+                      (for expected-value
+                           :in ,entries-var)
+                      (for index
+                           :upfrom 0)
 
-                        (if (functionp expected-value)
-                            ;; if expected-value is a matcher
-                            (with-context (format nil "Item with index ~a" index)
-                              (funcall expected-value checked-value))
-                            ;; if it is a real value
-                            (unless (equal checked-value
-                                           expected-value)
-                              (error 'assertion-error
-                                     :reason (format nil
-                                                     "Item ~S at index ~a, but ~S was expected"
-                                                     checked-value
-                                                     index
-                                                     expected-value))))))
-                ;; to show that everything is ok
-                t))
-         (let ((description "Contains all given values")
-               (matcher-function (function ,matcher)))
-           (setf (matcher-description matcher-function)
-                 description)
+                      (if (functionp expected-value)
+                          ;; if expected-value is a matcher
+                          (with-context (format nil "Item with index ~a" index)
+                            (funcall expected-value checked-value))
+                          ;; if it is a real value
+                          (unless (equal checked-value
+                                         expected-value)
+                            (error 'assertion-error
+                                   :reason (format nil
+                                                   "Item ~S at index ~a, but ~S was expected"
+                                                   checked-value
+                                                   index
+                                                   expected-value))))))
+                  ;; to show that everything is ok
+                  t))
+           (let ((description "Contains all given values")
+                 (matcher-function (function ,matcher)))
+             (setf (matcher-description matcher-function)
+                   description)
 
-           (setf (matcher-form matcher-function)
-                 (list 'contains ,@entries))
-           
-           ;; Return resulting matcher
-           matcher-function)))))
+             (setf (matcher-form matcher-function)
+                   (list 'contains ,entries-var))
+             
+             ;; Return resulting matcher
+             matcher-function))))))
 
 
 (defmacro contains-in-any-order (&rest entries)
   "Same as ``contains``, but items in the sequence can be in any order:
 
-.. code-block:: common-lisp-repl
-
+   ```
    TEST> (assert-that '(:foo
                         (a b c)
                         d)
@@ -767,6 +774,7 @@ You can ignore value of some list items, by using ``(any)`` matcher:
                        :foo))
    
      ✓ Contains all given values
+   ```
 "
   (with-gensyms (matcher)
     `(flet ((,matcher (value)
@@ -780,34 +788,34 @@ You can ignore value of some list items, by using ``(any)`` matcher:
                   (error 'assertion-error
                          :reason "Expected value is shorter than result"))
                 (iter (for item in (list ,@entries))
-                      (unless (find item value
-                                    :test (lambda (expected checked-item)
-                                            (if (functionp expected)
-                                                ;; pass value to next matcher
-                                                (handler-case
-                                                    (progn
-                                                      (funcall expected checked-item)
-                                                      ;; if matched, then return True
-                                                      t)
-                                                  (assertion-error (c)
-                                                    (declare (ignorable c))
-                                                    ;; if condition was thrown, then item
-                                                    ;; does not conform to the matcher
-                                                    nil))
-                                                ;; otherwise, just check for equality
-                                                (equal checked-item expected)
-                                                )))
-                        (error 'assertion-error
-                               :reason (if (functionp item)
-                                           (format nil
-                                                   "Value which ~S is missing"
-                                                   (or (matcher-description item)
-                                                       ;; if for some reason matcher's description
-                                                       ;; wasn't found
-                                                       item))
-                                           (format nil
-                                                   "Value ~S is missing"
-                                                   item))))))
+                  (unless (find item value
+                                :test (lambda (expected checked-item)
+                                        (if (functionp expected)
+                                            ;; pass value to next matcher
+                                            (handler-case
+                                                (progn
+                                                  (funcall expected checked-item)
+                                                  ;; if matched, then return True
+                                                  t)
+                                              (assertion-error (c)
+                                                (declare (ignorable c))
+                                                ;; if condition was thrown, then item
+                                                ;; does not conform to the matcher
+                                                nil))
+                                            ;; otherwise, just check for equality
+                                            (equal checked-item expected)
+                                            )))
+                    (error 'assertion-error
+                           :reason (if (functionp item)
+                                       (format nil
+                                               "Value which ~S is missing"
+                                               (or (matcher-description item)
+                                                   ;; if for some reason matcher's description
+                                                   ;; wasn't found
+                                                   item))
+                                       (format nil
+                                               "Value ~S is missing"
+                                               item))))))
               ;; return true to show that everything is ok
               t))
        
@@ -820,13 +828,13 @@ You can ignore value of some list items, by using ``(any)`` matcher:
 (defun has-type (expected-type)
   "Checks if a list have specivied length.
 
-.. code-block:: common-lisp-repl
-
+   ```
    TEST> \(matcher-description \(has-type 'cons\)\)
    \"Has type CONS\"
    
    TEST> \(funcall \(has-type 'cons\) 100500\)
    ; Debugger entered on #<ASSERTION-ERROR 100500 has type (INTEGER 0 4611686018427387903), but CONS was expected>
+   ```
 "
 
   (let ((matcher (lambda (value)
