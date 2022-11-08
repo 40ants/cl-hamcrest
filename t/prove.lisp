@@ -1,16 +1,16 @@
-(defpackage hamcrest-test/prove
-  (:use :cl
-        :rove
-        :hamcrest/prove
-        :hamcrest/utils)
-  (:import-from :alexandria
-                :with-gensyms)
-  (:import-from :hamcrest/matchers
-                :assertion-error
-                :assertion-error-reason)
+(uiop:define-package #:hamcrest-tests/prove
+  (:use #:cl
+        #:rove
+        #:hamcrest/prove
+        #:hamcrest/utils)
+  (:import-from #:alexandria
+                #:with-gensyms)
+  (:import-from #:hamcrest/matchers
+                #:assertion-error
+                #:assertion-error-reason)
   (:import-from #:cl-ppcre
                 #:scan))
-(in-package hamcrest-test/prove)
+(in-package #:hamcrest-tests/prove)
 
 
 (defmacro test-assertion (title body expected)
@@ -24,24 +24,24 @@ the result before trying to match."
   (with-gensyms (result trimmed)
     `(testing ,title
        (let* ((,result
-               ;; All output during the test, should be captured
-               ;; to test against give regex
-               (with-output-to-string
-                   (prove.output:*test-result-output*)
+                ;; All output during the test, should be captured
+                ;; to test against give regex
+                (with-output-to-string
+                    (prove.output:*test-result-output*)
 
-                 (let (;; Colors whould be turned off to
-                       ;; prevent Prove's reporter return
-                       ;; string with terminal sequences.
-                       ;; This way it will be easier to compare
-                       ;; results with usual strings
-                       (prove.color:*enable-colors* nil)
-                       ;; We need to overide current suite, to prevent
-                       ;; tested assert-that macro from modifying real testsuite.
-                       ;; Otherwise it can increment failed or success tests count
-                       ;; and prove will output wrong data.
-                       (prove.suite:*suite* (make-instance 'prove.suite:suite))
-                       (prove.reporter::*debug-indentation* nil))
-                   ,body)))
+                  (let (;; Colors whould be turned off to
+                        ;; prevent Prove's reporter return
+                        ;; string with terminal sequences.
+                        ;; This way it will be easier to compare
+                        ;; results with usual strings
+                        (prove.color:*enable-colors* nil)
+                        ;; We need to overide current suite, to prevent
+                        ;; tested assert-that macro from modifying real testsuite.
+                        ;; Otherwise it can increment failed or success tests count
+                        ;; and prove will output wrong data.
+                        (prove.suite:*suite* (make-instance 'prove.suite:suite))
+                        (prove.reporter::*debug-indentation* nil))
+                    ,body)))
 
               (,trimmed (string-trim '(#\Space #\Newline)
                                      (deindent ,result))))

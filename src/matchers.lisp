@@ -1,7 +1,6 @@
-(defpackage hamcrest/matchers
+(uiop:define-package #:hamcrest/matchers
   (:use #:cl
         #:iterate)
-  
   (:import-from #:alexandria
                 #:with-gensyms)
   (:import-from #:hamcrest/utils
@@ -27,8 +26,7 @@
            #:assertion-error-reason
            #:assertion-context
            #:assertion-error-reason-with-context))
-
-(in-package :hamcrest/matchers)
+(in-package #:hamcrest/matchers)
 
 
 (defvar *matcher-descriptions*

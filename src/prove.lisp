@@ -1,4 +1,4 @@
-(uiop:define-package hamcrest/prove
+(uiop:define-package #:hamcrest/prove
     (:use #:cl
           #:prove
           #:hamcrest/matchers)
@@ -8,8 +8,8 @@
                 #:assertion-error-reason-with-context)
   (:import-from #:alexandria
                 #:with-gensyms)
-  (:export :assert-that))
-(in-package hamcrest/prove)
+  (:export #:assert-that))
+(in-package #:hamcrest/prove)
 
 
 (defclass assertion-report (prove.report:failed-test-report)

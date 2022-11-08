@@ -6,7 +6,7 @@
 
 ## HAMCREST ASDF System Details
 
-* Version: 0.4.5
+* Version: 0.5.0
 
 * Description: A set of helpers to make your unittests more readable by using Hamcrest assertions.
 
@@ -166,7 +166,7 @@ alists and property lists.
 
 <a id="x-28HAMCREST-2FMATCHERS-3AHAS-PLIST-ENTRIES-20-2840ANTS-DOC-2FLOCATIVES-3AMACRO-29-29"></a>
 
-#### [macro](adda) `hamcrest/matchers:has-plist-entries` &rest entries
+#### [macro](032a) `hamcrest/matchers:has-plist-entries` &rest entries
 
 Matches plist entries:
 
@@ -181,7 +181,7 @@ This way you can test any number of plist's entries.
 
 <a id="x-28HAMCREST-2FMATCHERS-3AHASNT-PLIST-KEYS-20-2840ANTS-DOC-2FLOCATIVES-3AMACRO-29-29"></a>
 
-#### [macro](75df) `hamcrest/matchers:hasnt-plist-keys` &rest keys
+#### [macro](34d8) `hamcrest/matchers:hasnt-plist-keys` &rest keys
 
 Checks if given keys are missing from an object:
 
@@ -201,7 +201,7 @@ TEST> (let ((obj '(:foo "bar")))
 ```
 <a id="x-28HAMCREST-2FMATCHERS-3AHAS-ALIST-ENTRIES-20-2840ANTS-DOC-2FLOCATIVES-3AMACRO-29-29"></a>
 
-#### [macro](bf4b) `hamcrest/matchers:has-alist-entries` &rest entries
+#### [macro](5c50) `hamcrest/matchers:has-alist-entries` &rest entries
 
 Matches alist entries:
 
@@ -228,7 +228,7 @@ TEST> (let ((obj '((:the-key . "value"))))
 ```
 <a id="x-28HAMCREST-2FMATCHERS-3AHAS-HASH-ENTRIES-20-2840ANTS-DOC-2FLOCATIVES-3AMACRO-29-29"></a>
 
-#### [macro](0b13) `hamcrest/matchers:has-hash-entries` &rest entries
+#### [macro](0705) `hamcrest/matchers:has-hash-entries` &rest entries
 
 Matches hash entries:
 
@@ -257,7 +257,7 @@ TEST> (let ((obj (make-hash-table)))
 ```
 <a id="x-28HAMCREST-2FMATCHERS-3AHAS-PROPERTIES-20-2840ANTS-DOC-2FLOCATIVES-3AMACRO-29-29"></a>
 
-#### [macro](107a) `hamcrest/matchers:has-properties` &rest entries
+#### [macro](76e1) `hamcrest/matchers:has-properties` &rest entries
 
 Matches object properties:
 
@@ -280,7 +280,7 @@ TEST> (assert-that 'the-object
 ```
 <a id="x-28HAMCREST-2FMATCHERS-3AHAS-SLOTS-20-2840ANTS-DOC-2FLOCATIVES-3AMACRO-29-29"></a>
 
-#### [macro](7063) `hamcrest/matchers:has-slots` &rest entries
+#### [macro](d4a7) `hamcrest/matchers:has-slots` &rest entries
 
 Matches object slots:
 
@@ -307,7 +307,7 @@ TEST> (assert-that task
 ```
 <a id="x-28HAMCREST-2FMATCHERS-3AHAS-TYPE-20FUNCTION-29"></a>
 
-#### [function](f71a) `hamcrest/matchers:has-type` expected-type
+#### [function](5398) `hamcrest/matchers:has-type` expected-type
 
 Checks if a list have specivied length.
 
@@ -324,7 +324,7 @@ TEST> (funcall (has-type 'cons) 100500)
 
 <a id="x-28HAMCREST-2FMATCHERS-3AHAS-LENGTH-20FUNCTION-29"></a>
 
-#### [function](cc92) `hamcrest/matchers:has-length` expected-length
+#### [function](6c61) `hamcrest/matchers:has-length` expected-length
 
 Checks if a list have specivied length.
 
@@ -340,7 +340,7 @@ TEST> (assert-that '(a b c d) (has-length 100500))
 ```
 <a id="x-28HAMCREST-2FMATCHERS-3ACONTAINS-20-2840ANTS-DOC-2FLOCATIVES-3AMACRO-29-29"></a>
 
-#### [macro](e3ee) `hamcrest/matchers:contains` &rest entries
+#### [macro](a8ca) `hamcrest/matchers:contains` &rest entries
 
 Checks if each item from a list matches to given matchers.
 
@@ -375,7 +375,7 @@ TEST> (assert-that '(:foo
 ```
 <a id="x-28HAMCREST-2FMATCHERS-3ACONTAINS-IN-ANY-ORDER-20-2840ANTS-DOC-2FLOCATIVES-3AMACRO-29-29"></a>
 
-#### [macro](5302) `hamcrest/matchers:contains-in-any-order` &rest entries
+#### [macro](cef2) `hamcrest/matchers:contains-in-any-order` &rest entries
 
 Same as `contains`, but items in the sequence can be in any order:
 
@@ -396,7 +396,7 @@ TEST> (assert-that '(:foo
 
 <a id="x-28HAMCREST-2FMATCHERS-3AANY-20FUNCTION-29"></a>
 
-#### [function](7113) `hamcrest/matchers:any`
+#### [function](f867) `hamcrest/matchers:any`
 
 Assertion is passed regardles of value of the object:
 
@@ -415,7 +415,7 @@ TEST> (assert-that '(1 2 3) (any))
 ```
 <a id="x-28HAMCREST-2FMATCHERS-3AHAS-ALL-20FUNCTION-29"></a>
 
-#### [function](ecec) `hamcrest/matchers:has-all` &rest matchers
+#### [function](26eb) `hamcrest/matchers:has-all` &rest matchers
 
 Makes a matcher which groups another matchers with `AND` logic.
 
@@ -442,13 +442,13 @@ TEST> (assert-that '(:foo "bar" :blah "minor")
 
 <a id="x-28HAMCREST-2FMATCHERS-3A-5F-20FUNCTION-29"></a>
 
-#### [function](7c68) `hamcrest/matchers:_`
+#### [function](2881) `hamcrest/matchers:_`
 
 Symbol _ should be used as is not as a function.
 
 <a id="x-28HAMCREST-2FMATCHERS-3AMATCHER-DESCRIPTION-20FUNCTION-29"></a>
 
-#### [function](aae1) `hamcrest/matchers:matcher-description` fn
+#### [function](43f6) `hamcrest/matchers:matcher-description` fn
 
 Returns description of a given matcher function.
 
@@ -474,7 +474,7 @@ TEST> (matcher-description (has-plist-entries
 ```
 <a id="x-28HAMCREST-2FMATCHERS-3AMATCHER-FORM-20FUNCTION-29"></a>
 
-#### [function](c9da) `hamcrest/matchers:matcher-form` fn
+#### [function](bc23) `hamcrest/matchers:matcher-form` fn
 
 Returns description of a given matcher function.
 
@@ -500,19 +500,19 @@ TEST> (matcher-description (has-plist-entries
 ```
 <a id="x-28HAMCREST-2FMATCHERS-3AASSERTION-ERROR-20CONDITION-29"></a>
 
-#### [condition](f14b) `hamcrest/matchers:assertion-error` (error)
+#### [condition](7250) `hamcrest/matchers:assertion-error` (error)
 
 <a id="x-28HAMCREST-2FMATCHERS-3AASSERTION-ERROR-REASON-20-2840ANTS-DOC-2FLOCATIVES-3AREADER-20HAMCREST-2FMATCHERS-3AASSERTION-ERROR-29-29"></a>
 
-#### [reader](f14b) `hamcrest/matchers:assertion-error-reason` (assertion-error) (:reason)
+#### [reader](7250) `hamcrest/matchers:assertion-error-reason` (assertion-error) (:reason)
 
 <a id="x-28HAMCREST-2FMATCHERS-3AASSERTION-CONTEXT-20-2840ANTS-DOC-2FLOCATIVES-3AREADER-20HAMCREST-2FMATCHERS-3AASSERTION-ERROR-29-29"></a>
 
-#### [reader](f14b) `hamcrest/matchers:assertion-context` (assertion-error) (= '(copy-list \*context\*))
+#### [reader](7250) `hamcrest/matchers:assertion-context` (assertion-error) (= '(copy-list \*context\*))
 
 <a id="x-28HAMCREST-2FMATCHERS-3AASSERTION-ERROR-REASON-WITH-CONTEXT-20FUNCTION-29"></a>
 
-#### [function](6410) `hamcrest/matchers:assertion-error-reason-with-context` condition &key (indent-spaces 2)
+#### [function](fb2c) `hamcrest/matchers:assertion-error-reason-with-context` condition &key (indent-spaces 2)
 
 Returns a multiline string where error reason is nested into the context
 like that:
@@ -563,7 +563,7 @@ All available matchers are described in the @matchers section.
 
 <a id="x-28HAMCREST-2FPROVE-3AASSERT-THAT-20-2840ANTS-DOC-2FLOCATIVES-3AMACRO-29-29"></a>
 
-### [macro](7d64) `hamcrest/prove:assert-that` value &rest matchers
+### [macro](be29) `hamcrest/prove:assert-that` value &rest matchers
 
 Main macro to test values agains matchers.
 
@@ -604,24 +604,24 @@ all problems with data when there are few problems with keys.
 [931c]: https://gist.github.com/svetlyak40wt/fbe480384e9e3f75b10523aa0b4fb6ce
 [46fe]: https://github.com/40ants/cl-hamcrest
 [3156]: https://github.com/40ants/cl-hamcrest/actions
-[f14b]: https://github.com/40ants/cl-hamcrest/blob/cad0eb8a7d56d68bfa62acf81ba43123380c23d4/src/matchers.lisp#L125
-[6410]: https://github.com/40ants/cl-hamcrest/blob/cad0eb8a7d56d68bfa62acf81ba43123380c23d4/src/matchers.lisp#L143
-[7c68]: https://github.com/40ants/cl-hamcrest/blob/cad0eb8a7d56d68bfa62acf81ba43123380c23d4/src/matchers.lisp#L226
-[adda]: https://github.com/40ants/cl-hamcrest/blob/cad0eb8a7d56d68bfa62acf81ba43123380c23d4/src/matchers.lisp#L341
-[bf4b]: https://github.com/40ants/cl-hamcrest/blob/cad0eb8a7d56d68bfa62acf81ba43123380c23d4/src/matchers.lisp#L369
-[0b13]: https://github.com/40ants/cl-hamcrest/blob/cad0eb8a7d56d68bfa62acf81ba43123380c23d4/src/matchers.lisp#L410
-[107a]: https://github.com/40ants/cl-hamcrest/blob/cad0eb8a7d56d68bfa62acf81ba43123380c23d4/src/matchers.lisp#L452
-[aae1]: https://github.com/40ants/cl-hamcrest/blob/cad0eb8a7d56d68bfa62acf81ba43123380c23d4/src/matchers.lisp#L46
-[7063]: https://github.com/40ants/cl-hamcrest/blob/cad0eb8a7d56d68bfa62acf81ba43123380c23d4/src/matchers.lisp#L489
-[75df]: https://github.com/40ants/cl-hamcrest/blob/cad0eb8a7d56d68bfa62acf81ba43123380c23d4/src/matchers.lisp#L535
-[7113]: https://github.com/40ants/cl-hamcrest/blob/cad0eb8a7d56d68bfa62acf81ba43123380c23d4/src/matchers.lisp#L577
-[ecec]: https://github.com/40ants/cl-hamcrest/blob/cad0eb8a7d56d68bfa62acf81ba43123380c23d4/src/matchers.lisp#L604
-[cc92]: https://github.com/40ants/cl-hamcrest/blob/cad0eb8a7d56d68bfa62acf81ba43123380c23d4/src/matchers.lisp#L647
-[e3ee]: https://github.com/40ants/cl-hamcrest/blob/cad0eb8a7d56d68bfa62acf81ba43123380c23d4/src/matchers.lisp#L683
-[5302]: https://github.com/40ants/cl-hamcrest/blob/cad0eb8a7d56d68bfa62acf81ba43123380c23d4/src/matchers.lisp#L766
-[c9da]: https://github.com/40ants/cl-hamcrest/blob/cad0eb8a7d56d68bfa62acf81ba43123380c23d4/src/matchers.lisp#L78
-[f71a]: https://github.com/40ants/cl-hamcrest/blob/cad0eb8a7d56d68bfa62acf81ba43123380c23d4/src/matchers.lisp#L830
-[7d64]: https://github.com/40ants/cl-hamcrest/blob/cad0eb8a7d56d68bfa62acf81ba43123380c23d4/src/prove.lisp#L39
+[7250]: https://github.com/40ants/cl-hamcrest/blob/75603364e6aa30bf76295cbdfb9723579bcec719/src/matchers.lisp#L123
+[fb2c]: https://github.com/40ants/cl-hamcrest/blob/75603364e6aa30bf76295cbdfb9723579bcec719/src/matchers.lisp#L141
+[2881]: https://github.com/40ants/cl-hamcrest/blob/75603364e6aa30bf76295cbdfb9723579bcec719/src/matchers.lisp#L224
+[032a]: https://github.com/40ants/cl-hamcrest/blob/75603364e6aa30bf76295cbdfb9723579bcec719/src/matchers.lisp#L339
+[5c50]: https://github.com/40ants/cl-hamcrest/blob/75603364e6aa30bf76295cbdfb9723579bcec719/src/matchers.lisp#L367
+[0705]: https://github.com/40ants/cl-hamcrest/blob/75603364e6aa30bf76295cbdfb9723579bcec719/src/matchers.lisp#L408
+[43f6]: https://github.com/40ants/cl-hamcrest/blob/75603364e6aa30bf76295cbdfb9723579bcec719/src/matchers.lisp#L44
+[76e1]: https://github.com/40ants/cl-hamcrest/blob/75603364e6aa30bf76295cbdfb9723579bcec719/src/matchers.lisp#L450
+[d4a7]: https://github.com/40ants/cl-hamcrest/blob/75603364e6aa30bf76295cbdfb9723579bcec719/src/matchers.lisp#L487
+[34d8]: https://github.com/40ants/cl-hamcrest/blob/75603364e6aa30bf76295cbdfb9723579bcec719/src/matchers.lisp#L533
+[f867]: https://github.com/40ants/cl-hamcrest/blob/75603364e6aa30bf76295cbdfb9723579bcec719/src/matchers.lisp#L575
+[26eb]: https://github.com/40ants/cl-hamcrest/blob/75603364e6aa30bf76295cbdfb9723579bcec719/src/matchers.lisp#L602
+[6c61]: https://github.com/40ants/cl-hamcrest/blob/75603364e6aa30bf76295cbdfb9723579bcec719/src/matchers.lisp#L645
+[a8ca]: https://github.com/40ants/cl-hamcrest/blob/75603364e6aa30bf76295cbdfb9723579bcec719/src/matchers.lisp#L681
+[bc23]: https://github.com/40ants/cl-hamcrest/blob/75603364e6aa30bf76295cbdfb9723579bcec719/src/matchers.lisp#L76
+[cef2]: https://github.com/40ants/cl-hamcrest/blob/75603364e6aa30bf76295cbdfb9723579bcec719/src/matchers.lisp#L764
+[5398]: https://github.com/40ants/cl-hamcrest/blob/75603364e6aa30bf76295cbdfb9723579bcec719/src/matchers.lisp#L828
+[be29]: https://github.com/40ants/cl-hamcrest/blob/75603364e6aa30bf76295cbdfb9723579bcec719/src/prove.lisp#L39
 [eafb]: https://github.com/40ants/cl-hamcrest/issues
 [653f]: https://github.com/fukamachi/prove
 [d992]: https://quickdocs.org/optima

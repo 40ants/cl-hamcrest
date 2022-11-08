@@ -1,8 +1,8 @@
-(defpackage hamcrest-test/utils
-  (:use :cl
-        :rove
-        :hamcrest/utils))
-(in-package hamcrest-test/utils)
+(uiop:define-package #:hamcrest-tests/utils
+  (:use #:cl
+        #:rove
+        #:hamcrest/utils))
+(in-package #:hamcrest-tests/utils)
 
 
 (deftest test-alistp-predicate
