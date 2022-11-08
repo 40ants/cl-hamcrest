@@ -10,6 +10,7 @@
                               "REPL"
                               "SBCL"
                               "CCL"
+                              "CI"
                               "HTTP")
                :external-docs ("https://40ants.com/doc"))
   (0.5.0 2022-11-08

@@ -2,6 +2,12 @@
 
 # ChangeLog
 
+<a id="x-28HAMCREST-DOCS-2FCHANGELOG-3A-3A-7C0-2E5-2E0-7C-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29"></a>
+
+## 0.5.0 (2022-11-08)
+
+* Refactored documentation to use [`40ants-doc`][a2c7] system and moved from Circle`CI` to GitHub Actions.
+
 <a id="x-28HAMCREST-DOCS-2FCHANGELOG-3A-3A-7C0-2E4-2E5-7C-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29"></a>
 
 ## 0.4.5 (2022-02-11)
@@ -146,6 +152,7 @@ reports "Result is empty" in case if checked sequence has zero length.
 
 
 [6b65]: #x-28HAMCREST-2FMATCHERS-3ACONTAINS-20-2840ANTS-DOC-2FLOCATIVES-3AMACRO-29-29
+[a2c7]: https://40ants.com/doc/#x-28-23A-28-2810-29-20BASE-CHAR-20-2E-20-2240ants-doc-22-29-20ASDF-2FSYSTEM-3ASYSTEM-29
 [e59b]: https://github.com/fukamachi/rove/commit/1f84d70a0b4db03bd0ec9b837fbc961189462f0d
 
 * * *
