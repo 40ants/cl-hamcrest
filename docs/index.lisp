@@ -4,6 +4,7 @@
                 #:pythonic-string-syntax)
   (:import-from #:named-readtables
                 #:in-readtable)
+  (:import-from #:quicklisp)
   (:import-from #:40ants-doc
                 #:defsection
                 #:defsection-copy)

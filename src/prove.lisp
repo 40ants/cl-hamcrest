@@ -8,6 +8,10 @@
                 #:assertion-error-reason-with-context)
   (:import-from #:alexandria
                 #:with-gensyms)
+  (:import-from #:prove.report)
+  (:import-from #:prove.reporter)
+  (:import-from #:prove.reporter.list)
+  (:import-from #:prove.suite)
   (:export #:assert-that))
 (in-package #:hamcrest/prove)
 

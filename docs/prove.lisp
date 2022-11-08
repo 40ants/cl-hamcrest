@@ -6,9 +6,7 @@
   (:import-from #:named-readtables
                 #:in-readtable)
   (:import-from #:40ants-doc
-                #:defsection)
-  (:import-from #:hamcrest-docs/matchers
-                #:@matchers))
+                #:defsection))
 (in-package #:hamcrest-docs/prove)
 
 (in-readtable pythonic-string-syntax)
@@ -49,6 +47,6 @@ T
 
 This is the simple case, but nested objects can be checked too.
 
-All available matchers are described in the @matchers section.
+All available matchers are described in the hamcrest-docs/matchers:@matchers section.
 """
   (hamcrest/prove:assert-that macro))

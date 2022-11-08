@@ -16,7 +16,12 @@
   :by-cron "0 10 * * 1"
   :on-pull-request t
   :cache t
-  :jobs ((linter :check-imports t)
+  :jobs ((linter :check-imports t
+                 :asdf-systems ("hamcrest"
+                                "hamcrest/rove"
+                                "hamcrest/prove"
+                                "hamcrest-docs"
+                                "hamcrest-tests"))
          (run-tests
           ;; :os ("ubuntu-latest"
           ;;      "macos-latest")

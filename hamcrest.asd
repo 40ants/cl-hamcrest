@@ -25,3 +25,9 @@
   ;;               (read-sequence seq stream))
   ;;         seq)))
   :in-order-to ((test-op (test-op hamcrest-test))))
+
+
+(asdf:register-system-packages "prove" (list "PROVE.REPORT"
+                                             "PROVE.REPORTER"
+                                             "PROVE.REPORTER.LIST"
+                                             "PROVE.SUITE"))

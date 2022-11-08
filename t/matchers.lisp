@@ -4,6 +4,7 @@
         #:hamcrest/matchers)
   (:import-from #:alexandria
                 #:with-gensyms)
+  (:import-from #:cl-ppcre)
   (:import-from #:hamcrest/matchers
                 #:assertion-error
                 #:assertion-error-reason

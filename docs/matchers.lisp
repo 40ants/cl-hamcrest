@@ -6,8 +6,7 @@
                 #:in-readtable)
   (:import-from #:40ants-doc
                 #:defsection)
-  (:import-from #:docs-config
-                #:docs-config))
+  (:import-from #:hamcrest/matchers))
 (in-package #:hamcrest-docs/matchers)
 
 (in-readtable pythonic-string-syntax)

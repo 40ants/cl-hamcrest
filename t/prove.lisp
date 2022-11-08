@@ -5,6 +5,7 @@
         #:hamcrest/utils)
   (:import-from #:alexandria
                 #:with-gensyms)
+  (:import-from #:prove.reporter)
   (:import-from #:hamcrest/matchers
                 #:assertion-error
                 #:assertion-error-reason)
