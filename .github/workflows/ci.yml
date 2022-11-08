@@ -77,7 +77,7 @@
         },
         {
           "name": "Run Linter",
-          "run": "qlot exec 40ants-linter --system \"hamcrest\"",
+          "run": "qlot exec 40ants-linter --system \"hamcrest\" --imports",
           "shell": "bash"
         }
       ]

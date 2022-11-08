@@ -16,7 +16,7 @@
   :by-cron "0 10 * * 1"
   :on-pull-request t
   :cache t
-  :jobs ((linter)
+  :jobs ((linter :check-imports t)
          (run-tests
           ;; :os ("ubuntu-latest"
           ;;      "macos-latest")
