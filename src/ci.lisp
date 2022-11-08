@@ -23,16 +23,14 @@
                                 "hamcrest-docs"
                                 "hamcrest-tests"))
          (run-tests
-          ;; :os ("ubuntu-latest"
-          ;;      "macos-latest")
-          ;; :quicklisp ("ultralisp"
-          ;;             "quicklisp")
+          :os ("ubuntu-latest"
+               "macos-latest")
+          :quicklisp ("ultralisp"
+                      "quicklisp")
           :lisp ("sbcl"
-                 ;; "ccl"
-                 ;; "ecl"
-                 )
-          ;; :coverage t
-          )))
+                 "ccl"
+                 "ecl")
+          :coverage t)))
 
 
 (defworkflow docs
