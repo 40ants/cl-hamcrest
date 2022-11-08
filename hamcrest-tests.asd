@@ -12,3 +12,9 @@
 
   :perform (test-op :after (op c)
                     (symbol-call :rove :run c)))
+
+
+(asdf:register-system-packages "prove" (list "PROVE.REPORT"
+                                             "PROVE.REPORTER"
+                                             "PROVE.REPORTER.LIST"
+                                             "PROVE.SUITE"))
