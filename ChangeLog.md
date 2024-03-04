@@ -37,7 +37,6 @@ Object:
 
 * Fixed compatibility with the latest `rove`.
   Bug was caused by [this commit][e59b].
-
 * Also, now `hamcrest/rove` is covered by tests.
 
 <a id="x-28HAMCREST-DOCS-2FCHANGELOG-3A-3A-7C0-2E4-2E2-7C-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29"></a>
@@ -45,7 +44,6 @@ Object:
 ## 0.4.2 (2018-06-03)
 
 * Fixed hamcrest/prove compilation under `SBCL`.
-
 * Travis config now contains only `SBCL` and `CCL`.
 
 <a id="x-28HAMCREST-DOCS-2FCHANGELOG-3A-3A-7C0-2E4-2E1-7C-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29"></a>
@@ -66,15 +64,10 @@ now uses `package-inferred` asdf class.
 ## 0.3.4 (2018-01-29)
 
 * These symbols were exported to fix Rove integration:
-
 * `assertion-error`
-
 * `assertion-error-reason`
-
 * `assertion-context`
-
 * `assertion-error-reason-with-context`
-
 * `contains` matcher now saves it's form to make
   error report better under the Rove.
 
@@ -102,7 +95,6 @@ now uses `package-inferred` asdf class.
 
 * System was refactored to use `:package-inferred-system` `ASDF` option.
   Now all packages use `/` instead of dots.
-
 * Now cl-hamcrest supports `Rove` test framework, but you need a
   patched version from https://github.com/40ants/rove, because it wasn't
   accepted to the upstream yet.
@@ -120,9 +112,7 @@ reports "Result is empty" in case if checked sequence has zero length.
 ## 0.2.0 (2017-04-13)
 
 * Added `length` matcher.
-
 * Added nice documentation.
-
 * Removed special hack-around to work with Prove (now
   latest Prove's version from repository is required).
 
@@ -131,23 +121,14 @@ reports "Result is empty" in case if checked sequence has zero length.
 ## 0.1.0 (2017-04-02)
 
 * First version. Contains following matchers:
-
 * `has-plist-entries`;
-
 * `hasnt-plist-keys`;
-
 * `has-alist-entries`;
-
 * `has-hash-entries`;
-
 * `has-properties`;
-
 * `has-slots`;
-
 * `contains` and `contains-in-any-order`;
-
 * `any`;
-
 * `has-all`.
 
 
