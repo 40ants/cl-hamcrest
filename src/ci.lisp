@@ -28,7 +28,7 @@
           :quicklisp ("ultralisp"
                       "quicklisp")
           :lisp ("sbcl"
-                 "ccl-bin/1.12.1"
+                 "ccl-bin"
                  "ecl")
           :coverage t)))
 
