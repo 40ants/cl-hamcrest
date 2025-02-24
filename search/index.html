@@ -1,0 +1,102 @@
+<html lang=en>
+ <head>
+  <meta charset=UTF-8><meta name=viewport
+      content="width=device-width, initial-scale=1">
+  <title>Search Page</title>
+  <link rel=stylesheet type="text/css"
+        href="../theme.css">
+  <script type="text/javascript" src="../jquery.js"></script>
+  <script type="text/javascript" src="../toc.js"></script>
+  <script type="text/javascript">$(document).ready(function() {$('a:has(img)').css('border-bottom', 'none')})</script>
+  <link rel=stylesheet type="text/css"
+      href="../highlight.min.css">
+  <script type="text/javascript"
+          src="../highlight.min.js"></script>
+  <script type="text/javascript">hljs.highlightAll();</script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-FL71WXK73K"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-FL71WXK73K');
+    </script>
+
+    <!-- Yandex.Metrika counter -->
+    <script type="text/javascript" >
+       (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+       m[i].l=1*new Date();
+       for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+       k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+       (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+       ym(42462884, "init", {
+            clickmap:true,
+            trackLinks:true,
+            accurateTrackBounce:true
+       });
+    </script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/42462884" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <!-- /Yandex.Metrika counter -->
+
+ </head>
+ <body>
+  <div class=page><a id=fork-me href="https://github.com/40ants/cl-hamcrest">Fork me on GitHub</a>
+   <div class=navbar>
+    <div class=navbar-inner>
+     <a class=brand href="/">
+      <img class=logo
+           src="https://40ants.com/img/logo.svg"></a>
+     <ul class=nav>
+      <li><a href="/posts/">Blog</a>
+      <li><a href="/ru/posts/">Blog (RU)</a>
+      <li><a href="/tips/">Lisp Tips</a>
+      <li><a href="/projects/">Our Projects</a>
+      <li><a href="/about/">About</a>
+     </ul>
+    </div>
+   </div>
+   <input type=checkbox id=sidebar-check>
+   <label for=sidebar-check>
+    <div id=sidebar-trigger>
+     <span></span><span></span><span></span>
+    </div></label><div class=sidebar><div class=header><form class=search method=GET action="">
+      <input type=text name=q>
+      <input type=submit value=Search><span id=search-progress></span>
+     </form>
+    </div><div class=content><div class=page-toc><ul><li><p><a href="../#x-28HAMCREST-DOCS-2FINDEX-3A-40INDEX-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29" data-document="../" data-node="x-28HAMCREST-DOCS-2FINDEX-3A-40INDEX-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29">Implementation of Hamcrest for Common Lisp</a></p><ul><li><p><a href="../#hamcrest-asdf-system-details" data-document="../" data-node="hamcrest-asdf-system-details">HAMCREST ASDF System Details</a></p></li><li><p><a href="../#x-28HAMCREST-DOCS-2FINDEX-3A-3A-40INSTALLATION-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29" data-document="../" data-node="x-28HAMCREST-DOCS-2FINDEX-3A-3A-40INSTALLATION-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29">Installation</a></p></li><li><p><a href="../#x-28HAMCREST-DOCS-2FINDEX-3A-3A-40INTRODUCTION-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29" data-document="../" data-node="x-28HAMCREST-DOCS-2FINDEX-3A-3A-40INTRODUCTION-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29">Introduction</a></p><ul><li><p><a href="../#here-is-a-simple-example" data-document="../" data-node="here-is-a-simple-example">Here is a simple example</a></p></li></ul></li><li><p><a href="../#x-28HAMCREST-DOCS-2FINDEX-3A-3A-40WHY-NOT-PATTERNMATCHING-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29" data-document="../" data-node="x-28HAMCREST-DOCS-2FINDEX-3A-3A-40WHY-NOT-PATTERNMATCHING-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29">Why not pattern-matching library?</a></p><ul><li><p><a href="../#cl-hamcrest-is-more-concise-and-clear" data-document="../" data-node="cl-hamcrest-is-more-concise-and-clear">CL-HAMCREST is more concise and clear</a></p></li><li><p><a href="../#why-not-just-use-prove-s-assertions" data-document="../" data-node="why-not-just-use-prove-s-assertions">Why not just use Prove's assertions?</a></p></li></ul></li><li><p><a href="../#x-28HAMCREST-DOCS-2FMATCHERS-3A-3A-40MATCHERS-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29" data-document="../" data-node="x-28HAMCREST-DOCS-2FMATCHERS-3A-3A-40MATCHERS-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29">Matchers library</a></p><ul><li><p><a href="../#x-28HAMCREST-DOCS-2FMATCHERS-3A-3A-40OBJECT-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29" data-document="../" data-node="x-28HAMCREST-DOCS-2FMATCHERS-3A-3A-40OBJECT-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29">Object matchers</a></p></li><li><p><a href="../#x-28HAMCREST-DOCS-2FMATCHERS-3A-3A-40SEQUENCE-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29" data-document="../" data-node="x-28HAMCREST-DOCS-2FMATCHERS-3A-3A-40SEQUENCE-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29">Sequence matchers</a></p></li><li><p><a href="../#x-28HAMCREST-DOCS-2FMATCHERS-3A-3A-40BOOLEAN-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29" data-document="../" data-node="x-28HAMCREST-DOCS-2FMATCHERS-3A-3A-40BOOLEAN-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29">Boolean matchers</a></p></li><li><p><a href="../#x-28HAMCREST-DOCS-2FMATCHERS-3A-3A-40UTILS-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29" data-document="../" data-node="x-28HAMCREST-DOCS-2FMATCHERS-3A-3A-40UTILS-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29">Utility functions</a></p></li></ul></li><li><p><a href="../#x-28HAMCREST-DOCS-2FPROVE-3A-3A-40PROVE-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29" data-document="../" data-node="x-28HAMCREST-DOCS-2FPROVE-3A-3A-40PROVE-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29">Integration with Prove</a></p></li><li><p><a href="../#x-28HAMCREST-DOCS-2FINDEX-3A-3A-40ROADMAP-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29" data-document="../" data-node="x-28HAMCREST-DOCS-2FINDEX-3A-3A-40ROADMAP-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29">Roadmap</a></p></li></ul></li><li><p><a href="../changelog/#x-28HAMCREST-DOCS-2FCHANGELOG-3A-40CHANGELOG-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29" data-document="../changelog/" data-node="x-28HAMCREST-DOCS-2FCHANGELOG-3A-40CHANGELOG-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29">ChangeLog</a></p></li></ul>
+     </div>
+    </div><div class=footer>
+     <a href="https://40ants.com/doc">[generated by 40ANTS-DOC]</a>
+    </div>
+   </div><div class=content role=main><script type="text/javascript">
+var DOCUMENTATION_OPTIONS = {
+    URL_ROOT: '',
+    VERSION: '5.0.0+',
+    LANGUAGE: 'en',
+    COLLAPSE_INDEX: false,
+    BUILDER: 'dirhtml',
+    FILE_SUFFIX: '.html',
+    LINK_SUFFIX: '.html',
+    HAS_SOURCE: true,
+    SOURCELINK_SUFFIX: '.txt',
+    NAVIGATION_WITH_KEYS: false
+};
+</script>
+    <script src="../underscore.js"></script>
+    <script src="../doctools.js"></script>
+    <script src="../language_data.js"></script>
+    <script src="../searchtools.js"></script>
+    <script src="../searchindex.js"></script>
+    <div id=search-results></div>
+   </div><div class=footer>
+    <hr class=separator>
+    <p class=fineprint>Created with passion by <em>40Ants</em><a class=lisp-logo
+     href="http://lisp-lang.org/">
+      <img
+           src="https://40ants.com/img/made-with-lisp.svg"></a>
+   </div>
+  </div>
+ </body>
+</html>

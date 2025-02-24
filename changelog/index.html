@@ -1,0 +1,145 @@
+<html lang=en>
+ <head>
+  <meta charset=UTF-8><meta name=viewport
+      content="width=device-width, initial-scale=1">
+  <title>ChangeLog</title>
+  <link rel=stylesheet type="text/css"
+        href="../theme.css">
+  <script type="text/javascript" src="../jquery.js"></script>
+  <script type="text/javascript" src="../toc.js"></script>
+  <script type="text/javascript">$(document).ready(function() {$('a:has(img)').css('border-bottom', 'none')})</script>
+  <link rel=stylesheet type="text/css"
+      href="../highlight.min.css">
+  <script type="text/javascript"
+          src="../highlight.min.js"></script>
+  <script type="text/javascript">hljs.highlightAll();</script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-FL71WXK73K"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-FL71WXK73K');
+    </script>
+
+    <!-- Yandex.Metrika counter -->
+    <script type="text/javascript" >
+       (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+       m[i].l=1*new Date();
+       for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+       k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+       (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+       ym(42462884, "init", {
+            clickmap:true,
+            trackLinks:true,
+            accurateTrackBounce:true
+       });
+    </script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/42462884" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <!-- /Yandex.Metrika counter -->
+
+ </head>
+ <body>
+  <div class=page><a id=fork-me href="https://github.com/40ants/cl-hamcrest">Fork me on GitHub</a>
+   <div class=navbar>
+    <div class=navbar-inner>
+     <a class=brand href="/">
+      <img class=logo
+           src="https://40ants.com/img/logo.svg"></a>
+     <ul class=nav>
+      <li><a href="/posts/">Blog</a>
+      <li><a href="/ru/posts/">Blog (RU)</a>
+      <li><a href="/tips/">Lisp Tips</a>
+      <li><a href="/projects/">Our Projects</a>
+      <li><a href="/about/">About</a>
+     </ul>
+    </div>
+   </div>
+   <input type=checkbox id=sidebar-check>
+   <label for=sidebar-check>
+    <div id=sidebar-trigger>
+     <span></span><span></span><span></span>
+    </div></label><div class=sidebar><div class=header><form class=search method=GET
+      action="../search/">
+      <input type=text name=q>
+      <input type=submit value=Search><span id=search-progress></span>
+     </form>
+    </div><div class=content><div class=page-toc><ul><li><p><a href="../#x-28HAMCREST-DOCS-2FINDEX-3A-40INDEX-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29" data-document="../" data-node="x-28HAMCREST-DOCS-2FINDEX-3A-40INDEX-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29">Implementation of Hamcrest for Common Lisp</a></p><ul><li><p><a href="../#hamcrest-asdf-system-details" data-document="../" data-node="hamcrest-asdf-system-details">HAMCREST ASDF System Details</a></p></li><li><p><a href="../#x-28HAMCREST-DOCS-2FINDEX-3A-3A-40INSTALLATION-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29" data-document="../" data-node="x-28HAMCREST-DOCS-2FINDEX-3A-3A-40INSTALLATION-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29">Installation</a></p></li><li><p><a href="../#x-28HAMCREST-DOCS-2FINDEX-3A-3A-40INTRODUCTION-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29" data-document="../" data-node="x-28HAMCREST-DOCS-2FINDEX-3A-3A-40INTRODUCTION-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29">Introduction</a></p><ul><li><p><a href="../#here-is-a-simple-example" data-document="../" data-node="here-is-a-simple-example">Here is a simple example</a></p></li></ul></li><li><p><a href="../#x-28HAMCREST-DOCS-2FINDEX-3A-3A-40WHY-NOT-PATTERNMATCHING-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29" data-document="../" data-node="x-28HAMCREST-DOCS-2FINDEX-3A-3A-40WHY-NOT-PATTERNMATCHING-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29">Why not pattern-matching library?</a></p><ul><li><p><a href="../#cl-hamcrest-is-more-concise-and-clear" data-document="../" data-node="cl-hamcrest-is-more-concise-and-clear">CL-HAMCREST is more concise and clear</a></p></li><li><p><a href="../#why-not-just-use-prove-s-assertions" data-document="../" data-node="why-not-just-use-prove-s-assertions">Why not just use Prove's assertions?</a></p></li></ul></li><li><p><a href="../#x-28HAMCREST-DOCS-2FMATCHERS-3A-3A-40MATCHERS-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29" data-document="../" data-node="x-28HAMCREST-DOCS-2FMATCHERS-3A-3A-40MATCHERS-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29">Matchers library</a></p><ul><li><p><a href="../#x-28HAMCREST-DOCS-2FMATCHERS-3A-3A-40OBJECT-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29" data-document="../" data-node="x-28HAMCREST-DOCS-2FMATCHERS-3A-3A-40OBJECT-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29">Object matchers</a></p></li><li><p><a href="../#x-28HAMCREST-DOCS-2FMATCHERS-3A-3A-40SEQUENCE-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29" data-document="../" data-node="x-28HAMCREST-DOCS-2FMATCHERS-3A-3A-40SEQUENCE-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29">Sequence matchers</a></p></li><li><p><a href="../#x-28HAMCREST-DOCS-2FMATCHERS-3A-3A-40BOOLEAN-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29" data-document="../" data-node="x-28HAMCREST-DOCS-2FMATCHERS-3A-3A-40BOOLEAN-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29">Boolean matchers</a></p></li><li><p><a href="../#x-28HAMCREST-DOCS-2FMATCHERS-3A-3A-40UTILS-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29" data-document="../" data-node="x-28HAMCREST-DOCS-2FMATCHERS-3A-3A-40UTILS-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29">Utility functions</a></p></li></ul></li><li><p><a href="../#x-28HAMCREST-DOCS-2FPROVE-3A-3A-40PROVE-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29" data-document="../" data-node="x-28HAMCREST-DOCS-2FPROVE-3A-3A-40PROVE-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29">Integration with Prove</a></p></li><li><p><a href="../#x-28HAMCREST-DOCS-2FINDEX-3A-3A-40ROADMAP-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29" data-document="../" data-node="x-28HAMCREST-DOCS-2FINDEX-3A-3A-40ROADMAP-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29">Roadmap</a></p></li></ul></li><li><p><a href="#x-28HAMCREST-DOCS-2FCHANGELOG-3A-40CHANGELOG-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29" data-document="" data-node="x-28HAMCREST-DOCS-2FCHANGELOG-3A-40CHANGELOG-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29">ChangeLog</a></p></li></ul>
+     </div>
+    </div><div class=footer>
+     <a href="https://40ants.com/doc">[generated by 40ANTS-DOC]</a>
+    </div>
+   </div><div class=content role=main><h1>ChangeLog</h1><h2>0.5.0 (2022-11-08)<a class=header-link
+     href=#x-28HAMCREST-DOCS-2FCHANGELOG-3A-3A-7C0-2E5-2E0-7C-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29
+     title="Permalink to this headline"
+     id=x-28HAMCREST-DOCS-2FCHANGELOG-3A-3A-7C0-2E5-2E0-7C-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29></a></h2><ul><li><p>Refactored documentation to use <a href="https://40ants.com/doc/#x-28-23A-28-2810-29-20BASE-CHAR-20-2E-20-2240ants-doc-22-29-20ASDF-2FSYSTEM-3ASYSTEM-29"><code>40ants-doc</code></a> system and moved from Circle<code>CI</code> to GitHub Actions.</p></li></ul><h2>0.4.5 (2022-02-11)<a class=header-link
+     href=#x-28HAMCREST-DOCS-2FCHANGELOG-3A-3A-7C0-2E4-2E5-7C-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29
+     title="Permalink to this headline"
+     id=x-28HAMCREST-DOCS-2FCHANGELOG-3A-3A-7C0-2E4-2E5-7C-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29></a></h2><ul><li><p>Fixed <code>assert-that</code> for working with latest Rove.</p></li></ul><h2>0.4.4 (2019-06-07)<a class=header-link
+     href=#x-28HAMCREST-DOCS-2FCHANGELOG-3A-3A-7C0-2E4-2E4-7C-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29
+     title="Permalink to this headline"
+     id=x-28HAMCREST-DOCS-2FCHANGELOG-3A-3A-7C0-2E4-2E4-7C-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29></a></h2><ul><li><p>Fixed an issue how <code>assert-that</code> reports about failure under the Rove.
+Previously, it always reported that &quot;Object&quot; is <code>nil</code>, but now it is fixed,
+and output will look like that::</p></li></ul><p>Expected value is shorter than result
+    Matcher:
+    (<a href="../#x-28HAMCREST-2FMATCHERS-3ACONTAINS-20-2840ANTS-DOC-2FLOCATIVES-3AMACRO-29-29" data-document="../" data-node="x-28HAMCREST-2FMATCHERS-3ACONTAINS-20-2840ANTS-DOC-2FLOCATIVES-3AMACRO-29-29"><code>hamcrest/matchers:contains</code></a> 1 2)</p><pre><code class="text">Object:
+(LIST 1 2 3) -&gt; 
+(1 2 3)
+</code></pre><h2>0.4.3 (2018-12-08)<a class=header-link
+     href=#x-28HAMCREST-DOCS-2FCHANGELOG-3A-3A-7C0-2E4-2E3-7C-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29
+     title="Permalink to this headline"
+     id=x-28HAMCREST-DOCS-2FCHANGELOG-3A-3A-7C0-2E4-2E3-7C-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29></a></h2><ul><li><p>Fixed compatibility with the latest <code>rove</code>.
+  Bug was caused by <a href="https://github.com/fukamachi/rove/commit/1f84d70a0b4db03bd0ec9b837fbc961189462f0d">this commit</a>.</p></li><li><p>Also, now <code>hamcrest/rove</code> is covered by tests.</p></li></ul><h2>0.4.2 (2018-06-03)<a class=header-link
+     href=#x-28HAMCREST-DOCS-2FCHANGELOG-3A-3A-7C0-2E4-2E2-7C-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29
+     title="Permalink to this headline"
+     id=x-28HAMCREST-DOCS-2FCHANGELOG-3A-3A-7C0-2E4-2E2-7C-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29></a></h2><ul><li><p>Fixed hamcrest/prove compilation under <code>SBCL</code>.</p></li><li><p>Travis config now contains only <code>SBCL</code> and <code>CCL</code>.</p></li></ul><h2>0.4.1 (2018-06-03)<a class=header-link
+     href=#x-28HAMCREST-DOCS-2FCHANGELOG-3A-3A-7C0-2E4-2E1-7C-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29
+     title="Permalink to this headline"
+     id=x-28HAMCREST-DOCS-2FCHANGELOG-3A-3A-7C0-2E4-2E1-7C-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29></a></h2><ul><li><p>Tests where rewritten to use Rove.</p></li></ul><h2>0.4.0 (2018-06-02)<a class=header-link
+     href=#x-28HAMCREST-DOCS-2FCHANGELOG-3A-3A-7C0-2E4-2E0-7C-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29
+     title="Permalink to this headline"
+     id=x-28HAMCREST-DOCS-2FCHANGELOG-3A-3A-7C0-2E4-2E0-7C-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29></a></h2><ul><li><p>System <code>hamcrest-prove</code> was replaced with <code>hamcrest/prove</code> and
+now uses <code>package-inferred</code> asdf class.</p></li></ul><h2>0.3.4 (2018-01-29)<a class=header-link
+     href=#x-28HAMCREST-DOCS-2FCHANGELOG-3A-3A-7C0-2E3-2E4-7C-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29
+     title="Permalink to this headline"
+     id=x-28HAMCREST-DOCS-2FCHANGELOG-3A-3A-7C0-2E3-2E4-7C-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29></a></h2><ul><li><p>These symbols were exported to fix Rove integration:</p></li><li><p><code>assertion-error</code></p></li><li><p><code>assertion-error-reason</code></p></li><li><p><code>assertion-context</code></p></li><li><p><code>assertion-error-reason-with-context</code></p></li><li><p><code>contains</code> matcher now saves it's form to make
+  error report better under the Rove.</p></li></ul><h2>0.3.3 (2018-01-28)<a class=header-link
+     href=#x-28HAMCREST-DOCS-2FCHANGELOG-3A-3A-7C0-2E3-2E3-7C-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29
+     title="Permalink to this headline"
+     id=x-28HAMCREST-DOCS-2FCHANGELOG-3A-3A-7C0-2E3-2E3-7C-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29></a></h2><ul><li><p>Fixed system's version number.</p></li></ul><h2>0.3.2 (2018-01-27)<a class=header-link
+     href=#x-28HAMCREST-DOCS-2FCHANGELOG-3A-3A-7C0-2E3-2E2-7C-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29
+     title="Permalink to this headline"
+     id=x-28HAMCREST-DOCS-2FCHANGELOG-3A-3A-7C0-2E3-2E2-7C-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29></a></h2><ul><li><p>Fixed a way how hamcrest/rove reexports symbols from hamcrest/matchers.</p></li></ul><h2>0.3.1 (2018-01-26)<a class=header-link
+     href=#x-28HAMCREST-DOCS-2FCHANGELOG-3A-3A-7C0-2E3-2E1-7C-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29
+     title="Permalink to this headline"
+     id=x-28HAMCREST-DOCS-2FCHANGELOG-3A-3A-7C0-2E3-2E1-7C-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29></a></h2><ul><li><p>Fixed dependency from cl-ppcre.</p></li></ul><h2>0.3.0 (2018-01-26)<a class=header-link
+     href=#x-28HAMCREST-DOCS-2FCHANGELOG-3A-3A-7C0-2E3-2E0-7C-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29
+     title="Permalink to this headline"
+     id=x-28HAMCREST-DOCS-2FCHANGELOG-3A-3A-7C0-2E3-2E0-7C-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29></a></h2><ul><li><p>System was refactored to use <code>:package-inferred-system</code> <code>ASDF</code> option.
+  Now all packages use <code>/</code> instead of dots.</p></li><li><p>Now cl-hamcrest supports <code>Rove</code> test framework, but you need a
+  patched version from https://github.com/40ants/rove, because it wasn't
+  accepted to the upstream yet.</p></li></ul><h2>0.2.1 (2017-10-04)<a class=header-link
+     href=#x-28HAMCREST-DOCS-2FCHANGELOG-3A-3A-7C0-2E2-2E1-7C-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29
+     title="Permalink to this headline"
+     id=x-28HAMCREST-DOCS-2FCHANGELOG-3A-3A-7C0-2E2-2E1-7C-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29></a></h2><ul><li><p>Previously, matcher <code>contains</code> reported &quot;Result is shorter than
+expected&quot; if checked sequence length is lesser than expected, now it
+reports &quot;Result is empty&quot; in case if checked sequence has zero length.</p></li></ul><h2>0.2.0 (2017-04-13)<a class=header-link
+     href=#x-28HAMCREST-DOCS-2FCHANGELOG-3A-3A-7C0-2E2-2E0-7C-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29
+     title="Permalink to this headline"
+     id=x-28HAMCREST-DOCS-2FCHANGELOG-3A-3A-7C0-2E2-2E0-7C-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29></a></h2><ul><li><p>Added <code>length</code> matcher.</p></li><li><p>Added nice documentation.</p></li><li><p>Removed special hack-around to work with Prove (now
+  latest Prove's version from repository is required).</p></li></ul><h2>0.1.0 (2017-04-02)<a class=header-link
+     href=#x-28HAMCREST-DOCS-2FCHANGELOG-3A-3A-7C0-2E1-2E0-7C-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29
+     title="Permalink to this headline"
+     id=x-28HAMCREST-DOCS-2FCHANGELOG-3A-3A-7C0-2E1-2E0-7C-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29></a></h2><ul><li><p>First version. Contains following matchers:</p></li><li><p><code>has-plist-entries</code>;</p></li><li><p><code>hasnt-plist-keys</code>;</p></li><li><p><code>has-alist-entries</code>;</p></li><li><p><code>has-hash-entries</code>;</p></li><li><p><code>has-properties</code>;</p></li><li><p><code>has-slots</code>;</p></li><li><p><code>contains</code> and <code>contains-in-any-order</code>;</p></li><li><p><code>any</code>;</p></li><li><p><code>has-all</code>.</p></li></ul>
+   </div><div class=footer>
+    <hr class=separator>
+    <p class=fineprint>Created with passion by <em>40Ants</em><a class=lisp-logo
+     href="http://lisp-lang.org/">
+      <img
+           src="https://40ants.com/img/made-with-lisp.svg"></a>
+   </div>
+  </div>
+ </body>
+</html>

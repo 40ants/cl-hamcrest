@@ -1,0 +1,362 @@
+<html lang=en>
+ <head>
+  <meta charset=UTF-8><meta name=viewport
+      content="width=device-width, initial-scale=1">
+  <title>Implementation of Hamcrest for Common Lisp</title>
+  <link rel=stylesheet type="text/css"
+        href=theme.css>
+  <script type="text/javascript" src=jquery.js></script>
+  <script type="text/javascript" src=toc.js></script>
+  <script type="text/javascript">$(document).ready(function() {$('a:has(img)').css('border-bottom', 'none')})</script>
+  <link rel=stylesheet type="text/css"
+      href=highlight.min.css>
+  <script type="text/javascript"
+          src=highlight.min.js></script>
+  <script type="text/javascript">hljs.highlightAll();</script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-FL71WXK73K"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-FL71WXK73K');
+    </script>
+
+    <!-- Yandex.Metrika counter -->
+    <script type="text/javascript" >
+       (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+       m[i].l=1*new Date();
+       for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+       k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+       (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+       ym(42462884, "init", {
+            clickmap:true,
+            trackLinks:true,
+            accurateTrackBounce:true
+       });
+    </script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/42462884" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <!-- /Yandex.Metrika counter -->
+
+ </head>
+ <body>
+  <div class=page><a id=fork-me href="https://github.com/40ants/cl-hamcrest">Fork me on GitHub</a>
+   <div class=navbar>
+    <div class=navbar-inner>
+     <a class=brand href="/">
+      <img class=logo
+           src="https://40ants.com/img/logo.svg"></a>
+     <ul class=nav>
+      <li><a href="/posts/">Blog</a>
+      <li><a href="/ru/posts/">Blog (RU)</a>
+      <li><a href="/tips/">Lisp Tips</a>
+      <li><a href="/projects/">Our Projects</a>
+      <li><a href="/about/">About</a>
+     </ul>
+    </div>
+   </div>
+   <input type=checkbox id=sidebar-check>
+   <label for=sidebar-check>
+    <div id=sidebar-trigger>
+     <span></span><span></span><span></span>
+    </div></label><div class=sidebar><div class=header><form class=search method=GET action="search/">
+      <input type=text name=q>
+      <input type=submit value=Search><span id=search-progress></span>
+     </form>
+    </div><div class=content><div class=page-toc><ul><li><p><a href="#x-28HAMCREST-DOCS-2FINDEX-3A-40INDEX-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29" data-document="" data-node="x-28HAMCREST-DOCS-2FINDEX-3A-40INDEX-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29">Implementation of Hamcrest for Common Lisp</a></p><ul><li><p><a href="#hamcrest-asdf-system-details" data-document="" data-node="hamcrest-asdf-system-details">HAMCREST ASDF System Details</a></p></li><li><p><a href="#x-28HAMCREST-DOCS-2FINDEX-3A-3A-40INSTALLATION-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29" data-document="" data-node="x-28HAMCREST-DOCS-2FINDEX-3A-3A-40INSTALLATION-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29">Installation</a></p></li><li><p><a href="#x-28HAMCREST-DOCS-2FINDEX-3A-3A-40INTRODUCTION-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29" data-document="" data-node="x-28HAMCREST-DOCS-2FINDEX-3A-3A-40INTRODUCTION-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29">Introduction</a></p><ul><li><p><a href="#here-is-a-simple-example" data-document="" data-node="here-is-a-simple-example">Here is a simple example</a></p></li></ul></li><li><p><a href="#x-28HAMCREST-DOCS-2FINDEX-3A-3A-40WHY-NOT-PATTERNMATCHING-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29" data-document="" data-node="x-28HAMCREST-DOCS-2FINDEX-3A-3A-40WHY-NOT-PATTERNMATCHING-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29">Why not pattern-matching library?</a></p><ul><li><p><a href="#cl-hamcrest-is-more-concise-and-clear" data-document="" data-node="cl-hamcrest-is-more-concise-and-clear">CL-HAMCREST is more concise and clear</a></p></li><li><p><a href="#why-not-just-use-prove-s-assertions" data-document="" data-node="why-not-just-use-prove-s-assertions">Why not just use Prove's assertions?</a></p></li></ul></li><li><p><a href="#x-28HAMCREST-DOCS-2FMATCHERS-3A-3A-40MATCHERS-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29" data-document="" data-node="x-28HAMCREST-DOCS-2FMATCHERS-3A-3A-40MATCHERS-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29">Matchers library</a></p><ul><li><p><a href="#x-28HAMCREST-DOCS-2FMATCHERS-3A-3A-40OBJECT-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29" data-document="" data-node="x-28HAMCREST-DOCS-2FMATCHERS-3A-3A-40OBJECT-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29">Object matchers</a></p></li><li><p><a href="#x-28HAMCREST-DOCS-2FMATCHERS-3A-3A-40SEQUENCE-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29" data-document="" data-node="x-28HAMCREST-DOCS-2FMATCHERS-3A-3A-40SEQUENCE-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29">Sequence matchers</a></p></li><li><p><a href="#x-28HAMCREST-DOCS-2FMATCHERS-3A-3A-40BOOLEAN-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29" data-document="" data-node="x-28HAMCREST-DOCS-2FMATCHERS-3A-3A-40BOOLEAN-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29">Boolean matchers</a></p></li><li><p><a href="#x-28HAMCREST-DOCS-2FMATCHERS-3A-3A-40UTILS-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29" data-document="" data-node="x-28HAMCREST-DOCS-2FMATCHERS-3A-3A-40UTILS-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29">Utility functions</a></p></li></ul></li><li><p><a href="#x-28HAMCREST-DOCS-2FPROVE-3A-3A-40PROVE-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29" data-document="" data-node="x-28HAMCREST-DOCS-2FPROVE-3A-3A-40PROVE-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29">Integration with Prove</a></p></li><li><p><a href="#x-28HAMCREST-DOCS-2FINDEX-3A-3A-40ROADMAP-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29" data-document="" data-node="x-28HAMCREST-DOCS-2FINDEX-3A-3A-40ROADMAP-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29">Roadmap</a></p></li></ul></li><li><p><a href="changelog/#x-28HAMCREST-DOCS-2FCHANGELOG-3A-40CHANGELOG-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29" data-document="changelog/" data-node="x-28HAMCREST-DOCS-2FCHANGELOG-3A-40CHANGELOG-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29">ChangeLog</a></p></li></ul>
+     </div>
+    </div><div class=footer>
+     <a href="https://40ants.com/doc">[generated by 40ANTS-DOC]</a>
+    </div>
+   </div><div class=content role=main><h1>Implementation of Hamcrest for Common Lisp<a class=header-link
+     href=#x-28HAMCREST-DOCS-2FINDEX-3A-40INDEX-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29
+     title="Permalink to this headline"
+     id=x-28HAMCREST-DOCS-2FINDEX-3A-40INDEX-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29></a></h1><h2 id="hamcrest-asdf-system-details">HAMCREST ASDF System Details</h2><ul><li><p>Description: A set of helpers to make your unittests more readable by using Hamcrest assertions.</p></li><li><p>Licence: New <code>BSD</code> License</p></li><li><p>Author: Alexander Artemenko</p></li><li><p>Bug tracker: <a href="https://github.com/40ants/cl-hamcrest/issues">https://github.com/40ants/cl-hamcrest/issues</a></p></li><li><p>Source control: <a href="https://github.com/40ants/cl-hamcrest">GIT</a></p></li><li><p>Depends on: <a href="https://quickdocs.org/alexandria">alexandria</a>, <a href="https://quickdocs.org/cl-ppcre">cl-ppcre</a>, <a href="https://quickdocs.org/iterate">iterate</a>, <a href="https://quickdocs.org/split-sequence">split-sequence</a></p></li></ul><p><a href="https://github.com/40ants/cl-hamcrest/actions"><img src="https://github-actions.40ants.com/40ants/cl-hamcrest/matrix.svg"/></a></p><p><img src="http://quickdocs.org/badge/cl-hamcrest.svg"/></p><h2>Installation<a class=header-link
+     href=#x-28HAMCREST-DOCS-2FINDEX-3A-3A-40INSTALLATION-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29
+     title="Permalink to this headline"
+     id=x-28HAMCREST-DOCS-2FINDEX-3A-3A-40INSTALLATION-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29></a></h2><p>You can install this library from Quicklisp, but you want to receive updates quickly, then install it from Ultralisp.org:</p><pre><code class="">(ql-dist:install-dist &quot;http://dist.ultralisp.org/&quot;
+                      :prompt nil)
+(ql:quickload :hamcrest)</code></pre><h2>Introduction<a class=header-link
+     href=#x-28HAMCREST-DOCS-2FINDEX-3A-3A-40INTRODUCTION-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29
+     title="Permalink to this headline"
+     id=x-28HAMCREST-DOCS-2FINDEX-3A-3A-40INTRODUCTION-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29></a></h2><p>This is an implementation of <a href="http://hamcrest.org/">Hamcrest</a> for Common Lisp.</p><p>It simplifes unittests and make them more readable. Hamcrest uses
+idea of pattern-matching, to construct matchers from different pieces and
+to apply them to the data.</p><h3 id="here-is-a-simple-example">Here is a simple example</h3><pre><code class="">(assert-that
+  log-item
+  (has-plist-entries :|@message| &quot;Some&quot;
+                     :|@timestamp| _)
+  (hasnt-plist-keys :|@fields|))</code></pre><h2>Why not pattern-matching library?<a class=header-link
+     href=#x-28HAMCREST-DOCS-2FINDEX-3A-3A-40WHY-NOT-PATTERNMATCHING-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29
+     title="Permalink to this headline"
+     id=x-28HAMCREST-DOCS-2FINDEX-3A-3A-40WHY-NOT-PATTERNMATCHING-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29></a></h2><p>You may ask: &quot;Why dont use a pattern-matching library, like <a href="https://quickdocs.org/optima">Optima</a>?&quot;</p><p>Here is another example from another library <code>log4cl-json</code>, where I want
+to check that some fields in plist have special values and other key is not
+present. Here is the data:</p><pre><code class="">(defvar log-item '(:|@message| &quot;Some&quot;
+                   :|@timestamp| 122434342
+                   ;; this field is wrong and
+                   ;; shouldn't be here
+                   :|@fields| nil))</code></pre><p>With <a href="https://quickdocs.org/optima">Optima</a> I could write this code to match the data:</p><pre><code class="">(ok (ematch
+      log-item
+    ((and (guard (property :|@message| m)
+                 (equal m &quot;Some&quot;))
+          (property :|@timestamp| _)
+          (not (property :|@fields| _)))
+     t))
+  &quot;Log entry has message, timestamp, but not fields&quot;)</code></pre><p>But error message will be quite cumbersome:</p><pre><code class="">× Aborted due to an error in subtest &quot;Simple match&quot;
+  Raised an error Can't match ((:|@fields| NIL :|@timestamp|
+                                &quot;2017-01-03T16:42:00.991444Z&quot; :|@message|
+                                &quot;Some&quot;)) with ((COMMON-LISP:AND
+                                                (GUARD
+                                                 (PROPERTY :|@message| M)
+                                                 (EQUAL M &quot;Some&quot;))
+                                                (PROPERTY :|@timestamp|
+                                                 _)
+                                                (NOT
+                                                 (PROPERTY :|@fields|
+                                                  _)))). (expected: :NON-ERROR)</code></pre><h3 id="cl-hamcrest-is-more-concise-and-clear">CL-HAMCREST is more concise and clear</h3><p>With <code>cl-hamcrest</code> test becomes more readable:</p><pre><code class="">(assert-that
+      log-item
+      (has-plist-entries :|@message| &quot;Some&quot;
+                         :|@timestamp| _)
+      (hasnt-plist-keys :|@fields|))</code></pre><p>As well, as output about the failure:</p><pre><code class="">× Key :|@fields| is present in object, but shouldn't</code></pre><p>That is because <code>cl-hamcrest</code> tracks the context and works
+together with testing framework, to output all information
+to let you understand where the problem is.</p><h3 id="why-not-just-use-prove-s-assertions">Why not just use Prove's assertions?</h3><p>To draw a full picture, here is test, written in plain Prove's
+assertions:</p><pre><code class="">(ok (member :|@message| log-item))
+(is (getf log-item :|@message|)
+    &quot;Some&quot;)
+(ok (member :|@timestamp| log-item))
+(ok (not (member :|@fields| log-item)))</code></pre><p>And it's output:</p><pre><code class="">✓ (:|@message| &quot;Some&quot;) is expected to be T 
+✓ &quot;Some&quot; is expected to be &quot;Some&quot; 
+✓ (:|@timestamp| &quot;2017-01-03T16:57:17.988810Z&quot; :|@message| &quot;Some&quot;) is expected to be T 
+× NIL is expected to be T </code></pre><p>is not as clear, if you'll try to figure out
+what does <code>NIL is expected to be T</code> mean.</p><p>Description of all supported matchers, you can find in the
+<a href="#x-28HAMCREST-DOCS-2FMATCHERS-3A-3A-40MATCHERS-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29" data-document="" data-node="x-28HAMCREST-DOCS-2FMATCHERS-3A-3A-40MATCHERS-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29"><code>Matchers library</code></a> section.</p><h2>Matchers library<a class=header-link
+     href=#x-28HAMCREST-DOCS-2FMATCHERS-3A-3A-40MATCHERS-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29
+     title="Permalink to this headline"
+     id=x-28HAMCREST-DOCS-2FMATCHERS-3A-3A-40MATCHERS-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29></a></h2><p>Here you will find all matchers, supported by <code>CL-HAMCREST</code>, grouped by
+their purpose.</p><h3>Object matchers<a class=header-link
+     href=#x-28HAMCREST-DOCS-2FMATCHERS-3A-3A-40OBJECT-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29
+     title="Permalink to this headline"
+     id=x-28HAMCREST-DOCS-2FMATCHERS-3A-3A-40OBJECT-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29></a></h3><p>This kind of matchers checks some sort of properties on an object. In
+this case objects are not only the <code>CLOS</code> objects but also, hashmaps,
+alists and property lists.</p><div class=reference-bullet><div class=reference-bullet-header><a class=locative-type href="https://github.com/40ants/cl-hamcrest/blob/cd17c96d7e6c1ee5d876ddc2bf63133862989476/src/matchers.lisp#L339">macro</a><div class=reference-object><div class=object-name><a href=#x-28HAMCREST-2FMATCHERS-3AHAS-PLIST-ENTRIES-20-2840ANTS-DOC-2FLOCATIVES-3AMACRO-29-29 id=x-28HAMCREST-2FMATCHERS-3AHAS-PLIST-ENTRIES-20-2840ANTS-DOC-2FLOCATIVES-3AMACRO-29-29>hamcrest/matchers:has-plist-entries</a></div><div class=object-args><span class=locative-args>&amp;rest entries</span></div></div><a class=bullet-link href=#x-28HAMCREST-2FMATCHERS-3AHAS-PLIST-ENTRIES-20-2840ANTS-DOC-2FLOCATIVES-3AMACRO-29-29></a></div><div class=bullet-content><p>Matches plist entries:</p><pre><code class="">TEST&gt; (let ((obj '(:foo :bar)))
+        (assert-that obj
+                     (has-plist-entries :foo &quot;bar&quot;
+                                        :blah &quot;minor&quot;)))
+  × Key :FOO has :BAR value, but &quot;bar&quot; was expected</code></pre><p>This way you can test any number of plist's entries.</p></div></div><div class=reference-bullet><div class=reference-bullet-header><a class=locative-type href="https://github.com/40ants/cl-hamcrest/blob/cd17c96d7e6c1ee5d876ddc2bf63133862989476/src/matchers.lisp#L533">macro</a><div class=reference-object><div class=object-name><a href=#x-28HAMCREST-2FMATCHERS-3AHASNT-PLIST-KEYS-20-2840ANTS-DOC-2FLOCATIVES-3AMACRO-29-29 id=x-28HAMCREST-2FMATCHERS-3AHASNT-PLIST-KEYS-20-2840ANTS-DOC-2FLOCATIVES-3AMACRO-29-29>hamcrest/matchers:hasnt-plist-keys</a></div><div class=object-args><span class=locative-args>&amp;rest keys</span></div></div><a class=bullet-link href=#x-28HAMCREST-2FMATCHERS-3AHASNT-PLIST-KEYS-20-2840ANTS-DOC-2FLOCATIVES-3AMACRO-29-29></a></div><div class=bullet-content><p>Checks if given keys are missing from an object:</p><pre><code class="">TEST&gt; (let ((obj '(:foo &quot;bar&quot;)))
+        (assert-that obj
+                     (hasnt-plist-keys :blah :minor)))
+  ✓ Keys :BLAH, :MINOR are absent</code></pre><p>Assertion fails if at least one key is present in the object:</p><pre><code class="">TEST&gt; (let ((obj '(:foo &quot;bar&quot;)))
+        (assert-that obj
+                     (hasnt-plist-keys :blah :foo)))
+  × Key :FOO is present in object, but shouldn't.</code></pre></div></div><div class=reference-bullet><div class=reference-bullet-header><a class=locative-type href="https://github.com/40ants/cl-hamcrest/blob/cd17c96d7e6c1ee5d876ddc2bf63133862989476/src/matchers.lisp#L367">macro</a><div class=reference-object><div class=object-name><a href=#x-28HAMCREST-2FMATCHERS-3AHAS-ALIST-ENTRIES-20-2840ANTS-DOC-2FLOCATIVES-3AMACRO-29-29 id=x-28HAMCREST-2FMATCHERS-3AHAS-ALIST-ENTRIES-20-2840ANTS-DOC-2FLOCATIVES-3AMACRO-29-29>hamcrest/matchers:has-alist-entries</a></div><div class=object-args><span class=locative-args>&amp;rest entries</span></div></div><a class=bullet-link href=#x-28HAMCREST-2FMATCHERS-3AHAS-ALIST-ENTRIES-20-2840ANTS-DOC-2FLOCATIVES-3AMACRO-29-29></a></div><div class=bullet-content><p>Matches alist entries:</p><pre><code class="">TEST&gt; (let ((obj '((:the-key . &quot;value&quot;))))
+        (assert-that obj
+                     (has-alist-entries :the-key &quot;value&quot;)))
+
+  ✓ Has alist entries:
+      :THE-KEY = &quot;value&quot;
+
+TEST&gt; (let ((obj '((:the-key . &quot;value&quot;))))
+        (assert-that obj
+                     (has-alist-entries :the-key &quot;value&quot;
+                                        :missing-key &quot;value&quot;)))
+
+  × Key :MISSING-KEY is missing
+
+TEST&gt; (let ((obj '((:the-key . &quot;value&quot;))))
+        (assert-that obj
+                     (has-alist-entries :the-key &quot;other-value&quot;)))
+
+  × Key :THE-KEY has &quot;value&quot; value, but &quot;other-value&quot; was expected</code></pre></div></div><div class=reference-bullet><div class=reference-bullet-header><a class=locative-type href="https://github.com/40ants/cl-hamcrest/blob/cd17c96d7e6c1ee5d876ddc2bf63133862989476/src/matchers.lisp#L408">macro</a><div class=reference-object><div class=object-name><a href=#x-28HAMCREST-2FMATCHERS-3AHAS-HASH-ENTRIES-20-2840ANTS-DOC-2FLOCATIVES-3AMACRO-29-29 id=x-28HAMCREST-2FMATCHERS-3AHAS-HASH-ENTRIES-20-2840ANTS-DOC-2FLOCATIVES-3AMACRO-29-29>hamcrest/matchers:has-hash-entries</a></div><div class=object-args><span class=locative-args>&amp;rest entries</span></div></div><a class=bullet-link href=#x-28HAMCREST-2FMATCHERS-3AHAS-HASH-ENTRIES-20-2840ANTS-DOC-2FLOCATIVES-3AMACRO-29-29></a></div><div class=bullet-content><p>Matches hash entries:</p><pre><code class="">TEST&gt; (let ((obj (make-hash-table)))
+        (setf (gethash 'the-key obj) &quot;value&quot;)
+        (assert-that obj
+                     (has-hash-entries 'the-key &quot;value&quot;)))
+
+  ✓ Has hash entries:
+      THE-KEY = &quot;value&quot;
+
+TEST&gt; (let ((obj (make-hash-table)))
+        (setf (gethash 'the-key obj) &quot;value&quot;)
+        (assert-that obj
+                     (has-hash-entries 'missing-key &quot;value&quot;)))
+
+  × Key MISSING-KEY is missing
+
+TEST&gt; (let ((obj (make-hash-table)))
+        (setf (gethash 'the-key obj) &quot;value&quot;)
+        (assert-that obj
+                     (has-hash-entries 'the-key &quot;other-value&quot;)))
+
+  × Key THE-KEY has &quot;value&quot; value, but &quot;other-value&quot; was expected</code></pre></div></div><div class=reference-bullet><div class=reference-bullet-header><a class=locative-type href="https://github.com/40ants/cl-hamcrest/blob/cd17c96d7e6c1ee5d876ddc2bf63133862989476/src/matchers.lisp#L450">macro</a><div class=reference-object><div class=object-name><a href=#x-28HAMCREST-2FMATCHERS-3AHAS-PROPERTIES-20-2840ANTS-DOC-2FLOCATIVES-3AMACRO-29-29 id=x-28HAMCREST-2FMATCHERS-3AHAS-PROPERTIES-20-2840ANTS-DOC-2FLOCATIVES-3AMACRO-29-29>hamcrest/matchers:has-properties</a></div><div class=object-args><span class=locative-args>&amp;rest entries</span></div></div><a class=bullet-link href=#x-28HAMCREST-2FMATCHERS-3AHAS-PROPERTIES-20-2840ANTS-DOC-2FLOCATIVES-3AMACRO-29-29></a></div><div class=bullet-content><p>Matches object properties:</p><pre><code class="">TEST&gt; (defvar the-object)
+THE-OBJECT
+TEST&gt; (setf (getf the-object :tags) '(one two))
+TEST&gt; (assert-that 'the-object
+                   (has-properties :tags '(one two)))
+  ✓ Has properties:
+      :TAGS = (ONE TWO)
+
+TEST&gt; (assert-that 'the-object
+                   (has-properties :tags 'wrong-value))
+  × Property :TAGS has (ONE TWO) value, but WRONG-VALUE was expected
+
+TEST&gt; (assert-that 'the-object
+                   (has-properties :missing-property '(one two)))
+  × Property :MISSING-PROPERTY is missing</code></pre></div></div><div class=reference-bullet><div class=reference-bullet-header><a class=locative-type href="https://github.com/40ants/cl-hamcrest/blob/cd17c96d7e6c1ee5d876ddc2bf63133862989476/src/matchers.lisp#L487">macro</a><div class=reference-object><div class=object-name><a href=#x-28HAMCREST-2FMATCHERS-3AHAS-SLOTS-20-2840ANTS-DOC-2FLOCATIVES-3AMACRO-29-29 id=x-28HAMCREST-2FMATCHERS-3AHAS-SLOTS-20-2840ANTS-DOC-2FLOCATIVES-3AMACRO-29-29>hamcrest/matchers:has-slots</a></div><div class=object-args><span class=locative-args>&amp;rest entries</span></div></div><a class=bullet-link href=#x-28HAMCREST-2FMATCHERS-3AHAS-SLOTS-20-2840ANTS-DOC-2FLOCATIVES-3AMACRO-29-29></a></div><div class=bullet-content><p>Matches object slots:</p><pre><code class="">TEST&gt; (defstruct task
+        title
+        description)
+
+TEST&gt; (defvar task (make-task :title &quot;The title &quot;))
+
+TEST&gt; (assert-that task
+                   (has-slots 'title &quot;The title &quot;))
+  ✓ Has slots:
+      TITLE = &quot;The title &quot;
+
+TEST&gt; (assert-that task
+                   (has-slots 'title &quot;Wrong title &quot;))
+  × Slot TITLE has &quot;The title &quot; value, but &quot;Wrong title &quot; was expected
+
+TEST&gt; (assert-that task
+                   (has-slots 'description nil))
+  ✓ Has slots:
+      DESCRIPTION = NIL</code></pre></div></div><div class=reference-bullet><div class=reference-bullet-header><a class=locative-type href="https://github.com/40ants/cl-hamcrest/blob/cd17c96d7e6c1ee5d876ddc2bf63133862989476/src/matchers.lisp#L828">function</a><div class=reference-object><div class=object-name><a href=#x-28HAMCREST-2FMATCHERS-3AHAS-TYPE-20FUNCTION-29 id=x-28HAMCREST-2FMATCHERS-3AHAS-TYPE-20FUNCTION-29>hamcrest/matchers:has-type</a></div><div class=object-args><span class=locative-args>expected-type</span></div></div><a class=bullet-link href=#x-28HAMCREST-2FMATCHERS-3AHAS-TYPE-20FUNCTION-29></a></div><div class=bullet-content><p>Checks if a list have specivied length.</p><pre><code class="">TEST&gt; (matcher-description (has-type 'cons))
+&quot;Has type CONS&quot;
+
+TEST&gt; (funcall (has-type 'cons) 100500)
+; Debugger entered on #&lt;ASSERTION-ERROR 100500 has type (INTEGER 0 4611686018427387903), but CONS was expected&gt;</code></pre></div></div><h3>Sequence matchers<a class=header-link
+     href=#x-28HAMCREST-DOCS-2FMATCHERS-3A-3A-40SEQUENCE-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29
+     title="Permalink to this headline"
+     id=x-28HAMCREST-DOCS-2FMATCHERS-3A-3A-40SEQUENCE-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29></a></h3><div class=reference-bullet><div class=reference-bullet-header><a class=locative-type href="https://github.com/40ants/cl-hamcrest/blob/cd17c96d7e6c1ee5d876ddc2bf63133862989476/src/matchers.lisp#L645">function</a><div class=reference-object><div class=object-name><a href=#x-28HAMCREST-2FMATCHERS-3AHAS-LENGTH-20FUNCTION-29 id=x-28HAMCREST-2FMATCHERS-3AHAS-LENGTH-20FUNCTION-29>hamcrest/matchers:has-length</a></div><div class=object-args><span class=locative-args>expected-length</span></div></div><a class=bullet-link href=#x-28HAMCREST-2FMATCHERS-3AHAS-LENGTH-20FUNCTION-29></a></div><div class=bullet-content><p>Checks if a list have specivied length.</p><pre><code class="">TEST&gt; (assert-that 'nil (has-length 0))
+  ✓ Has length of 0
+
+TEST&gt; (assert-that '(a b c d) (has-length 4))
+  ✓ Has length of 4
+
+TEST&gt; (assert-that '(a b c d) (has-length 100500))
+  × List (A B C D) has length of 4, but 100500 was expected</code></pre></div></div><div class=reference-bullet><div class=reference-bullet-header><a class=locative-type href="https://github.com/40ants/cl-hamcrest/blob/cd17c96d7e6c1ee5d876ddc2bf63133862989476/src/matchers.lisp#L681">macro</a><div class=reference-object><div class=object-name><a href=#x-28HAMCREST-2FMATCHERS-3ACONTAINS-20-2840ANTS-DOC-2FLOCATIVES-3AMACRO-29-29 id=x-28HAMCREST-2FMATCHERS-3ACONTAINS-20-2840ANTS-DOC-2FLOCATIVES-3AMACRO-29-29>hamcrest/matchers:contains</a></div><div class=object-args><span class=locative-args>&amp;rest entries</span></div></div><a class=bullet-link href=#x-28HAMCREST-2FMATCHERS-3ACONTAINS-20-2840ANTS-DOC-2FLOCATIVES-3AMACRO-29-29></a></div><div class=bullet-content><p>Checks if each item from a list matches to given matchers.</p><p>Contains can accept as raw values, as another matchers:</p><pre><code class="">TEST&gt; (assert-that '(:foo
+                     (a b c)
+                     d)
+                   (contains :foo
+                             (has-length 3)
+                             'd))
+  ✓ Contains all given values</code></pre><p>Given list should have a length equal to count of matchers:</p><pre><code class="">TEST&gt; (assert-that '(:foo
+                     (a b c)
+                     d)
+                   (contains :foo))
+  × Expected value is shorter than result</code></pre><p>You can ignore value of some list items, by using <code>(any)</code> matcher:</p><pre><code class="">TEST&gt; (assert-that '(:foo
+                     (a b c)
+                     d)
+                   (contains :foo (any) (any)))
+  ✓ Contains all given values</code></pre></div></div><div class=reference-bullet><div class=reference-bullet-header><a class=locative-type href="https://github.com/40ants/cl-hamcrest/blob/cd17c96d7e6c1ee5d876ddc2bf63133862989476/src/matchers.lisp#L764">macro</a><div class=reference-object><div class=object-name><a href=#x-28HAMCREST-2FMATCHERS-3ACONTAINS-IN-ANY-ORDER-20-2840ANTS-DOC-2FLOCATIVES-3AMACRO-29-29 id=x-28HAMCREST-2FMATCHERS-3ACONTAINS-IN-ANY-ORDER-20-2840ANTS-DOC-2FLOCATIVES-3AMACRO-29-29>hamcrest/matchers:contains-in-any-order</a></div><div class=object-args><span class=locative-args>&amp;rest entries</span></div></div><a class=bullet-link href=#x-28HAMCREST-2FMATCHERS-3ACONTAINS-IN-ANY-ORDER-20-2840ANTS-DOC-2FLOCATIVES-3AMACRO-29-29></a></div><div class=bullet-content><p>Same as <code>contains</code>, but items in the sequence can be in any order:</p><pre><code class="">TEST&gt; (assert-that '(:foo
+                     (a b c)
+                     d)
+                   (contains-in-any-order
+                    (has-length 3)
+                    'd
+                    :foo))
+
+  ✓ Contains all given values</code></pre></div></div><h3>Boolean matchers<a class=header-link
+     href=#x-28HAMCREST-DOCS-2FMATCHERS-3A-3A-40BOOLEAN-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29
+     title="Permalink to this headline"
+     id=x-28HAMCREST-DOCS-2FMATCHERS-3A-3A-40BOOLEAN-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29></a></h3><div class=reference-bullet><div class=reference-bullet-header><a class=locative-type href="https://github.com/40ants/cl-hamcrest/blob/cd17c96d7e6c1ee5d876ddc2bf63133862989476/src/matchers.lisp#L575">function</a><div class=reference-object><div class=object-name><a href=#x-28HAMCREST-2FMATCHERS-3AANY-20FUNCTION-29 id=x-28HAMCREST-2FMATCHERS-3AANY-20FUNCTION-29>hamcrest/matchers:any</a></div></div><a class=bullet-link href=#x-28HAMCREST-2FMATCHERS-3AANY-20FUNCTION-29></a></div><div class=bullet-content><p>Assertion is passed regardles of value of the object:</p><pre><code class="">TEST&gt; (assert-that 1 (any))
+  ✓ Any value if good enough
+
+TEST&gt; (assert-that &quot;the-string&quot; (any))
+  ✓ Any value if good enough
+
+TEST&gt; (assert-that 'the-symbol (any))
+  ✓ Any value if good enough
+
+TEST&gt; (assert-that '(1 2 3) (any))
+  ✓ Any value if good enough</code></pre></div></div><div class=reference-bullet><div class=reference-bullet-header><a class=locative-type href="https://github.com/40ants/cl-hamcrest/blob/cd17c96d7e6c1ee5d876ddc2bf63133862989476/src/matchers.lisp#L602">function</a><div class=reference-object><div class=object-name><a href=#x-28HAMCREST-2FMATCHERS-3AHAS-ALL-20FUNCTION-29 id=x-28HAMCREST-2FMATCHERS-3AHAS-ALL-20FUNCTION-29>hamcrest/matchers:has-all</a></div><div class=object-args><span class=locative-args>&amp;rest matchers</span></div></div><a class=bullet-link href=#x-28HAMCREST-2FMATCHERS-3AHAS-ALL-20FUNCTION-29></a></div><div class=bullet-content><p>Makes a matcher which groups another matchers with <code>AND</code> logic.</p><p>This way we can check if plist has one key and hasn't another.
+And if all matchers succeed, then <code>has-all</code> succeed as well:</p><pre><code class="">TEST&gt; (assert-that '(:foo &quot;bar&quot;)
+                   (has-all (has-plist-entries :foo &quot;bar&quot;)
+                            (hasnt-plist-keys :blah)))
+  ✓ All checks are passed</code></pre><p>If at least one check is failed, then <code>has-all</code> fails too:</p><pre><code class="">TEST&gt; (assert-that '(:foo &quot;bar&quot; :blah &quot;minor&quot;)
+                   (has-all (has-plist-entries :foo &quot;bar&quot;)
+                            (hasnt-plist-keys :blah)))
+  × Key :BLAH is present in object, but shouldn't</code></pre></div></div><h3>Utility functions<a class=header-link
+     href=#x-28HAMCREST-DOCS-2FMATCHERS-3A-3A-40UTILS-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29
+     title="Permalink to this headline"
+     id=x-28HAMCREST-DOCS-2FMATCHERS-3A-3A-40UTILS-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29></a></h3><div class=reference-bullet><div class=reference-bullet-header><a class=locative-type href="https://github.com/40ants/cl-hamcrest/blob/cd17c96d7e6c1ee5d876ddc2bf63133862989476/src/matchers.lisp#L224">function</a><div class=reference-object><div class=object-name><a href=#x-28HAMCREST-2FMATCHERS-3A-5F-20FUNCTION-29 id=x-28HAMCREST-2FMATCHERS-3A-5F-20FUNCTION-29>hamcrest/matchers:_</a></div></div><a class=bullet-link href=#x-28HAMCREST-2FMATCHERS-3A-5F-20FUNCTION-29></a></div><div class=bullet-content><p>Symbol _ should be used as is not as a function.</p></div></div><div class=reference-bullet><div class=reference-bullet-header><a class=locative-type href="https://github.com/40ants/cl-hamcrest/blob/cd17c96d7e6c1ee5d876ddc2bf63133862989476/src/matchers.lisp#L44">function</a><div class=reference-object><div class=object-name><a href=#x-28HAMCREST-2FMATCHERS-3AMATCHER-DESCRIPTION-20FUNCTION-29 id=x-28HAMCREST-2FMATCHERS-3AMATCHER-DESCRIPTION-20FUNCTION-29>hamcrest/matchers:matcher-description</a></div><div class=object-args><span class=locative-args>fn</span></div></div><a class=bullet-link href=#x-28HAMCREST-2FMATCHERS-3AMATCHER-DESCRIPTION-20FUNCTION-29></a></div><div class=bullet-content><p>Returns description of a given matcher function.</p><p>Can be used to print nested matchers in a nicely indented,
+human readable way:</p><pre><code class="">TEST&gt; (matcher-description (has-length 100500))
+&quot;Has length of 100500 &quot;
+
+TEST&gt; (matcher-description (contains
+                            (has-plist-entries :foo &quot;bar &quot;)
+                            (has-plist-entries :foo &quot;minor &quot;)))
+&quot;Contains all given values &quot;
+
+TEST&gt; (matcher-description (has-plist-entries
+                            :foo &quot;bar &quot;
+                            :blah (has-hash-entries :minor &quot;again &quot;)))
+&quot;Has plist entries:
+  :FOO = &quot;bar&quot;
+  :BLAH = Has hash entries:
+            :MINOR = &quot;again&quot;&quot;</code></pre></div></div><div class=reference-bullet><div class=reference-bullet-header><a class=locative-type href="https://github.com/40ants/cl-hamcrest/blob/cd17c96d7e6c1ee5d876ddc2bf63133862989476/src/matchers.lisp#L76">function</a><div class=reference-object><div class=object-name><a href=#x-28HAMCREST-2FMATCHERS-3AMATCHER-FORM-20FUNCTION-29 id=x-28HAMCREST-2FMATCHERS-3AMATCHER-FORM-20FUNCTION-29>hamcrest/matchers:matcher-form</a></div><div class=object-args><span class=locative-args>fn</span></div></div><a class=bullet-link href=#x-28HAMCREST-2FMATCHERS-3AMATCHER-FORM-20FUNCTION-29></a></div><div class=bullet-content><p>Returns description of a given matcher function.</p><p>Can be used to print nested matchers in a nicely indented,
+human readable way:</p><pre><code class="">TEST&gt; (matcher-description (has-length 100500))
+&quot;Has length of 100500 &quot;
+
+TEST&gt; (matcher-description (contains
+                            (has-plist-entries :foo &quot;bar &quot;)
+                            (has-plist-entries :foo &quot;minor &quot;)))
+&quot;Contains all given values &quot;
+
+TEST&gt; (matcher-description (has-plist-entries
+                            :foo &quot;bar &quot;
+                            :blah (has-hash-entries :minor &quot;again &quot;)))
+&quot;Has plist entries:
+  :FOO = &quot;bar&quot;
+  :BLAH = Has hash entries:
+            :MINOR = &quot;again&quot;&quot;</code></pre></div></div><div class=reference-bullet><div class=reference-bullet-header><a class=locative-type href="https://github.com/40ants/cl-hamcrest/blob/cd17c96d7e6c1ee5d876ddc2bf63133862989476/src/matchers.lisp#L123">condition</a><div class=reference-object><div class=object-name><a href=#x-28HAMCREST-2FMATCHERS-3AASSERTION-ERROR-20CONDITION-29 id=x-28HAMCREST-2FMATCHERS-3AASSERTION-ERROR-20CONDITION-29>hamcrest/matchers:assertion-error</a></div><div class=object-args><span class=locative-args></span></div></div><a class=bullet-link href=#x-28HAMCREST-2FMATCHERS-3AASSERTION-ERROR-20CONDITION-29></a></div></div><div class=reference-bullet><div class=reference-bullet-header><a class=locative-type href="https://github.com/40ants/cl-hamcrest/blob/cd17c96d7e6c1ee5d876ddc2bf63133862989476/src/matchers.lisp#L123">reader</a><div class=reference-object><div class=object-name><a href=#x-28HAMCREST-2FMATCHERS-3AASSERTION-ERROR-REASON-20-2840ANTS-DOC-2FLOCATIVES-3AREADER-20HAMCREST-2FMATCHERS-3AASSERTION-ERROR-29-29 id=x-28HAMCREST-2FMATCHERS-3AASSERTION-ERROR-REASON-20-2840ANTS-DOC-2FLOCATIVES-3AREADER-20HAMCREST-2FMATCHERS-3AASSERTION-ERROR-29-29>hamcrest/matchers:assertion-error-reason</a></div><div class=object-args><span class=locative-args></span><span class=locative-args>(:reason)</span></div></div><a class=bullet-link href=#x-28HAMCREST-2FMATCHERS-3AASSERTION-ERROR-REASON-20-2840ANTS-DOC-2FLOCATIVES-3AREADER-20HAMCREST-2FMATCHERS-3AASSERTION-ERROR-29-29></a></div></div><div class=reference-bullet><div class=reference-bullet-header><a class=locative-type href="https://github.com/40ants/cl-hamcrest/blob/cd17c96d7e6c1ee5d876ddc2bf63133862989476/src/matchers.lisp#L123">reader</a><div class=reference-object><div class=object-name><a href=#x-28HAMCREST-2FMATCHERS-3AASSERTION-CONTEXT-20-2840ANTS-DOC-2FLOCATIVES-3AREADER-20HAMCREST-2FMATCHERS-3AASSERTION-ERROR-29-29 id=x-28HAMCREST-2FMATCHERS-3AASSERTION-CONTEXT-20-2840ANTS-DOC-2FLOCATIVES-3AREADER-20HAMCREST-2FMATCHERS-3AASSERTION-ERROR-29-29>hamcrest/matchers:assertion-context</a></div><div class=object-args><span class=locative-args></span><span class=locative-args>(= &#39;(copy-list \*context\*))</span></div></div><a class=bullet-link href=#x-28HAMCREST-2FMATCHERS-3AASSERTION-CONTEXT-20-2840ANTS-DOC-2FLOCATIVES-3AREADER-20HAMCREST-2FMATCHERS-3AASSERTION-ERROR-29-29></a></div></div><div class=reference-bullet><div class=reference-bullet-header><a class=locative-type href="https://github.com/40ants/cl-hamcrest/blob/cd17c96d7e6c1ee5d876ddc2bf63133862989476/src/matchers.lisp#L141">function</a><div class=reference-object><div class=object-name><a href=#x-28HAMCREST-2FMATCHERS-3AASSERTION-ERROR-REASON-WITH-CONTEXT-20FUNCTION-29 id=x-28HAMCREST-2FMATCHERS-3AASSERTION-ERROR-REASON-WITH-CONTEXT-20FUNCTION-29>hamcrest/matchers:assertion-error-reason-with-context</a></div><div class=object-args><span class=locative-args>condition &amp;key (indent-spaces 2)</span></div></div><a class=bullet-link href=#x-28HAMCREST-2FMATCHERS-3AASSERTION-ERROR-REASON-WITH-CONTEXT-20FUNCTION-29></a></div><div class=bullet-content><p>Returns a multiline string where error reason is nested into the context
+like that:</p><p>Item with index 1:
+  Alist entry with key <code>:NAME</code>
+    Alist entry with key <code>:FIRST</code> is required</p><p>Parameter :indent-spaces could be specified to control number of spaces
+for each indentation level.</p></div></div><h2>Integration with Prove<a class=header-link
+     href=#x-28HAMCREST-DOCS-2FPROVE-3A-3A-40PROVE-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29
+     title="Permalink to this headline"
+     id=x-28HAMCREST-DOCS-2FPROVE-3A-3A-40PROVE-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29></a></h2><p><code>CL-HAMCREST</code> has integration with <a href="https://github.com/fukamachi/prove">Prove</a>.</p><pre><code class="">TEST&gt; (ql:quickload :hamcrest-prove)
+TEST&gt; (use-package :hamcrest.prove)
+TEST&gt; (let ((obj (make-hash-table)))
+        (assert-that
+         obj
+         (has-hash-entries :foo :bar)))
+  × Key :FOO is missing
+T
+TEST&gt; (let ((obj (make-hash-table)))
+        (setf (gethash :foo obj) :bar)
+
+        (assert-that
+         obj
+         (has-hash-entries :foo :bar)))
+  ✓ Has hash entries:
+      :FOO = :BAR
+T
+TEST&gt; (let ((obj (make-hash-table)))
+        (setf (gethash :foo obj) :bar)
+
+        (assert-that
+         obj
+         (has-hash-entries :foo :some-value)))
+  × Key :FOO has :BAR value, but :SOME-VALUE was expected
+T</code></pre><p>This is the simple case, but nested objects can be checked too.</p><p>All available matchers are described in the hamcrest-docs/matchers:@matchers section.</p><div class=reference-bullet><div class=reference-bullet-header><a class=locative-type href="https://github.com/40ants/cl-hamcrest/blob/cd17c96d7e6c1ee5d876ddc2bf63133862989476/src/prove.lisp#L43">macro</a><div class=reference-object><div class=object-name><a href=#x-28HAMCREST-2FPROVE-3AASSERT-THAT-20-2840ANTS-DOC-2FLOCATIVES-3AMACRO-29-29 id=x-28HAMCREST-2FPROVE-3AASSERT-THAT-20-2840ANTS-DOC-2FLOCATIVES-3AMACRO-29-29>hamcrest/prove:assert-that</a></div><div class=object-args><span class=locative-args>value &amp;rest matchers</span></div></div><a class=bullet-link href=#x-28HAMCREST-2FPROVE-3AASSERT-THAT-20-2840ANTS-DOC-2FLOCATIVES-3AMACRO-29-29></a></div><div class=bullet-content><p>Main macro to test values agains matchers.</p></div></div><h2>Roadmap<a class=header-link
+     href=#x-28HAMCREST-DOCS-2FINDEX-3A-3A-40ROADMAP-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29
+     title="Permalink to this headline"
+     id=x-28HAMCREST-DOCS-2FINDEX-3A-3A-40ROADMAP-2040ANTS-DOC-2FLOCATIVES-3ASECTION-29></a></h2><ul><li><p>Logical matchers:</p></li><li><p><code>any-of</code> – Matches if any of the given matchers evaluate to True.</p></li><li><p><code>is-not</code> – Inverts the given matcher to its logical negation (think if
+we need it, and how to show the results, here are results
+how it works <a href="https://gist.github.com/svetlyak40wt/fbe480384e9e3f75b10523aa0b4fb6ce">in PyHamcrest</a>
+– it just sees that matcher returned True and raises Assertion error with full object's content and
+matcher's description with prepended 'not' particle).</p></li><li><p>Object matchers:</p></li><li><p>Add <code>hasnt-some-keys</code> matchers, corresponding to
+<code>has-some-entries</code>.</p></li><li><p>Make <code>has-alist-entries</code> work with keys other than keyword
+right now it uses <code>eql</code> to compare keys.</p></li><li><p>Sequence matchers:</p></li><li><p><code>is-in</code> – Matches if evaluated object is present in a given sequence.</p></li><li><p>Other features:</p></li><li><p>Use uniq CommonLisp feature to restart signaled conditions to collect
+all problems with data when there are few problems with keys.</p></li></ul>
+   </div><div class=footer>
+    <hr class=separator>
+    <p class=fineprint>Created with passion by <em>40Ants</em><a class=lisp-logo
+     href="http://lisp-lang.org/">
+      <img
+           src="https://40ants.com/img/made-with-lisp.svg"></a>
+   </div>
+  </div>
+ </body>
+</html>
