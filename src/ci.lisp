@@ -28,8 +28,12 @@
           :quicklisp ("ultralisp"
                       "quicklisp")
           :lisp ("sbcl"
-                 "ccl-bin/1.12.1"
+                 "ccl-bin"
                  "ecl")
+          :exclude (:os "macos-latest"
+                        ;; CCL does not work on OSX arch architecture, returning:
+                        ;; Not supported platform arm64.
+                    :lisp "ccl-bin")
           :coverage t)))
 
 
