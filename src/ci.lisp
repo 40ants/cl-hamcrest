@@ -30,6 +30,10 @@
           :lisp ("sbcl"
                  "ccl-bin"
                  "ecl")
+          :exclude (:os "macos-latest"
+                        ;; CCL does not work on OSX arch architecture, returning:
+                        ;; Not supported platform arm64.
+                    :lisp "ccl-bin")
           :coverage t)))
 
 

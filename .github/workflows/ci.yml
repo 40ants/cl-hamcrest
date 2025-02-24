@@ -64,6 +64,12 @@
             "ubuntu-latest",
             "macos-latest"
           ],
+          "exclude": [
+            {
+              "os": "macos-latest",
+              "lisp": "ccl-bin"
+            }
+          ],
           "quicklisp": [
             "ultralisp",
             "quicklisp"
