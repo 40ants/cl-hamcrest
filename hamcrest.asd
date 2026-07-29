@@ -24,7 +24,7 @@
   ;;         (setf (fill-pointer seq)
   ;;               (read-sequence seq stream))
   ;;         seq)))
-  :in-order-to ((test-op (test-op hamcrest-test))))
+  :in-order-to ((test-op (test-op hamcrest-tests))))
 
 
 (asdf:register-system-packages "prove" (list "PROVE.REPORT"
