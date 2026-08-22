@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<rss version="2.0">
+    <channel>
+        <title>hamcrest-docs ChangeLog</title>
+        <generator>xml-emitter</generator>
+        <language>en-us</language>
+        <item>
+            <title>0.5.0  (2022-11-08)</title>
+            <description>&lt;ul&gt;&lt;li&gt;&lt;p&gt;Refactored documentation to use &lt;a href=&quot;https://40ants.com/doc/#x-28-23A-28-2810-29-20BASE-CHAR-20-2E-20-2240ants-doc-22-29-20ASDF-2FSYSTEM-3ASYSTEM-29&quot;&gt;&lt;code&gt;40ants-doc&lt;/code&gt;&lt;/a&gt; system and moved from Circle&lt;code&gt;CI&lt;/code&gt; to GitHub Actions.&lt;/p&gt;&lt;/li&gt;&lt;/ul&gt;</description>
+            <pubDate>Tue, 08 Nov 2022 00:00:00 +0000</pubDate>
+        </item>
+        <item>
+            <title>0.4.5  (2022-02-11)</title>
+            <description>&lt;ul&gt;&lt;li&gt;&lt;p&gt;Fixed &lt;code&gt;assert-that&lt;/code&gt; for working with latest Rove.&lt;/p&gt;&lt;/li&gt;&lt;/ul&gt;</description>
+            <pubDate>Fri, 11 Feb 2022 00:00:00 +0000</pubDate>
+        </item>
+        <item>
+            <title>0.4.4  (2019-06-07)</title>
+            <description>&lt;ul&gt;&lt;li&gt;&lt;p&gt;Fixed an issue how &lt;code&gt;assert-that&lt;/code&gt; reports about failure under the Rove.
+Previously, it always reported that &amp;quot;Object&amp;quot; is &lt;code&gt;nil&lt;/code&gt;, but now it is fixed,
+and output will look like that::&lt;/p&gt;&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;Expected value is shorter than result
+    Matcher:
+    (&lt;a href=&quot;#x-28HAMCREST-2FMATCHERS-3ACONTAINS-20-2840ANTS-DOC-2FLOCATIVES-3AMACRO-29-29&quot; data-document=&quot;&quot; data-node=&quot;x-28HAMCREST-2FMATCHERS-3ACONTAINS-20-2840ANTS-DOC-2FLOCATIVES-3AMACRO-29-29&quot;&gt;&lt;code&gt;hamcrest/matchers:contains&lt;/code&gt;&lt;/a&gt; 1 2)&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;text&quot;&gt;Object:
+(LIST 1 2 3) -&amp;gt; 
+(1 2 3)
+&lt;/code&gt;&lt;/pre&gt;</description>
+            <pubDate>Fri, 07 Jun 2019 00:00:00 +0000</pubDate>
+        </item>
+        <item>
+            <title>0.4.3  (2018-12-08)</title>
+            <description>&lt;ul&gt;&lt;li&gt;&lt;p&gt;Fixed compatibility with the latest &lt;code&gt;rove&lt;/code&gt;.
+  Bug was caused by &lt;a href=&quot;https://github.com/fukamachi/rove/commit/1f84d70a0b4db03bd0ec9b837fbc961189462f0d&quot;&gt;this commit&lt;/a&gt;.&lt;/p&gt;&lt;/li&gt;&lt;li&gt;&lt;p&gt;Also, now &lt;code&gt;hamcrest/rove&lt;/code&gt; is covered by tests.&lt;/p&gt;&lt;/li&gt;&lt;/ul&gt;</description>
+            <pubDate>Sat, 08 Dec 2018 00:00:00 +0000</pubDate>
+        </item>
+        <item>
+            <title>0.4.2  (2018-06-03)</title>
+            <description>&lt;ul&gt;&lt;li&gt;&lt;p&gt;Fixed hamcrest/prove compilation under &lt;code&gt;SBCL&lt;/code&gt;.&lt;/p&gt;&lt;/li&gt;&lt;li&gt;&lt;p&gt;Travis config now contains only &lt;code&gt;SBCL&lt;/code&gt; and &lt;code&gt;CCL&lt;/code&gt;.&lt;/p&gt;&lt;/li&gt;&lt;/ul&gt;</description>
+            <pubDate>Sun, 03 Jun 2018 00:00:00 +0000</pubDate>
+        </item>
+        <item>
+            <title>0.4.1  (2018-06-03)</title>
+            <description>&lt;ul&gt;&lt;li&gt;&lt;p&gt;Tests where rewritten to use Rove.&lt;/p&gt;&lt;/li&gt;&lt;/ul&gt;</description>
+            <pubDate>Sun, 03 Jun 2018 00:00:00 +0000</pubDate>
+        </item>
+        <item>
+            <title>0.4.0  (2018-06-02)</title>
+            <description>&lt;ul&gt;&lt;li&gt;&lt;p&gt;System &lt;code&gt;hamcrest-prove&lt;/code&gt; was replaced with &lt;code&gt;hamcrest/prove&lt;/code&gt; and
+now uses &lt;code&gt;package-inferred&lt;/code&gt; asdf class.&lt;/p&gt;&lt;/li&gt;&lt;/ul&gt;</description>
+            <pubDate>Sat, 02 Jun 2018 00:00:00 +0000</pubDate>
+        </item>
+        <item>
+            <title>0.3.4  (2018-01-29)</title>
+            <description>&lt;ul&gt;&lt;li&gt;&lt;p&gt;These symbols were exported to fix Rove integration:&lt;/p&gt;&lt;/li&gt;&lt;li&gt;&lt;p&gt;&lt;code&gt;assertion-error&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;&lt;li&gt;&lt;p&gt;&lt;code&gt;assertion-error-reason&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;&lt;li&gt;&lt;p&gt;&lt;code&gt;assertion-context&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;&lt;li&gt;&lt;p&gt;&lt;code&gt;assertion-error-reason-with-context&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;&lt;li&gt;&lt;p&gt;&lt;code&gt;contains&lt;/code&gt; matcher now saves it&apos;s form to make
+  error report better under the Rove.&lt;/p&gt;&lt;/li&gt;&lt;/ul&gt;</description>
+            <pubDate>Mon, 29 Jan 2018 00:00:00 +0000</pubDate>
+        </item>
+        <item>
+            <title>0.3.3  (2018-01-28)</title>
+            <description>&lt;ul&gt;&lt;li&gt;&lt;p&gt;Fixed system&apos;s version number.&lt;/p&gt;&lt;/li&gt;&lt;/ul&gt;</description>
+            <pubDate>Sun, 28 Jan 2018 00:00:00 +0000</pubDate>
+        </item>
+        <item>
+            <title>0.3.2  (2018-01-27)</title>
+            <description>&lt;ul&gt;&lt;li&gt;&lt;p&gt;Fixed a way how hamcrest/rove reexports symbols from hamcrest/matchers.&lt;/p&gt;&lt;/li&gt;&lt;/ul&gt;</description>
+            <pubDate>Sat, 27 Jan 2018 00:00:00 +0000</pubDate>
+        </item>
+        <item>
+            <title>0.3.1  (2018-01-26)</title>
+            <description>&lt;ul&gt;&lt;li&gt;&lt;p&gt;Fixed dependency from cl-ppcre.&lt;/p&gt;&lt;/li&gt;&lt;/ul&gt;</description>
+            <pubDate>Fri, 26 Jan 2018 00:00:00 +0000</pubDate>
+        </item>
+        <item>
+            <title>0.3.0  (2018-01-26)</title>
+            <description>&lt;ul&gt;&lt;li&gt;&lt;p&gt;System was refactored to use &lt;code&gt;:package-inferred-system&lt;/code&gt; &lt;code&gt;ASDF&lt;/code&gt; option.
+  Now all packages use &lt;code&gt;/&lt;/code&gt; instead of dots.&lt;/p&gt;&lt;/li&gt;&lt;li&gt;&lt;p&gt;Now cl-hamcrest supports &lt;code&gt;Rove&lt;/code&gt; test framework, but you need a
+  patched version from https://github.com/40ants/rove, because it wasn&apos;t
+  accepted to the upstream yet.&lt;/p&gt;&lt;/li&gt;&lt;/ul&gt;</description>
+            <pubDate>Fri, 26 Jan 2018 00:00:00 +0000</pubDate>
+        </item>
+        <item>
+            <title>0.2.1  (2017-10-04)</title>
+            <description>&lt;ul&gt;&lt;li&gt;&lt;p&gt;Previously, matcher &lt;code&gt;contains&lt;/code&gt; reported &amp;quot;Result is shorter than
+expected&amp;quot; if checked sequence length is lesser than expected, now it
+reports &amp;quot;Result is empty&amp;quot; in case if checked sequence has zero length.&lt;/p&gt;&lt;/li&gt;&lt;/ul&gt;</description>
+            <pubDate>Wed, 04 Oct 2017 00:00:00 +0000</pubDate>
+        </item>
+        <item>
+            <title>0.2.0  (2017-04-13)</title>
+            <description>&lt;ul&gt;&lt;li&gt;&lt;p&gt;Added &lt;code&gt;length&lt;/code&gt; matcher.&lt;/p&gt;&lt;/li&gt;&lt;li&gt;&lt;p&gt;Added nice documentation.&lt;/p&gt;&lt;/li&gt;&lt;li&gt;&lt;p&gt;Removed special hack-around to work with Prove (now
+  latest Prove&apos;s version from repository is required).&lt;/p&gt;&lt;/li&gt;&lt;/ul&gt;</description>
+            <pubDate>Thu, 13 Apr 2017 00:00:00 +0000</pubDate>
+        </item>
+        <item>
+            <title>0.1.0  (2017-04-02)</title>
+            <description>&lt;ul&gt;&lt;li&gt;&lt;p&gt;First version. Contains following matchers:&lt;/p&gt;&lt;/li&gt;&lt;li&gt;&lt;p&gt;&lt;code&gt;has-plist-entries&lt;/code&gt;;&lt;/p&gt;&lt;/li&gt;&lt;li&gt;&lt;p&gt;&lt;code&gt;hasnt-plist-keys&lt;/code&gt;;&lt;/p&gt;&lt;/li&gt;&lt;li&gt;&lt;p&gt;&lt;code&gt;has-alist-entries&lt;/code&gt;;&lt;/p&gt;&lt;/li&gt;&lt;li&gt;&lt;p&gt;&lt;code&gt;has-hash-entries&lt;/code&gt;;&lt;/p&gt;&lt;/li&gt;&lt;li&gt;&lt;p&gt;&lt;code&gt;has-properties&lt;/code&gt;;&lt;/p&gt;&lt;/li&gt;&lt;li&gt;&lt;p&gt;&lt;code&gt;has-slots&lt;/code&gt;;&lt;/p&gt;&lt;/li&gt;&lt;li&gt;&lt;p&gt;&lt;code&gt;contains&lt;/code&gt; and &lt;code&gt;contains-in-any-order&lt;/code&gt;;&lt;/p&gt;&lt;/li&gt;&lt;li&gt;&lt;p&gt;&lt;code&gt;any&lt;/code&gt;;&lt;/p&gt;&lt;/li&gt;&lt;li&gt;&lt;p&gt;&lt;code&gt;has-all&lt;/code&gt;.&lt;/p&gt;&lt;/li&gt;&lt;/ul&gt;</description>
+            <pubDate>Sun, 02 Apr 2017 00:00:00 +0000</pubDate>
+        </item>
+    </channel>
+</rss>
