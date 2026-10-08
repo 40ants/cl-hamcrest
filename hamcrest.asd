@@ -1,5 +1,5 @@
 #-asdf3.1 (error "hamcrest requires ASDF 3.1")
-(defsystem hamcrest
+(asdf:defsystem hamcrest
   ;; :version (:read-file-form "version.lisp-expr")
   :defsystem-depends-on ("40ants-asdf-system")
   :class :40ants-asdf-system

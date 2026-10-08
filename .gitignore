@@ -2,3 +2,31 @@
 /env/
 /quicklisp/
 /.qlot/
+
+# Standard CL ignore list
+
+# Hidden files in subdirectories
+*/.*
+
+# Emacs backup files
+*~
+
+# Other Emacs files
+.emacs*
+
+# Common Lisp compiled files
+*.FASL
+*.fasl
+*.lisp-temp
+*.dfsl
+*.pfsl
+*.d64fsl
+*.p64fsl
+*.lx64fsl
+*.lx32fsl
+*.dx64fsl
+*.dx32fsl
+*.fx64fsl
+*.fx32fsl
+*.sx64fsl
+

@@ -237,6 +237,17 @@
   (bar))
 
 
+(defclass test-person ()
+  ((name :initarg :name :accessor person-name)
+   (age :initarg :age :accessor person-age)
+   (address :initarg :address :accessor person-address :initform nil)))
+
+
+(defclass test-address ()
+  ((city :initarg :city :accessor address-city)
+   (zip :initarg :zip :accessor address-zip)))
+
+
 (deftest slot-assertions
     "Slots assertions"
   (let ((object (make-test-class :foo 1 :bar 2))
@@ -483,4 +494,220 @@
    (has-type 'integer)
    '(a b c d)
    "(A B C D) has type CONS, but INTEGER was expected"))
+
+
+;;; Tests for nested context pushing
+
+(deftest nested-context-assertions
+    "Nested matchers should include context in error messages"
+
+  ;; Test that nested has-slots failure includes slot context
+  (let ((person (make-instance 'test-person
+                               :name "Alice"
+                               :age 30
+                               :address (make-instance 'test-address
+                                                       :city "Boston"
+                                                       :zip "02101"))))
+
+    (test-if-matcher-fails
+     "Nested has-slots failure includes slot context"
+     (has-slots 'address (has-slots 'city "NYC"))
+     person
+     "Slot ADDRESS
+  Slot CITY has \"Boston\" value, but \"NYC\" was expected")
+
+    ;; Test that multi-level nesting shows full context chain
+    (test-if-matcher-fails
+     "Multi-level nesting shows full context chain"
+     (has-slots 'address (has-slots 'zip "99999"))
+     person
+     "Slot ADDRESS
+  Slot ZIP has \"02101\" value, but \"99999\" was expected"))
+
+  ;; Test nested plist context
+  (let ((value '(:user (:name "Alice" :age 30))))
+    (test-if-matcher-fails
+     "Nested has-plist-entries failure includes plist context"
+     (has-plist-entries :user (has-plist-entries :name "Bob"))
+     value
+     "Plist entry :USER
+  Key :NAME has \"Alice\" value, but \"Bob\" was expected"))
+
+  ;; Test nested alist context
+  (let ((value '((:user . ((:name . "Alice"))))))
+    (test-if-matcher-fails
+     "Nested has-alist-entries failure includes alist context"
+     (has-alist-entries :user (has-alist-entries :name "Bob"))
+     value
+     "Alist entry :USER
+  Key :NAME has \"Alice\" value, but \"Bob\" was expected"))
+
+  ;; Test that non-nested matchers do NOT add context
+  (let ((object (make-test-class :foo 1 :bar 2)))
+    (test-if-matcher-fails
+     "Non-nested slot failure has no context"
+     (has-slots 'foo 42)
+     object
+     "Slot FOO has 1 value, but 42 was expected")))
+
+
+;;; Tests for instance-of matcher
+
+(deftest instance-of-assertions
+    "instance-of matcher checks type and optionally applies nested matchers"
+
+  (let ((person (make-instance 'test-person
+                               :name "Alice"
+                               :age 30
+                               :address (make-instance 'test-address
+                                                       :city "Boston"
+                                                       :zip "02101"))))
+
+    ;; Type-only check
+    (test-if-matcher-ok
+     "Correct type with no matchers"
+     (instance-of 'test-person)
+     person
+     "Instance of TEST-PERSON")
+
+    ;; Type + slot matcher
+    (test-if-matcher-ok
+     "Correct type with slot matcher"
+     (instance-of 'test-person
+                  (has-slots 'name "Alice" 'age 30))
+     person
+     "Instance of TEST-PERSON, Has slots:
+  NAME = \"Alice\"
+  AGE = 30")
+
+    ;; Wrong type
+    (test-if-matcher-fails
+     "Wrong type fails"
+     (instance-of 'test-address)
+     person
+     "(?s).*has type TEST-PERSON, but TEST-ADDRESS was expected")
+
+    ;; Right type, nested matcher fails
+    (test-if-matcher-fails
+     "Right type but nested matcher fails"
+     (instance-of 'test-person
+                  (has-slots 'name "Bob"))
+     person
+     "Instance of TEST-PERSON
+  Slot NAME has \"Alice\" value, but \"Bob\" was expected")
+
+    ;; Combined instance-of with nested has-slots for deep structure
+    (test-if-matcher-ok
+     "Deep nested structure with instance-of"
+     (instance-of 'test-person
+                  (has-slots 'address
+                             (instance-of 'test-address
+                                          (has-slots 'city "Boston"))))
+     person
+     "Instance of TEST-PERSON, Has slots:
+  ADDRESS = Instance of TEST-ADDRESS, Has slots:
+              CITY = \"Boston\"")
+
+    ;; Deep nested failure with full context
+    ;; Note: context is LIFO (innermost first), so Instance of TEST-ADDRESS
+    ;; appears before Slot ADDRESS and Instance of TEST-PERSON
+    (test-if-matcher-fails
+     "Deep nested failure with instance-of context"
+     (instance-of 'test-person
+                  (has-slots 'address
+                             (instance-of 'test-address
+                                          (has-slots 'city "NYC"))))
+     person
+     "Instance of TEST-ADDRESS
+  Slot ADDRESS
+    Instance of TEST-PERSON
+      Slot CITY has \"Boston\" value, but \"NYC\" was expected")))
+
+
+;;; Tests for has-accessors matcher
+
+(deftest accessor-assertions
+    "has-accessors matcher checks object via accessor functions"
+
+  (let ((person (make-instance 'test-person
+                               :name "Alice"
+                               :age 30
+                               :address (make-instance 'test-address
+                                                       :city "Boston"
+                                                       :zip "02101")))
+        (a-number 1)
+        (a-list '(1 2 3)))
+
+    ;; Successful match
+    (test-if-matcher-ok
+     "Successful accessor match"
+     (has-accessors 'person-name "Alice" 'person-age 30)
+     person
+     "Has accessors:
+  PERSON-NAME = \"Alice\"
+  PERSON-AGE = 30")
+
+    ;; Wrong value
+    (test-if-matcher-fails
+     "Accessor returns wrong value"
+     (has-accessors 'person-name "Bob")
+     person
+     "Accessor PERSON-NAME returned \"Alice\", but \"Bob\" was expected")
+
+    ;; Placeholder _ can match any value
+    (test-if-matcher-ok
+     "Placeholder _ can match any value"
+     (has-accessors 'person-name _)
+     person
+     "Has accessors:
+  PERSON-NAME = _")
+
+    ;; Nested matchers via accessor
+    (test-if-matcher-ok
+     "Nested matcher via accessor"
+     (has-accessors 'person-address
+                    (has-accessors 'address-city "Boston"))
+     person
+     "Has accessors:
+  PERSON-ADDRESS = Has accessors:
+                     ADDRESS-CITY = \"Boston\"")
+
+    ;; Nested accessor failure with context
+    (test-if-matcher-fails
+     "Nested accessor failure includes context"
+     (has-accessors 'person-address
+                    (has-accessors 'address-city "NYC"))
+     person
+     "Accessor PERSON-ADDRESS
+  Accessor ADDRESS-CITY returned \"Boston\", but \"NYC\" was expected")
+
+    (locally
+        ;; remove compile-time warning
+        ;; about wrong type
+        (declare #+sbcl
+                 (sb-ext:muffle-conditions sb-int:type-warning))
+
+      ;; Non-instance input
+      (test-if-matcher-fails
+       "Non-instance input fails"
+       (has-accessors 'person-name "Alice")
+       a-number
+       "Value is not an instance")
+
+      (test-if-matcher-fails
+       "Non-instance list input fails"
+       (has-accessors 'person-name "Alice")
+       a-list
+       "Value is not an instance"))
+
+    ;; Combined with instance-of for the full pattern
+    (test-if-matcher-ok
+     "Combined instance-of with has-accessors"
+     (instance-of 'test-person
+                  (has-accessors 'person-name "Alice"
+                                 'person-age 30))
+     person
+     "Instance of TEST-PERSON, Has accessors:
+  PERSON-NAME = \"Alice\"
+  PERSON-AGE = 30")))
 
